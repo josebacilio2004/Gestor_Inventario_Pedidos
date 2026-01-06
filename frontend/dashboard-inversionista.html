@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Inversionista</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">🏪 Gestor de Inventario</a>
+            <ul class="navbar-nav">
+                <li><a href="dashboard-inversionista.html" class="nav-link active">Mi Dashboard</a></li>
+                <li><a href="pages/pedidos.html" class="nav-link">Ver Pedidos</a></li>
+                <li style="margin-left: auto;">
+                    <span class="text-secondary" id="user-name"></span>
+                    <a href="login.html" class="nav-link" style="color: var(--danger);">🚪 Salir</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="card-header mb-2">
+            <h1 class="card-title">💰 Panel de Control - Inversionista</h1>
+            <p class="text-secondary">Monitorea tus inversiones y capital</p>
+        </div>
+
+        <!-- Estadísticas del Inversionista -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Capital Total Invertido</div>
+                <div class="stat-value" id="capital-invertido">S/ 0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Capital Devuelto</div>
+                <div class="stat-value" id="capital-devuelto" style="color: var(--success)">S/ 0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Capital Pendiente</div>
+                <div class="stat-value" id="capital-pendiente" style="color: var(--warning)">S/ 0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Pedidos</div>
+                <div class="stat-value" id="total-pedidos">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Ganancia Real</div>
+                <div class="stat-value" id="ganancia-real">S/ 0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Ganancia Devuelta</div>
+                <div class="stat-value" id="ganancia-devuelta" style="color: var(--success)">S/ 0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Ganancia Pendiente</div>
+                <div class="stat-value" id="ganancia-pendiente" style="color: var(--warning)">S/ 0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">% Devolución</div>
+                <div class="stat-value" id="porcentaje-devolucion">0%</div>
+            </div>
+        </div>
+
+        <!-- Tabla de Pedidos -->
+        <div class="card mt-2">
+            <h2 style="margin-bottom: 1rem;">📋 Mis Pedidos</h2>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Fecha</th>
+                            <th>Producto</th>
+                            <th>Comprador</th>
+                            <th>Capital</th>
+                            <th>Devuelto</th>
+                            <th>Pendiente</th>
+                            <th>Ganancia</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pedidos-body">
+                        <tr>
+                            <td colspan="9" class="text-center">Cargando...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        const userId = sessionStorage.getItem('userId');
+        const userName = sessionStorage.getItem('userName');
+        const userRole = sessionStorage.getItem('userRole');
+
+        if (!userId || userRole !== 'inversionista') {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('user-name').textContent = `👤 ${userName}`;
+
+        async function loadDashboard() {
+            try {
+                const data = await fetchAPI(`/inversionistas/${userId}`);
+
+                // Actualizar estadísticas
+                document.getElementById('capital-invertido').textContent = formatCurrency(data.resumen.capital_total_invertido || 0);
+                document.getElementById('capital-devuelto').textContent = formatCurrency(data.resumen.capital_total_devuelto || 0);
+                document.getElementById('capital-pendiente').textContent = formatCurrency(data.resumen.capital_total_pendiente || 0);
+                document.getElementById('total-pedidos').textContent = data.resumen.total_pedidos || 0;
+                document.getElementById('ganancia-real').textContent = formatCurrency(data.resumen.ganancia_total_real || 0);
+                document.getElementById('ganancia-devuelta').textContent = formatCurrency(data.resumen.ganancia_devuelta || 0);
+                document.getElementById('ganancia-pendiente').textContent = formatCurrency(data.resumen.ganancia_pendiente || 0);
+
+                const porcentaje = data.resumen.capital_total_invertido > 0
+                    ? ((data.resumen.capital_total_devuelto / data.resumen.capital_total_invertido) * 100).toFixed(1)
+                    : 0;
+                document.getElementById('porcentaje-devolucion').textContent = `${porcentaje}%`;
+
+                // Renderizar pedidos
+                const tbody = document.getElementById('pedidos-body');
+                if (!data.pedidos || data.pedidos.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="9" class="text-center">No tienes pedidos registrados</td></tr>';
+                } else {
+                    tbody.innerHTML = data.pedidos.map(p => `
+            <tr>
+              <td>${p.id}</td>
+              <td>${formatDate(p.fecha_pedido)}</td>
+              <td>${p.producto_nombre || '-'}</td>
+              <td>${p.comprador_nombre || '-'}</td>
+              <td>${formatCurrency(p.capital_invertido)}</td>
+              <td style="color: var(--success)">${formatCurrency(p.capital_devuelto)}</td>
+              <td style="color: var(--warning)">${formatCurrency(p.capital_pendiente)}</td>
+              <td>${formatCurrency(p.ganancia_real)}</td>
+              <td><span class="badge ${getBadgeClass(p.estado)}">${p.estado}</span></td>
+            </tr>
+          `).join('');
+                }
+            } catch (error) {
+                console.error('Error al cargar dashboard:', error);
+                showNotification('Error al cargar datos', 'error');
+            }
+        }
+
+        function getBadgeClass(estado) {
+            const classes = {
+                'completado': 'badge-success',
+                'pendiente': 'badge-warning',
+                'cancelado': 'badge-danger'
+            };
+            return classes[estado] || '';
+        }
+
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Sistema de Gestión de Inventario</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navegación -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../index.html" class="navbar-brand">
+                🏪 Gestor de Inventario
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="../index.html" class="nav-link">Dashboard</a></li>
+                <li><a href="productos.html" class="nav-link active">Productos</a></li>
+                <li><a href="distribuidores.html" class="nav-link">Distribuidores</a></li>
+                <li><a href="inversionistas.html" class="nav-link">Inversionistas</a></li>
+                <li><a href="compradores.html" class="nav-link">Compradores</a></li>
+                <li><a href="pedidos.html" class="nav-link">Pedidos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+        <div class="card-header mb-2">
+            <div class="d-flex justify-between align-center">
+                <div>
+                    <h1 class="card-title">📦 Gestión de Productos</h1>
+                    <p class="text-secondary">Administra tu catálogo de productos de ferretería</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateModal()">
+                    ➕ Nuevo Producto
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla de Productos -->
+        <div class="card">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Precio Ref.</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productos-table-body">
+                        <tr>
+                            <td colspan="6" class="text-center loading">Cargando productos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Crear/Editar Producto -->
+    <div id="producto-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Nuevo Producto</h2>
+                <button class="close-btn" onclick="closeModal('producto-modal')">×</button>
+            </div>
+            <form id="producto-form">
+                <input type="hidden" id="producto-id">
+
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre del Producto *</label>
+                    <input type="text" id="nombre" class="form-control" required placeholder="Ej: Cemento Portland">
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo_producto" class="form-label">Tipo de Producto *</label>
+                    <input type="text" id="tipo_producto" class="form-control" required
+                        placeholder="Ej: Material de construcción">
+                </div>
+
+                <div class="form-group">
+                    <label for="precio_referencia" class="form-label">Precio de Referencia</label>
+                    <input type="number" id="precio_referencia" class="form-control" step="0.01" min="0"
+                        placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea id="descripcion" class="form-control" rows="3"
+                        placeholder="Descripción del producto"></textarea>
+                </div>
+
+                <div class="d-flex gap-1 mt-2">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('producto-modal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/productos.js"></script>
+</body>
+
+</html>

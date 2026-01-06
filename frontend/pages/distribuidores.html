@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribuidores - Sistema de Gestión de Inventario</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navegación -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../index.html" class="navbar-brand">
+                🏪 Gestor de Inventario
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="../index.html" class="nav-link">Dashboard</a></li>
+                <li><a href="productos.html" class="nav-link">Productos</a></li>
+                <li><a href="distribuidores.html" class="nav-link active">Distribuidores</a></li>
+                <li><a href="inversionistas.html" class="nav-link">Inversionistas</a></li>
+                <li><a href="compradores.html" class="nav-link">Compradores</a></li>
+                <li><a href="pedidos.html" class="nav-link">Pedidos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+        <div class="card-header mb-2">
+            <div class="d-flex justify-between align-center">
+                <div>
+                    <h1 class="card-title">🏢 Gestión de Distribuidores</h1>
+                    <p class="text-secondary">Administra tu red de proveedores</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateModal()">
+                    ➕ Nuevo Distribuidor
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla de Distribuidores -->
+        <div class="card">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Contacto</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <th>Dirección</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="distribuidores-table-body">
+                        <tr>
+                            <td colspan="7" class="text-center loading">Cargando distribuidores...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Crear/Editar Distribuidor -->
+    <div id="distribuidor-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Nuevo Distribuidor</h2>
+                <button class="close-btn" onclick="closeModal('distribuidor-modal')">×</button>
+            </div>
+            <form id="distribuidor-form">
+                <input type="hidden" id="distribuidor-id">
+
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre del Distribuidor *</label>
+                    <input type="text" id="nombre" class="form-control" required
+                        placeholder="Ej: Distribuidora Central">
+                </div>
+
+                <div class="form-group">
+                    <label for="contacto" class="form-label">Persona de Contacto</label>
+                    <input type="text" id="contacto" class="form-control" placeholder="Ej: Juan Pérez">
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="tel" id="telefono" class="form-control" placeholder="Ej: 555-0101">
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="ventas@distribuidor.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion" class="form-label">Dirección</label>
+                    <textarea id="direccion" class="form-control" rows="2" placeholder="Dirección completa"></textarea>
+                </div>
+
+                <div class="d-flex gap-1 mt-2">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('distribuidor-modal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/distribuidores.js"></script>
+</body>
+
+</html>

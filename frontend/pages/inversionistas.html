@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inversionistas - Sistema de Gestión de Inventario</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navegación -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../index.html" class="navbar-brand">
+                🏪 Gestor de Inventario
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="../index.html" class="nav-link">Dashboard</a></li>
+                <li><a href="productos.html" class="nav-link">Productos</a></li>
+                <li><a href="distribuidores.html" class="nav-link">Distribuidores</a></li>
+                <li><a href="inversionistas.html" class="nav-link active">Inversionistas</a></li>
+                <li><a href="compradores.html" class="nav-link">Compradores</a></li>
+                <li><a href="pedidos.html" class="nav-link">Pedidos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+        <div class="card-header mb-2">
+            <div class="d-flex justify-between align-center">
+                <div>
+                    <h1 class="card-title">💰 Gestión de Inversionistas</h1>
+                    <p class="text-secondary">Administra los inversionistas y su capital</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateModal()">
+                    ➕ Nuevo Inversionista
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla de Inversionistas -->
+        <div class="card">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Usuario</th>
+                            <th>Pedidos</th>
+                            <th>Capital Invertido</th>
+                            <th>Capital Devuelto</th>
+                            <th>Capital Pendiente</th>
+                            <th>Ganancia</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inversionistas-table-body">
+                        <tr>
+                            <td colspan="9" class="text-center loading">Cargando inversionistas...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Crear/Editar Inversionista -->
+    <div id="inversionista-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Nuevo Inversionista</h2>
+                <button class="close-btn" onclick="closeModal('inversionista-modal')">×</button>
+            </div>
+            <form id="inversionista-form">
+                <input type="hidden" id="inversionista-id">
+
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre del Inversionista *</label>
+                    <input type="text" id="nombre" class="form-control" required placeholder="Ej: Juan García">
+                </div>
+
+                <div class="form-group">
+                    <label for="usuario" class="form-label">Usuario de Acceso *</label>
+                    <input type="text" id="usuario" class="form-control" required placeholder="Ej: jgarcia">
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Contraseña *</label>
+                    <input type="password" id="password" class="form-control"
+                        placeholder="Dejar vacío para mantener la actual">
+                </div>
+
+                <div class="form-group">
+                    <label for="contacto" class="form-label">Persona de Contacto</label>
+                    <input type="text" id="contacto" class="form-control" placeholder="Ej: Juan García">
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="tel" id="telefono" class="form-control" placeholder="Ej: 999-111-222">
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="inversionista@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="notas" class="form-label">Notas</label>
+                    <textarea id="notas" class="form-control" rows="2" placeholder="Notas adicionales"></textarea>
+                </div>
+
+                <div class="d-flex gap-1 mt-2">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('inversionista-modal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Ver Detalle de Inversionista -->
+    <div id="detalle-modal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="detalle-nombre">Detalle del Inversionista</h2>
+                <button class="close-btn" onclick="closeModal('detalle-modal')">×</button>
+            </div>
+
+            <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem;">
+                <div class="stat-card">
+                    <div class="stat-label">Capital Invertido</div>
+                    <div class="stat-value" id="detalle-capital-invertido">S/ 0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Capital Devuelto</div>
+                    <div class="stat-value" id="detalle-capital-devuelto">S/ 0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Capital Pendiente</div>
+                    <div class="stat-value" id="detalle-capital-pendiente">S/ 0.00</div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 1rem;">📋 Pedidos Asociados</h3>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Pedido #</th>
+                            <th>Producto</th>
+                            <th>Comprador</th>
+                            <th>Capital</th>
+                            <th>Devuelto</th>
+                            <th>Pendiente</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detalle-pedidos-body">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-center mt-2">
+                <button class="btn btn-secondary" onclick="closeModal('detalle-modal')">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/inversionistas.js"></script>
+</body>
+
+</html>
