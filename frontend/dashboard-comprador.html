@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Comprador</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/corporate-theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <nav class="navbar">
         <div class="navbar-container">
-            <a href="index.html" class="navbar-brand">🏪 Gestor de Inventario</a>
+            <a href="index.html" class="navbar-brand">🏢 Distribuidora Ss&M</a>
             <ul class="navbar-nav">
                 <li><a href="dashboard-comprador.html" class="nav-link active">Mi Dashboard</a></li>
                 <li><a href="pages/pedidos.html" class="nav-link">Gestionar Pedidos</a></li>
@@ -26,8 +27,8 @@
 
     <main class="container">
         <div class="card-header mb-2">
-            <h1 class="card-title">🛒 Panel de Control - Comprador Principal</h1>
-            <p class="text-secondary">Gestiona tus compras y devoluciones de capital</p>
+            <h1 class="card-title">🛒 Panel de Control - Comprador</h1>
+            <p class="text-secondary">Gestiona tus compras y devoluciones de capital y ganancia</p>
         </div>
 
         <!-- Estadísticas del Comprador -->
@@ -77,6 +78,7 @@
                             <th>Capital</th>
                             <th>Devuelto</th>
                             <th>Pendiente</th>
+                            <th>Ganancia</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -95,7 +97,7 @@
     <div id="pago-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">💵 Registrar Pago de Capital</h2>
+                <h2 class="modal-title" id="modal-title">💵 Registrar Pago de Capital</h2>
                 <button class="close-btn" onclick="closeModal('pago-modal')">×</button>
             </div>
             <form id="pago-form">
@@ -181,11 +183,22 @@
               <td>${formatCurrency(p.capital_invertido)}</td>
               <td style="color: var(--success)">${formatCurrency(p.capital_devuelto)}</td>
               <td style="color: var(--warning)">${formatCurrency(p.capital_pendiente)}</td>
+              <td>
+                <div style="display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem;">
+                  <span style="color: var(--success)">✅ ${formatCurrency(p.ganancia_devuelta || 0)}</span>
+                  <span style="color: var(--warning)">⏳ ${formatCurrency(p.ganancia_pendiente || p.ganancia_real)}</span>
+                </div>
+              </td>
               <td><span class="badge ${getBadgeClass(p.estado)}">${p.estado}</span></td>
               <td>
-                ${p.capital_pendiente > 0 ? `
-                  <button class="btn btn-sm btn-success" onclick="abrirPago(${p.id}, ${p.capital_pendiente})">💵</button>
-                ` : '✅'}
+                <div style="display: flex; gap: 0.25rem;">
+                  ${p.capital_pendiente > 0 ? `
+                    <button class="btn btn-sm btn-success" onclick="abrirPago(${p.id}, ${p.capital_pendiente}, 'capital')" title="Pagar Capital">💵</button>
+                  ` : '✅'}
+                  ${(p.ganancia_pendiente || p.ganancia_real) > 0 ? `
+                    <button class="btn btn-sm btn-primary" onclick="abrirPago(${p.id}, ${p.ganancia_pendiente || p.ganancia_real}, 'ganancia')" title="Pagar Ganancia">💰</button>
+                  ` : ''}
+                </div>
               </td>
             </tr>
           `).join('');
@@ -195,11 +208,22 @@
             }
         }
 
-        function abrirPago(pedidoId, capitalPendiente) {
-            currentPedido = { id: pedidoId, pendiente: capitalPendiente };
+        function abrirPago(pedidoId, montoPendiente, tipoPago = 'capital') {
+            currentPedido = { id: pedidoId, pendiente: montoPendiente, tipo: tipoPago };
             document.getElementById('pedido_id_pago').value = pedidoId;
             document.getElementById('pedido-numero').textContent = pedidoId;
-            document.getElementById('capital-pendiente-pago').textContent = formatCurrency(capitalPendiente);
+
+            // Actualizar título del modal según tipo
+            const modalTitle = tipoPago === 'ganancia' ? '💰 Registrar Pago de Ganancia' : '💵 Registrar Pago de Capital';
+            document.getElementById('modal-title').textContent = modalTitle;
+
+            const labelPendiente = tipoPago === 'ganancia' ? 'Ganancia pendiente:' : 'Capital pendiente:';
+            document.querySelector('#pago-modal .text-secondary').innerHTML =
+                `${labelPendiente} <strong id="capital-pendiente-pago">${formatCurrency(montoPendiente)}</strong>`;
+
+            // Pre-seleccionar tipo de pago
+            document.getElementById('tipo_pago').value = tipoPago;
+
             document.getElementById('fecha_pago').value = new Date().toISOString().split('T')[0];
             openModal('pago-modal');
         }
@@ -207,22 +231,31 @@
         document.getElementById('pago-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            const tipoPago = document.getElementById('tipo_pago').value;
             const data = {
-                pedido_id: document.getElementById('pedido_id_pago').value,
+                pedido_id: parseInt(document.getElementById('pedido_id_pago').value),
                 monto: parseFloat(document.getElementById('monto_pago').value),
                 fecha_pago: document.getElementById('fecha_pago').value,
-                tipo_pago: document.getElementById('tipo_pago').value,
+                tipo_pago: tipoPago,
                 notas: document.getElementById('notas_pago').value
             };
 
             try {
-                await create('pagos-capital', data);
-                showNotification('Pago registrado exitosamente', 'success');
+                // Usar endpoint correcto según tipo de pago
+                const endpoint = tipoPago === 'ganancia' ? 'pagos-ganancia' : 'pagos-capital';
+                await create(endpoint, data);
+
+                const mensaje = tipoPago === 'ganancia'
+                    ? '💰 Pago de ganancia registrado exitosamente'
+                    : '💵 Pago de capital registrado exitosamente';
+
+                showNotification(mensaje, 'success');
                 closeModal('pago-modal');
                 document.getElementById('pago-form').reset();
                 loadDashboard();
             } catch (error) {
                 console.error('Error al registrar pago:', error);
+                showNotification('Error al registrar pago', 'error');
             }
         });
 

@@ -55,16 +55,38 @@ router.get('/:id', async (req, res) => {
             [id]
         );
 
-        // Resumen
-        const resumen = await pool.query(
-            'SELECT * FROM vista_inversionistas_resumen WHERE id = $1',
+        // Calcular resumen directamente
+        const statsResult = await pool.query(
+            `SELECT 
+                COALESCE(SUM(capital_invertido), 0) as capital_total,
+                COALESCE(SUM(capital_devuelto), 0) as capital_devuelto,
+                COALESCE(SUM(capital_pendiente), 0) as capital_pendiente,
+                COUNT(*) as total_pedidos,
+                COALESCE(SUM(ganancia_real), 0) as ganancia_total,
+                COALESCE(SUM(ganancia_devuelta_monto), 0) as ganancia_devuelta_total
+            FROM pedidos 
+            WHERE inversionista_id = $1`,
             [id]
         );
+
+        const stats = statsResult.rows[0];
+        const resumen = {
+            capital_total_invertido: parseFloat(stats.capital_total || 0),
+            capital_devuelto: parseFloat(stats.capital_devuelto || 0),
+            capital_pendiente_devolver: parseFloat(stats.capital_pendiente || 0),
+            total_pedidos: parseInt(stats.total_pedidos || 0),
+            ganancia_total_real: parseFloat(stats.ganancia_total || 0),
+            ganancia_devuelta: parseFloat(stats.ganancia_devuelta_total || 0),
+            ganancia_pendiente: parseFloat(stats.ganancia_total || 0) - parseFloat(stats.ganancia_devuelta_total || 0),
+            porcentaje_devolucion: parseFloat(stats.capital_total || 0) > 0
+                ? parseFloat(((parseFloat(stats.capital_devuelto || 0) / parseFloat(stats.capital_total || 0)) * 100).toFixed(1))
+                : 0
+        };
 
         res.json({
             ...inversionista.rows[0],
             pedidos: pedidos.rows,
-            resumen: resumen.rows[0]
+            resumen
         });
     } catch (err) {
         console.error('Error al obtener inversionista:', err);

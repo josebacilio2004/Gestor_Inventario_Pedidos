@@ -105,6 +105,22 @@ router.post('/', async (req, res) => {
             [pedido_id, monto, fecha_pago, tipo_pago || 'capital', metodo_pago, comprobante, notas]
         );
 
+        // ACTUALIZACIÓN AUTOMÁTICA: Recalcular totales y estado del pedido
+        await pool.query(
+            `UPDATE pedidos 
+             SET capital_devuelto = (
+               SELECT COALESCE(SUM(monto), 0) FROM pagos_capital WHERE pedido_id = $1
+             ),
+             estado = CASE 
+               WHEN (capital_invertido - (SELECT COALESCE(SUM(monto), 0) FROM pagos_capital WHERE pedido_id = $1)) <= 0.01 
+                 AND COALESCE(ganancia_pendiente, 0) <= 0.01 
+               THEN 'completado' 
+               ELSE 'pendiente' 
+             END
+             WHERE id = $1`,
+            [pedido_id]
+        );
+
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error('Error al registrar pago:', err);
