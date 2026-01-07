@@ -2,12 +2,21 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/database');
 
-// GET - Obtener todos los compradores con resumen
+// GET - Obtener todos los compradores (incluye password para login)
 router.get('/', async (req, res) => {
     try {
-        const result = await pool.query(
-            'SELECT * FROM vista_compradores_resumen ORDER BY nombre ASC'
-        );
+        const result = await pool.query(`
+            SELECT c.*, 
+                COALESCE(COUNT(DISTINCT p.id), 0) as total_pedidos,
+                COALESCE(SUM(p.capital_invertido), 0) as capital_total_gestionado,
+                COALESCE(SUM(p.capital_devuelto), 0) as capital_devuelto,
+                COALESCE(SUM(p.capital_pendiente), 0) as capital_pendiente_devolver,
+                COALESCE(SUM(p.ganancia_real), 0) as ganancia_generada
+            FROM compradores c
+            LEFT JOIN pedidos p ON c.id = p.comprador_id
+            GROUP BY c.id
+            ORDER BY c.nombre ASC
+        `);
         res.json(result.rows);
     } catch (err) {
         console.error('Error al obtener compradores:', err);

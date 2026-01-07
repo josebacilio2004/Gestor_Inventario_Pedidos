@@ -2,12 +2,21 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/database');
 
-// GET - Obtener todos los inversionistas con resumen
+// GET - Obtener todos los inversionistas (incluye password para login)
 router.get('/', async (req, res) => {
     try {
-        const result = await pool.query(
-            'SELECT * FROM vista_inversionistas_resumen ORDER BY nombre ASC'
-        );
+        const result = await pool.query(`
+            SELECT i.*, 
+                COALESCE(COUNT(DISTINCT p.id), 0) as total_pedidos,
+                COALESCE(SUM(p.capital_invertido), 0) as capital_total_invertido,
+                COALESCE(SUM(p.capital_devuelto), 0) as capital_total_devuelto,
+                COALESCE(SUM(p.capital_pendiente), 0) as capital_total_pendiente,
+                COALESCE(SUM(p.ganancia_real), 0) as ganancia_total_real
+            FROM inversionistas i
+            LEFT JOIN pedidos p ON i.id = p.inversionista_id
+            GROUP BY i.id
+            ORDER BY i.nombre ASC
+        `);
         res.json(result.rows);
     } catch (err) {
         console.error('Error al obtener inversionistas:', err);

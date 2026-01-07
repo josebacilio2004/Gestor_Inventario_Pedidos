@@ -170,7 +170,7 @@
             </div>
 
             <div class="role-selector">
-                <button type="button" class="role-btn active" onclick="selectRole('inversionista')">
+                <button type="button" class="role-btn" onclick="selectRole('inversionista')">
                     <span class="role-icon">💰</span>
                     <span>Inversionista</span>
                 </button>
@@ -178,12 +178,16 @@
                     <span class="role-icon">🛒</span>
                     <span>Comprador</span>
                 </button>
+                <button type="button" class="role-btn active" onclick="selectRole('admin')">
+                    <span class="role-icon">👨‍💼</span>
+                    <span>Administrador</span>
+                </button>
             </div>
 
             <div id="error-message" class="error-message"></div>
 
             <form id="login-form">
-                <input type="hidden" id="role" value="inversionista">
+                <input type="hidden" id="role" value="admin">
 
                 <div class="form-group">
                     <label for="usuario" class="form-label">Usuario</label>
@@ -245,34 +249,57 @@
             const password = document.getElementById('password').value;
             const role = document.getElementById('role').value;
 
+            console.log('=== LOGIN ATTEMPT ===');
+            console.log('Usuario:', usuario);
+            console.log('Rol:', role);
+
             try {
-                // Obtener lista de usuarios según el rol
+                // ADMIN usa endpoint diferente (POST)
+                if (role === 'admin') {
+                    const response = await fetch('http://localhost:3002/api/admin/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ usuario, password })
+                    });
+
+                    if (!response.ok) {
+                        showError('❌ Credenciales de administrador incorrectas');
+                        return;
+                    }
+
+                    const admin = await response.json();
+                    sessionStorage.setItem('userId', admin.id);
+                    sessionStorage.setItem('userName', admin.nombre);
+                    sessionStorage.setItem('userRole', 'admin');
+                    sessionStorage.setItem('userLogin', admin.usuario);
+
+                    console.log('✅ Admin login exitoso');
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // INVERSIONISTAS Y COMPRADORES usan GET
                 const endpoint = role === 'inversionista' ? 'inversionistas' : 'compradores';
                 const response = await fetch(`http://localhost:3002/api/${endpoint}`);
 
                 if (!response.ok) {
-                    throw new Error('Error de conexión con el servidor');
+                    throw new Error('Error de conexión');
                 }
 
                 const usuarios = await response.json();
-
-                // Buscar usuario que coincida
-                const user = usuarios.find(u =>
-                    u.usuario === usuario && u.password_hash === password && u.activo
-                );
+                const user = usuarios.find(u => u.usuario === usuario && u.password_hash === password && u.activo);
 
                 if (!user) {
                     showError('❌ Usuario o contraseña incorrectos');
                     return;
                 }
 
-                // Guardar sesión
                 sessionStorage.setItem('userId', user.id);
                 sessionStorage.setItem('userName', user.nombre);
                 sessionStorage.setItem('userRole', role);
                 sessionStorage.setItem('userLogin', usuario);
 
-                // Redirigir según rol
+                console.log('✅ Login exitoso');
                 if (role === 'inversionista') {
                     window.location.href = 'dashboard-inversionista.html';
                 } else {
@@ -280,7 +307,7 @@
                 }
             } catch (error) {
                 console.error('Error en login:', error);
-                showError('⚠️ Error al conectar con el servidor. Verifica que esté corriendo.');
+                showError('⚠️ Error al conectar con el servidor');
             }
         });
 
