@@ -8,6 +8,7 @@ const pedidosRoutes = require('./routes/pedidos');
 const inversionistasRoutes = require('./routes/inversionistas');
 const compradoresRoutes = require('./routes/compradores');
 const pagosCapitalRoutes = require('./routes/pagos-capital');
+const pagosGananciaRoutes = require('./routes/pagos-ganancia');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/api/pedidos', pedidosRoutes);
 app.use('/api/inversionistas', inversionistasRoutes);
 app.use('/api/compradores', compradoresRoutes);
 app.use('/api/pagos-capital', pagosCapitalRoutes);
+app.use('/api/pagos-ganancia', pagosGananciaRoutes);
 app.use('/api/admin', adminRoutes);
 
 // Ruta raíz
