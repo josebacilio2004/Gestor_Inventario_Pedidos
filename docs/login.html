@@ -209,7 +209,7 @@
             </form>
 
             <div class="admin-link">
-                <a href="index.html">💼 Acceso Administrativo (Sin autenticación)</a>
+                <a href="dashboard.html">💼 Acceso Administrativo (Sin autenticación)</a>
             </div>
         </div>
     </div>
@@ -278,7 +278,7 @@
                     sessionStorage.setItem('userLogin', admin.usuario);
 
                     console.log('✅ Admin login exitoso');
-                    window.location.href = 'index.html';
+                    window.location.href = 'dashboard.html';
                     return;
                 } else {
                     // Inversionistas y compradores
@@ -310,13 +310,13 @@
                     } else {
                         window.location.href = 'dashboard-comprador.html';
                     }
-                
+
                 }
             } catch (error) {
-                    console.error('Error en login:', error);
-                    showError('⚠️ Error al conectar con el servidor');
-                }
-            });
+                console.error('Error en login:', error);
+                showError('⚠️ Error al conectar con el servidor');
+            }
+        });
 
         // Clear fields on load
         document.getElementById('usuario').value = '';

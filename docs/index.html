@@ -4,123 +4,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Sistema de Gestión de Inventario</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/corporate-theme.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Distribuidora Ss&M - Redirigiendo...</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #1a3a52 0%, #2c5f7f 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .loader {
+      text-align: center;
+      color: white;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 20px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #c0c0c0;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <!-- Navegación -->
-  <nav class="navbar">
-    <div class="navbar-container">
-      <a href="index.html" class="navbar-brand">
-        🏢 Distribuidora Ss&M
-      </a>
-      <ul class="navbar-nav">
-        <li><a href="index.html" class="nav-link active">Dashboard</a></li>
-        <li><a href="pages/productos.html" class="nav-link">Productos</a></li>
-        <li><a href="pages/distribuidores.html" class="nav-link">Distribuidores</a></li>
-        <li><a href="pages/inversionistas.html" class="nav-link">Inversionistas</a></li>
-        <li><a href="pages/compradores.html" class="nav-link">Compradores</a></li>
-        <li><a href="pages/pedidos.html" class="nav-link">Pedidos</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- Contenido Principal -->
-  <main class="container">
-    <div class="card-header mb-2">
-      <h1 class="card-title">📊 Dashboard General</h1>
-      <p class="text-secondary">Resumen de tu negocio de ferretería</p>
-    </div>
-
-    <!-- Grid de Estadísticas -->
-    <div class="stats-grid">
-      <!-- Total Pedidos -->
-      <div class="stat-card">
-        <div class="stat-label">Total Pedidos</div>
-        <div class="stat-value" id="total-pedidos">0</div>
-      </div>
-
-      <!-- Capital Total Invertido -->
-      <div class="stat-card">
-        <div class="stat-label">Capital Invertido</div>
-        <div class="stat-value" id="capital-total">$0.00</div>
-      </div>
-
-      <!-- Ganancia Esperada -->
-      <div class="stat-card">
-        <div class="stat-label">Ganancia Esperada</div>
-        <div class="stat-value" id="ganancia-esperada">$0.00</div>
-      </div>
-
-      <!-- Ganancia Real -->
-      <div class="stat-card">
-        <div class="stat-label">Ganancia Real</div>
-        <div class="stat-value" id="ganancia-real">$0.00</div>
-      </div>
-
-      <!-- Devolución de Capital -->
-      <div class="stat-card">
-        <div class="stat-label">Devolución de Capital</div>
-        <div class="stat-value" id="devolucion-total">$0.00</div>
-      </div>
-
-      <!-- Margen de Ganancia -->
-      <div class="stat-card">
-        <div class="stat-label">Margen de Ganancia</div>
-        <div class="stat-value" id="margen-ganancia">0%</div>
-      </div>
-
-      <!-- Pedidos Completados -->
-      <div class="stat-card">
-        <div class="stat-label">Pedidos Completados</div>
-        <div class="stat-value" id="pedidos-completados">0</div>
-      </div>
-
-      <!-- Pedidos Pendientes -->
-      <div class="stat-card">
-        <div class="stat-label">Pedidos Pendientes</div>
-        <div class="stat-value" id="pedidos-pendientes">0</div>
-      </div>
-    </div>
-
-    <!-- Acciones Rápidas -->
-    <div class="card mt-2">
-      <div class="card-header">
-        <h2 class="card-title">⚡ Acciones Rápidas</h2>
-      </div>
-      <div class="d-flex gap-1">
-        <a href="pages/pedidos.html" class="btn btn-primary">
-          ➕ Nuevo Pedido
-        </a>
-        <a href="pages/productos.html" class="btn btn-secondary">
-          📦 Gestionar Productos
-        </a>
-        <a href="pages/distribuidores.html" class="btn btn-secondary">
-          🏢 Gestionar Distribuidores
-        </a>
-      </div>
-    </div>
-
-    <!-- Información del Sistema -->
-    <div class="card mt-2">
-      <div class="card-header">
-        <h2 class="card-title">ℹ️ Información del Sistema</h2>
-      </div>
-      <p class="text-secondary">
-        <strong>Sistema de Gestión de Inventario y Pagos v1.0</strong><br>
-        Gestiona tus productos, distribuidores y pedidos de manera eficiente.<br>
-        Monitorea tu capital invertido, ganancias y retorno de inversión en tiempo real.
-      </p>
-    </div>
-  </main>
-
-  <script src="js/config.js"></script>
-  <script src="js/app.js"></script>
+  <div class="loader">
+    <div class="spinner"></div>
+    <p>Redirigiendo al login...</p>
+  </div>
+  <script>
+    // Redirigir inmediatamente a login.html
+    window.location.href = 'login.html';
+  </script>
 </body>
 
 </html>

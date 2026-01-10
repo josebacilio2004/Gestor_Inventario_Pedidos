@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compradores - Sistema de Gestión de Inventario</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navegación -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../dashboard.html" class="navbar-brand">
+                🏪 Gestor de Inventario
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="../dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="productos.html" class="nav-link">Productos</a></li>
+                <li><a href="distribuidores.html" class="nav-link">Distribuidores</a></li>
+                <li><a href="inversionistas.html" class="nav-link">Inversionistas</a></li>
+                <li><a href="compradores.html" class="nav-link active">Compradores</a></li>
+                <li><a href="pedidos.html" class="nav-link">Pedidos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+        <div class="card-header mb-2">
+            <div class="d-flex justify-between align-center">
+                <div>
+                    <h1 class="card-title">🛒 Gestión de Compradores Principales</h1>
+                    <p class="text-secondary">Administra los compradores que gestionan las inversiones</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateModal()">
+                    ➕ Nuevo Comprador
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla de Compradores -->
+        <div class="card">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Usuario</th>
+                            <th>Pedidos</th>
+                            <th>Capital Gestionado</th>
+                            <th>Capital Devuelto</th>
+                            <th>Pendiente Devolver</th>
+                            <th>Ganancia Generada</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="compradores-table-body">
+                        <tr>
+                            <td colspan="9" class="text-center loading">Cargando compradores...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Crear/Editar Comprador -->
+    <div id="comprador-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Nuevo Comprador Principal</h2>
+                <button class="close-btn" onclick="closeModal('comprador-modal')">×</button>
+            </div>
+            <form id="comprador-form">
+                <input type="hidden" id="comprador-id">
+
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre del Comprador *</label>
+                    <input type="text" id="nombre" class="form-control" required placeholder="Ej: Pedro Sánchez">
+                </div>
+
+                <div class="form-group">
+                    <label for="usuario" class="form-label">Usuario de Acceso *</label>
+                    <input type="text" id="usuario" class="form-control" required placeholder="Ej: psanchez">
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Contraseña *</label>
+                    <input type="password" id="password" class="form-control"
+                        placeholder="Dejar vacío para mantener la actual">
+                </div>
+
+                <div class="form-group">
+                    <label for="contacto" class="form-label">Contacto</label>
+                    <input type="text" id="contacto" class="form-control" placeholder="Ej: Pedro Sánchez">
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="tel" id="telefono" class="form-control" placeholder="Ej: 988-111-222">
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="comprador@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="notas" class="form-label">Notas</label>
+                    <textarea id="notas" class="form-control" rows="2" placeholder="Notas adicionales"></textarea>
+                </div>
+
+                <div class="d-flex gap-1 mt-2">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('comprador-modal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/compradores.js"></script>
+</body>
+
+</html>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribuidores - Sistema de Gestión de Inventario</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navegación -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../dashboard.html" class="navbar-brand">
+                🏪 Gestor de Inventario
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="../dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="productos.html" class="nav-link">Productos</a></li>
+                <li><a href="distribuidores.html" class="nav-link active">Distribuidores</a></li>
+                <li><a href="inversionistas.html" class="nav-link">Inversionistas</a></li>
+                <li><a href="compradores.html" class="nav-link">Compradores</a></li>
+                <li><a href="pedidos.html" class="nav-link">Pedidos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+        <div class="card-header mb-2">
+            <div class="d-flex justify-between align-center">
+                <div>
+                    <h1 class="card-title">🏢 Gestión de Distribuidores</h1>
+                    <p class="text-secondary">Administra tu red de proveedores</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateModal()">
+                    ➕ Nuevo Distribuidor
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla de Distribuidores -->
+        <div class="card">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Contacto</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <th>Dirección</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="distribuidores-table-body">
+                        <tr>
+                            <td colspan="7" class="text-center loading">Cargando distribuidores...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Crear/Editar Distribuidor -->
+    <div id="distribuidor-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Nuevo Distribuidor</h2>
+                <button class="close-btn" onclick="closeModal('distribuidor-modal')">×</button>
+            </div>
+            <form id="distribuidor-form">
+                <input type="hidden" id="distribuidor-id">
+
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre del Distribuidor *</label>
+                    <input type="text" id="nombre" class="form-control" required
+                        placeholder="Ej: Distribuidora Central">
+                </div>
+
+                <div class="form-group">
+                    <label for="contacto" class="form-label">Persona de Contacto</label>
+                    <input type="text" id="contacto" class="form-control" placeholder="Ej: Juan Pérez">
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="tel" id="telefono" class="form-control" placeholder="Ej: 555-0101">
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="ventas@distribuidor.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion" class="form-label">Dirección</label>
+                    <textarea id="direccion" class="form-control" rows="2" placeholder="Dirección completa"></textarea>
+                </div>
+
+                <div class="d-flex gap-1 mt-2">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('distribuidor-modal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/distribuidores.js"></script>
+</body>
+
+</html>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inversionistas - Sistema de Gestión de Inventario</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navegación -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../dashboard.html" class="navbar-brand">
+                🏪 Gestor de Inventario
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="../dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="productos.html" class="nav-link">Productos</a></li>
+                <li><a href="distribuidores.html" class="nav-link">Distribuidores</a></li>
+                <li><a href="inversionistas.html" class="nav-link active">Inversionistas</a></li>
+                <li><a href="compradores.html" class="nav-link">Compradores</a></li>
+                <li><a href="pedidos.html" class="nav-link">Pedidos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+        <div class="card-header mb-2">
+            <div class="d-flex justify-between align-center">
+                <div>
+                    <h1 class="card-title">💰 Gestión de Inversionistas</h1>
+                    <p class="text-secondary">Administra los inversionistas y su capital</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateModal()">
+                    ➕ Nuevo Inversionista
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla de Inversionistas -->
+        <div class="card">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Usuario</th>
+                            <th>Pedidos</th>
+                            <th>Capital Invertido</th>
+                            <th>Capital Devuelto</th>
+                            <th>Capital Pendiente</th>
+                            <th>Ganancia</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inversionistas-table-body">
+                        <tr>
+                            <td colspan="9" class="text-center loading">Cargando inversionistas...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Crear/Editar Inversionista -->
+    <div id="inversionista-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Nuevo Inversionista</h2>
+                <button class="close-btn" onclick="closeModal('inversionista-modal')">×</button>
+            </div>
+            <form id="inversionista-form">
+                <input type="hidden" id="inversionista-id">
+
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre del Inversionista *</label>
+                    <input type="text" id="nombre" class="form-control" required placeholder="Ej: Juan García">
+                </div>
+
+                <div class="form-group">
+                    <label for="usuario" class="form-label">Usuario de Acceso *</label>
+                    <input type="text" id="usuario" class="form-control" required placeholder="Ej: jgarcia">
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Contraseña *</label>
+                    <input type="password" id="password" class="form-control"
+                        placeholder="Dejar vacío para mantener la actual">
+                </div>
+
+                <div class="form-group">
+                    <label for="contacto" class="form-label">Persona de Contacto</label>
+                    <input type="text" id="contacto" class="form-control" placeholder="Ej: Juan García">
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="tel" id="telefono" class="form-control" placeholder="Ej: 999-111-222">
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="inversionista@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="notas" class="form-label">Notas</label>
+                    <textarea id="notas" class="form-control" rows="2" placeholder="Notas adicionales"></textarea>
+                </div>
+
+                <div class="d-flex gap-1 mt-2">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('inversionista-modal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Ver Detalle de Inversionista -->
+    <div id="detalle-modal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="detalle-nombre">Detalle del Inversionista</h2>
+                <button class="close-btn" onclick="closeModal('detalle-modal')">×</button>
+            </div>
+
+            <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem;">
+                <div class="stat-card">
+                    <div class="stat-label">Capital Invertido</div>
+                    <div class="stat-value" id="detalle-capital-invertido">S/ 0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Capital Devuelto</div>
+                    <div class="stat-value" id="detalle-capital-devuelto">S/ 0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Capital Pendiente</div>
+                    <div class="stat-value" id="detalle-capital-pendiente">S/ 0.00</div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 1rem;">📋 Pedidos Asociados</h3>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Pedido #</th>
+                            <th>Producto</th>
+                            <th>Comprador</th>
+                            <th>Capital</th>
+                            <th>Devuelto</th>
+                            <th>Pendiente</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detalle-pedidos-body">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-center mt-2">
+                <button class="btn btn-secondary" onclick="closeModal('detalle-modal')">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/inversionistas.js"></script>
+</body>
+
+</html>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos - Sistema de Gestión de Inventario</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/corporate-theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navegación -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../dashboard.html" class="navbar-brand">
+                🏪 Gestor de Inventario
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="../dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="productos.html" class="nav-link">Productos</a></li>
+                <li><a href="distribuidores.html" class="nav-link">Distribuidores</a></li>
+                <li><a href="inversionistas.html" class="nav-link">Inversionistas</a></li>
+                <li><a href="compradores.html" class="nav-link">Compradores</a></li>
+                <li><a href="pedidos.html" class="nav-link active">Pedidos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+        <div class="card-header mb-2">
+            <div class="d-flex justify-between align-center">
+                <div>
+                    <h1 class="card-title">📋 Gestión de Pedidos</h1>
+                    <p class="text-secondary">Registra y monitorea tus pedidos de inventario</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateModal()">
+                    ➕ Nuevo Pedido
+                </button>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card mb-2">
+            <div class="d-flex gap-1 align-center">
+                <div class="form-group" style="margin: 0; flex: 1;">
+                    <select id="filter-estado" class="form-control" onchange="loadPedidos()">
+                        <option value="">Todos los estados</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="completado">Completado</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+                </div>
+                <button class="btn btn-secondary" onclick="resetFilters()">
+                    🔄 Limpiar Filtros
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla de Pedidos -->
+        <div class="card">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Producto</th>
+                            <th>Distribuidor</th>
+                            <th>Cantidad</th>
+                            <th>Capital</th>
+                            <th>Ganancia Esp.</th>
+                            <th>Ganancia Real</th>
+                            <th>Devolución</th>
+                            <th>✓ Ganancia</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pedidos-table-body">
+                        <tr>
+                            <td colspan="11" class="text-center loading">Cargando pedidos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Crear/Editar Pedido -->
+    <div id="pedido-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Nuevo Pedido</h2>
+                <button class="close-btn" onclick="closeModal('pedido-modal')">×</button>
+            </div>
+            <form id="pedido-form">
+                <input type="hidden" id="pedido-id">
+
+                <div class="form-group">
+                    <label for="fecha_pedido" class="form-label">Fecha del Pedido *</label>
+                    <input type="date" id="fecha_pedido" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="producto_id" class="form-label">Producto *</label>
+                    <select id="producto_id" class="form-control" required>
+                        <option value="">Seleccione un producto</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="distribuidor_id" class="form-label">Distribuidor *</label>
+                    <select id="distribuidor_id" class="form-control" required>
+                        <option value="">Seleccione un distribuidor</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="inversionista_id" class="form-label">💰 Inversionista *</label>
+                    <select id="inversionista_id" class="form-control" required>
+                        <option value="">Seleccione un inversionista</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comprador_id" class="form-label">🛒 Comprador Principal *</label>
+                    <select id="comprador_id" class="form-control" required>
+                        <option value="">Seleccione un comprador</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cantidad" class="form-label">Cantidad *</label>
+                    <input type="number" id="cantidad" class="form-control" required min="1" placeholder="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="capital_invertido" class="form-label">Capital Invertido *</label>
+                    <input type="number" id="capital_invertido" class="form-control" required step="0.01" min="0"
+                        placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label for="ganancia_esperada" class="form-label">Ganancia Esperada *</label>
+                    <input type="number" id="ganancia_esperada" class="form-control" required step="0.01" min="0"
+                        placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label for="ganancia_real" class="form-label">Ganancia Real</label>
+                    <input type="number" id="ganancia_real" class="form-control" step="0.01" min="0" placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label for="devolucion_capital" class="form-label">Devolución de Capital</label>
+                    <input type="number" id="devolucion_capital" class="form-control" step="0.01" min="0"
+                        placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label for="estado" class="form-label">Estado *</label>
+                    <select id="estado" class="form-control" required>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="completado">Completado</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="notas" class="form-label">Notas</label>
+                    <textarea id="notas" class="form-control" rows="2"
+                        placeholder="Notas adicionales sobre el pedido"></textarea>
+                </div>
+
+                <div class="d-flex gap-1 mt-2">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('pedido-modal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/navigation.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/pedidos.js"></script>
+</body>
+
+</html>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Sistema de Gestión de Inventario</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navegación -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../dashboard.html" class="navbar-brand">
+                🏪 Gestor de Inventario
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="../dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="productos.html" class="nav-link active">Productos</a></li>
+                <li><a href="distribuidores.html" class="nav-link">Distribuidores</a></li>
+                <li><a href="inversionistas.html" class="nav-link">Inversionistas</a></li>
+                <li><a href="compradores.html" class="nav-link">Compradores</a></li>
+                <li><a href="pedidos.html" class="nav-link">Pedidos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+        <div class="card-header mb-2">
+            <div class="d-flex justify-between align-center">
+                <div>
+                    <h1 class="card-title">📦 Gestión de Productos</h1>
+                    <p class="text-secondary">Administra tu catálogo de productos de ferretería</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateModal()">
+                    ➕ Nuevo Producto
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla de Productos -->
+        <div class="card">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Precio Ref.</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productos-table-body">
+                        <tr>
+                            <td colspan="6" class="text-center loading">Cargando productos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Crear/Editar Producto -->
+    <div id="producto-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Nuevo Producto</h2>
+                <button class="close-btn" onclick="closeModal('producto-modal')">×</button>
+            </div>
+            <form id="producto-form">
+                <input type="hidden" id="producto-id">
+
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre del Producto *</label>
+                    <input type="text" id="nombre" class="form-control" required placeholder="Ej: Cemento Portland">
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo_producto" class="form-label">Tipo de Producto *</label>
+                    <input type="text" id="tipo_producto" class="form-control" required
+                        placeholder="Ej: Material de construcción">
+                </div>
+
+                <div class="form-group">
+                    <label for="precio_referencia" class="form-label">Precio de Referencia</label>
+                    <input type="number" id="precio_referencia" class="form-control" step="0.01" min="0"
+                        placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea id="descripcion" class="form-control" rows="3"
+                        placeholder="Descripción del producto"></textarea>
+                </div>
+
+                <div class="d-flex gap-1 mt-2">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('producto-modal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/productos.js"></script>
+</body>
+
+</html>
