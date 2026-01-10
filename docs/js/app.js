@@ -1,20 +1,23 @@
 // Configuración API
-const API_URL = 'http://localhost:3002/api';
+// const API_URL = 'http://localhost:3002/api';
 
 // Funciones helper para hacer peticiones
 async function fetchAPI(endpoint, options = {}) {
+    // Usar API_URL del config.js (producción o desarrollo)
+    const url = `${window.API_URL}/api${endpoint}`;
+
     try {
-        const response = await fetch(`${API_URL}${endpoint}`, {
+        const response = await fetch(url, {
+            ...options,
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
-            },
-            ...options
+            }
         });
 
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.error || 'Error en la petición');
+            throw new Error(error.error || 'Error al realizar la petición');
         }
 
         return await response.json();
