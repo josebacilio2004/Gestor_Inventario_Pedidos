@@ -257,9 +257,10 @@
             console.log('Rol:', role);
 
             try {
-                // ADMIN usa endpoint diferente (POST)
-                if (role === 'admin') {
-                    const response = await fetch('http://localhost:3002/api/admin/login', {
+                // Admin login separado
+                if (currentRole === 'admin') {
+                    console.log('Intentando login de admin con endpoint /api/admin/login');
+                    const response = await fetch(`${window.API_URL}/api/admin/login`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ usuario, password })
@@ -279,40 +280,41 @@
                     console.log('✅ Admin login exitoso');
                     window.location.href = 'index.html';
                     return;
-                }
-
-                // INVERSIONISTAS Y COMPRADORES usan GET
-                const endpoint = role === 'inversionista' ? 'inversionistas' : 'compradores';
-                const response = await fetch(`http://localhost:3002/api/${endpoint}`);
-
-                if (!response.ok) {
-                    throw new Error('Error de conexión');
-                }
-
-                const usuarios = await response.json();
-                const user = usuarios.find(u => u.usuario === usuario && u.password_hash === password && u.activo);
-
-                if (!user) {
-                    showError('❌ Usuario o contraseña incorrectos');
-                    return;
-                }
-
-                sessionStorage.setItem('userId', user.id);
-                sessionStorage.setItem('userName', user.nombre);
-                sessionStorage.setItem('userRole', role);
-                sessionStorage.setItem('userLogin', usuario);
-
-                console.log('✅ Login exitoso');
-                if (role === 'inversionista') {
-                    window.location.href = 'dashboard-inversionista.html';
                 } else {
-                    window.location.href = 'dashboard-comprador.html';
+                    // Inversionistas y compradores
+                    const endpoint = currentRole === 'inversionista' ? 'inversionistas' : 'compradores';
+                    console.log(`Buscando usuario en endpoint: /api/${endpoint}`);
+
+                    const response = await fetch(`${window.API_URL}/api/${endpoint}`);
+
+                    if (!response.ok) {
+                        throw new Error('Error de conexión');
+                    }
+
+                    const usuarios = await response.json();
+                    const user = usuarios.find(u => u.usuario === usuario && u.password_hash === password && u.activo);
+
+                    if (!user) {
+                        showError('❌ Usuario o contraseña incorrectos');
+                        return;
+                    }
+
+                    sessionStorage.setItem('userId', user.id);
+                    sessionStorage.setItem('userName', user.nombre);
+                    sessionStorage.setItem('userRole', role);
+                    sessionStorage.setItem('userLogin', usuario);
+
+                    console.log('✅ Login exitoso');
+                    if (role === 'inversionista') {
+                        window.location.href = 'dashboard-inversionista.html';
+                    } else {
+                        window.location.href = 'dashboard-comprador.html';
+                    }
+                } catch (error) {
+                    console.error('Error en login:', error);
+                    showError('⚠️ Error al conectar con el servidor');
                 }
-            } catch (error) {
-                console.error('Error en login:', error);
-                showError('⚠️ Error al conectar con el servidor');
-            }
-        });
+            });
 
         // Clear fields on load
         document.getElementById('usuario').value = '';
