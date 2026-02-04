@@ -90,7 +90,7 @@ function renderPedidos() {
         const mensaje = userRole === 'admin'
             ? 'No hay pedidos registrados'
             : 'No tienes pedidos asignados';
-        tbody.innerHTML = `<tr><td colspan="12" class="text-center">${mensaje}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" class="text-center">${mensaje}</td></tr>`;
         return;
     }
 
@@ -108,8 +108,6 @@ function renderPedidos() {
         <td>${pedido.cantidad}</td>
         <td>${formatCurrency(pedido.capital_invertido)}</td>
         <td>${formatCurrency(pedido.ganancia_esperada)}</td>
-        <td>${formatCurrency(pedido.ganancia_real)}</td>
-        <td>${formatCurrency(pedido.devolucion_capital)}</td>
         <td style="text-align: center;">
           <label class="checkbox-container" title="${pedido.ganancia_devuelta ? 'Ganancia devuelta el ' + formatDate(pedido.fecha_ganancia_devuelta) : 'Ganancia pendiente'}">
             <input type="checkbox" 
