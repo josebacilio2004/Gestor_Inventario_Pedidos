@@ -186,8 +186,8 @@
               <td style="color: var(--warning)">${formatCurrency(p.capital_pendiente)}</td>
               <td>
                 <div style="display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem;">
-                  <span style="color: var(--success)">✅ ${formatCurrency(p.ganancia_devuelta || 0)}</span>
-                  <span style="color: var(--warning)">⏳ ${formatCurrency(p.ganancia_pendiente || p.ganancia_real)}</span>
+                  <span style="color: var(--success)" title="Ganancia devuelta">✅ ${formatCurrency(p.ganancia_devuelta || 0)}</span>
+                  <span style="color: var(--warning)" title="Ganancia esperada">⏳ ${formatCurrency(p.ganancia_esperada || 0)}</span>
                 </div>
               </td>
               <td><span class="badge ${getBadgeClass(p.estado)}">${p.estado}</span></td>
@@ -196,8 +196,8 @@
                   ${p.capital_pendiente > 0 ? `
                     <button class="btn btn-sm btn-success" onclick="abrirPago(${p.id}, ${p.capital_pendiente}, 'capital')" title="Pagar Capital">💵</button>
                   ` : '✅'}
-                  ${(p.ganancia_pendiente || p.ganancia_real) > 0 ? `
-                    <button class="btn btn-sm btn-primary" onclick="abrirPago(${p.id}, ${p.ganancia_pendiente || p.ganancia_real}, 'ganancia')" title="Pagar Ganancia">💰</button>
+                  ${p.ganancia_esperada > 0 && !p.ganancia_devuelta ? `
+                    <button class="btn btn-sm btn-primary" onclick="abrirPago(${p.id}, ${p.ganancia_esperada}, 'ganancia')" title="Pagar Ganancia">💰</button>
                   ` : ''}
                 </div>
               </td>
