@@ -196,8 +196,8 @@
                   ${p.capital_pendiente > 0 ? `
                     <button class="btn btn-sm btn-success" onclick="abrirPago(${p.id}, ${p.capital_pendiente}, 'capital')" title="Pagar Capital">💵</button>
                   ` : `<span style="color: var(--success)">✅</span>`}
-                  ${(p.ganancia_devuelta_monto || 0) < p.ganancia_esperada ? `
-                    <button class="btn btn-sm btn-primary" onclick="abrirPago(${p.id}, ${p.ganancia_esperada - (p.ganancia_devuelta_monto || 0)}, 'ganancia')" title="Pagar Ganancia">💰</button>
+                  ${parseFloat(p.ganancia_devuelta_monto || 0) < parseFloat(p.ganancia_esperada) ? `
+                    <button class="btn btn-sm btn-primary" onclick="abrirPago(${p.id}, ${p.ganancia_esperada - (p.ganancia_devuelta_monto || 0)}, 'ganancia')" title="Pagar S/ ${formatCurrency(p.ganancia_esperada - (p.ganancia_devuelta_monto || 0))}">💰</button>
                   ` : `<span style="color: var(--success)">✅</span>`}
                 </div>
               </td>
