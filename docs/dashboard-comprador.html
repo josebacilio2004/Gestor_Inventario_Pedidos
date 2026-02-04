@@ -195,10 +195,10 @@
                 <div style="display: flex; gap: 0.25rem;">
                   ${p.capital_pendiente > 0 ? `
                     <button class="btn btn-sm btn-success" onclick="abrirPago(${p.id}, ${p.capital_pendiente}, 'capital')" title="Pagar Capital">💵</button>
-                  ` : '✅'}
-                  ${p.ganancia_esperada > (p.ganancia_devuelta_monto || 0) ? `
+                  ` : `<span style="color: var(--success)">✅</span>`}
+                  ${(p.ganancia_devuelta_monto || 0) < p.ganancia_esperada ? `
                     <button class="btn btn-sm btn-primary" onclick="abrirPago(${p.id}, ${p.ganancia_esperada - (p.ganancia_devuelta_monto || 0)}, 'ganancia')" title="Pagar Ganancia">💰</button>
-                  ` : ''}
+                  ` : `<span style="color: var(--success)">✅</span>`}
                 </div>
               </td>
             </tr>
