@@ -148,8 +148,6 @@ function openCreateModal() {
 
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('fecha_pedido').value = today;
-    document.getElementById('ganancia_real').value = '0';
-    document.getElementById('devolucion_capital').value = '0';
     document.getElementById('estado').value = 'pendiente';
 
     openModal('pedido-modal');
@@ -171,8 +169,6 @@ async function editPedido(id) {
         document.getElementById('cantidad').value = pedido.cantidad;
         document.getElementById('capital_invertido').value = pedido.capital_invertido;
         document.getElementById('ganancia_esperada').value = pedido.ganancia_esperada;
-        document.getElementById('ganancia_real').value = pedido.ganancia_real;
-        document.getElementById('devolucion_capital').value = pedido.devolucion_capital;
         document.getElementById('estado').value = pedido.estado;
         document.getElementById('notas').value = pedido.notas || '';
 
@@ -237,8 +233,13 @@ async function toggleGananciaDevuelta(id, checked) {
 document.getElementById('pedido-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // FIX: Convertir fecha correctamente sin problemas de timezone
+    const fechaInput = document.getElementById('fecha_pedido').value;
+    const [year, month, day] = fechaInput.split('-');
+    const fechaLocal = `${year}-${month}-${day}`;
+
     const data = {
-        fecha_pedido: document.getElementById('fecha_pedido').value,
+        fecha_pedido: fechaLocal,
         producto_id: parseInt(document.getElementById('producto_id').value),
         distribuidor_id: parseInt(document.getElementById('distribuidor_id').value),
         inversionista_id: document.getElementById('inversionista_id').value ? parseInt(document.getElementById('inversionista_id').value) : null,
@@ -246,8 +247,6 @@ document.getElementById('pedido-form').addEventListener('submit', async (e) => {
         cantidad: parseInt(document.getElementById('cantidad').value),
         capital_invertido: parseFloat(document.getElementById('capital_invertido').value),
         ganancia_esperada: parseFloat(document.getElementById('ganancia_esperada').value),
-        ganancia_real: parseFloat(document.getElementById('ganancia_real').value) || 0,
-        devolucion_capital: parseFloat(document.getElementById('devolucion_capital').value) || 0,
         estado: document.getElementById('estado').value,
         notas: document.getElementById('notas').value
     };
