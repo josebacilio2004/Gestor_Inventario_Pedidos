@@ -101,19 +101,29 @@ function formatCurrency(amount) {
     }).format(amount);
 }
 
-// Formatear fecha
+// Formatear fecha sin problemas de timezone
 function formatDate(dateString) {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-}
+    if (!dateString) return '-';
 
-// Formatear fecha para input
+    // Parsear fecha sin conversión de timezone
+    // Si viene como "2026-02-05", extraer año, mes, día directamente
+    const dateParts = dateString.split('T')[0].split('-');
+    const year = parseInt(dateParts[0]);
+    const month = parseInt(dateParts[1]) - 1; // Mes en JS es 0-indexed
+    const day = parseInt(dateParts[2]);
+
+    // Crear fecha en zona horaria local sin conversión UTC
+    const date = new Date(year, month, day);
+
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('es-ES', options);
+}
+// Formatear fecha para input type="date"
 function formatDateForInput(dateString) {
-    const date = new Date(dateString);
-    return date.toISOString().split('T')[0];
+    if (!dateString) return '';
+
+    // Solo extraer la parte de fecha (YYYY-MM-DD) sin conversión
+    return dateString.split('T')[0];
 }
 
 // Cargar estadísticas en el dashboard
