@@ -266,3 +266,23 @@
         text-align: center;
     }
 }
+
+/* ================================================= CATALOG PAGE STYLES ================================================= */
+
+.catalog-header { background-color: var(--bg-secondary); padding: 3rem 2rem 2rem; text-align: center; }
+
+.catalog-header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+
+.search-section { padding: 2rem; background-color: white; border-bottom: 1px solid var(--border-color); }
+
+.search-bar { max-width: 600px; margin: 0 auto; }
+
+.search-input { width: 100%; padding: 1rem; font-size: 1.125rem; border: 2px solid var(--border-color); border-radius: 8px; transition: border-color 0.3s ease; }
+
+.search-input:focus { outline: none; border-color: var(--primary); }
+
+.catalog-products { padding: 3rem 2rem; min-height: 50vh; }
+
+.products-count { font-size: 1.125rem; font-weight: 600; margin-bottom: 2rem; color: var(--text-secondary); }
+
+.stock-badge { font-weight: 600; }
