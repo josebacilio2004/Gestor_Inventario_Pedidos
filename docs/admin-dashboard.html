@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distribuidora Ss&M - Redirigiendo...</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #1a3a52 0%, #2c5f7f 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .loader {
+      text-align: center;
+      color: white;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 20px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #c0c0c0;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="loader">
+    <div class="spinner"></div>
+    <p>Redirigiendo al login...</p>
+  </div>
+  <script>
+    // Redirigir inmediatamente a login.html
+    window.location.href = 'login.html';
+  </script>
+</body>
+
+</html>

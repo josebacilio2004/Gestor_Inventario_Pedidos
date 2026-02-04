@@ -2,53 +2,135 @@
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Distribuidora Ss&M - Redirigiendo...</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #1a3a52 0%, #2c5f7f 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    .loader {
-      text-align: center;
-      color: white;
-    }
-
-    .spinner {
-      width: 50px;
-      height: 50px;
-      margin: 0 auto 20px;
-      border: 5px solid rgba(255, 255, 255, 0.3);
-      border-top-color: #c0c0c0;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comercializadora ALY - Ferretería en Huancayo</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/corporate-theme.css">
+    <link rel="stylesheet" href="css/responsive-nav.css">
+    <link rel="stylesheet" href="css/landing.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <div class="loader">
-    <div class="spinner"></div>
-    <p>Redirigiendo al login...</p>
-  </div>
-  <script>
-    // Redirigir inmediatamente a login.html
-    window.location.href = 'login.html';
-  </script>
+    <!-- Navegación -->
+    <nav class="navbar" style="background-color: var(--primary); color: white;">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand" style="color: white;">
+                <img src="assets/logo.png" alt="Comercializadora ALY"
+                    style="height: 40px; vertical-align: middle; margin-right: 8px;">
+                Comercializadora ALY
+            </a>
+            <button class="navbar-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation">
+                <span style="background-color: white;"></span>
+                <span style="background-color: white;"></span>
+                <span style="background-color: white;"></span>
+            </button>
+            <ul class="navbar-nav">
+                <li><a href="#productos" class="nav-link" style="color: white;">Productos</a></li>
+                <li><a href="#contacto" class="nav-link" style="color: white;">Contacto</a></li>
+                <li><a href="catalogo.html" class="nav-link" style="color: white;">📋 Catálogo</a></li>
+                <li><a href="login.html" class="btn btn-secondary" style="margin-left: 1rem;">🔐 Acceso Empleados</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <img src="assets/logo.png" alt="Comercializadora ALY" class="hero-logo">
+            <h1 class="hero-title">Comercializadora ALY</h1>
+            <p class="hero-subtitle">Tu ferretería de confianza en Huancayo</p>
+            <p class="hero-description">
+                Herramientas de calidad, productos de construcción y ferretería<br>
+                RUC: 1043224765 | Cel: +51951679240
+            </p>
+            <div class="hero-actions">
+                <a href="#productos" class="btn btn-primary btn-lg">Ver Productos</a>
+                <a href="catalogo.html" class="btn btn-secondary btn-lg">📋 Catálogo Completo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Productos Destacados -->
+    <section class="featured-products" id="productos">
+        <div class="container">
+            <div class="section-header">
+                <h2>⭐ Productos Destacados</h2>
+                <p class="text-secondary">Nuestros productos más populares</p>
+            </div>
+            <div id="featured-products-grid" class="products-grid">
+                <div class="product-card-skeleton"></div>
+                <div class="product-card-skeleton"></div>
+                <div class="product-card-skeleton"></div>
+                <div class="product-card-skeleton"></div>
+            </div>
+            <div class="text-center mt-2">
+                <a href="catalogo.html" class="btn btn-primary">Ver todos los productos →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto -->
+    <section class="contact-section" id="contacto">
+        <div class="container">
+            <div class="section-header">
+                <h2>📞 Contáctanos</h2>
+                <p class="text-secondary">Estamos aquí para ayudarte</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon">📱</div>
+                    <h3>Teléfono</h3>
+                    <p>+51 951 679 240</p>
+                    <a href="tel:+51951679240" class="btn btn-secondary">Llamarnos</a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">📍</div>
+                    <h3>Ubicación</h3>
+                    <p>Huancayo - Perú</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">🏢</div>
+                    <h3>RUC</h3>
+                    <p>1043224765</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="assets/logo.png" alt="Comercializadora ALY" style="height: 60px; margin-bottom: 1rem;">
+                    <p class="text-secondary">Tu ferretería de confianza desde hace años</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p>📱 +51 951 679 240</p>
+                    <p>📍 Huancayo - Perú</p>
+                    <p>🏢 RUC: 1043224765</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces</h4>
+                    <p><a href="catalogo.html">Catálogo</a></p>
+                    <p><a href="login.html">Acceso Empleados</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Comercializadora ALY. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/landing.js"></script>
 </body>
 
 </html>
