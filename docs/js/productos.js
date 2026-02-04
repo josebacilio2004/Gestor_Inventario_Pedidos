@@ -61,6 +61,15 @@ async function editProducto(id) {
         document.getElementById('tipo_producto').value = producto.tipo_producto;
         document.getElementById('precio_referencia').value = producto.precio_referencia || '';
         document.getElementById('descripcion').value = producto.descripcion || '';
+        document.getElementById('imagen_url').value = producto.imagen_url || '';
+
+        // Mostrar preview si hay imagen
+        if (producto.imagen_url) {
+            const preview = document.getElementById('image-preview');
+            const container = document.getElementById('image-preview-container');
+            preview.src = producto.imagen_url;
+            container.style.display = 'block';
+        }
 
         openModal('producto-modal');
     } catch (error) {
@@ -91,7 +100,8 @@ document.getElementById('producto-form').addEventListener('submit', async (e) =>
         nombre: document.getElementById('nombre').value,
         tipo_producto: document.getElementById('tipo_producto').value,
         precio_referencia: parseFloat(document.getElementById('precio_referencia').value) || null,
-        descripcion: document.getElementById('descripcion').value
+        descripcion: document.getElementById('descripcion').value,
+        imagen_url: document.getElementById('imagen_url').value || null
     };
 
     try {
@@ -111,4 +121,26 @@ document.getElementById('producto-form').addEventListener('submit', async (e) =>
 });
 
 // Inicializar
-document.addEventListener('DOMContentLoaded', loadProductos);
+document.addEventListener('DOMContentLoaded', () => {
+    loadProductos();
+
+    // Preview de imagen
+    const imagenUrlInput = document.getElementById('imagen_url');
+    if (imagenUrlInput) {
+        imagenUrlInput.addEventListener('input', (e) => {
+            const url = e.target.value;
+            const preview = document.getElementById('image-preview');
+            const container = document.getElementById('image-preview-container');
+
+            if (url) {
+                preview.src = url;
+                container.style.display = 'block';
+                preview.onerror = () => {
+                    container.style.display = 'none';
+                };
+            } else {
+                container.style.display = 'none';
+            }
+        });
+    }
+});

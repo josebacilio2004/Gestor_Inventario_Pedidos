@@ -290,3 +290,14 @@
 
 /* Product image placeholder */
 .product-image-placeholder { width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 4rem; background-color: var(--bg-secondary); border-radius: 8px; margin-bottom: 1rem; }
+
+
+/* Hero logo floating circle */
+.hero-logo { height: 180px !important; width: 180px !important; margin-bottom: 2rem !important; background: white !important; border-radius: 50% !important; padding: 2rem !important; box-shadow: 0 10px 40px rgba(0,0,0,0.2), 0 0 0 10px rgba(255,255,255,0.1) !important; animation: float 3s ease-in-out infinite !important; border: 4px solid rgba(255,255,255,0.3) !important; filter: none !important; }
+
+@keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+
+/* Fix text colors for contrast */
+.hero-title, .hero-subtitle, .hero-description { color: white !important; }
+
+.section-header h2 { color: var(--text-primary) !important; }
