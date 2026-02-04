@@ -1,0 +1,98 @@
+/* =================================================
+   RESPONSIVE NAVBAR WITH HAMBURGER MENU
+   ================================================= */
+
+/* Hamburger button (hidden on desktop) */
+.navbar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: auto;
+}
+
+.navbar-toggle span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: var(--text-primary);
+  margin: 5px 0;
+  transition: 0.3s;
+  border-radius: 2px;
+}
+
+/* Hamburger animation when active */
+.navbar-toggle.active span:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.navbar-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggle.active span:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .navbar-toggle {
+    display: block;
+  }
+
+  .navbar-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-color);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+
+  .navbar-nav.active {
+    max-height: 500px; /* Ajustar según número de items */
+  }
+
+  .navbar-nav li {
+    width: 100%;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .navbar-nav li:last-child {
+    border-bottom: none;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 15px 20px;
+    width: 100%;
+  }
+
+  .nav-link:hover {
+    background-color: var(--hover-bg);
+  }
+
+  /* Ajustar container para posición absoluta del menu */
+  .navbar-container {
+    position: relative;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .navbar-nav {
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
