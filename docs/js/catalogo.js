@@ -1,4 +1,4 @@
-// Catalog page functionality
+// Catalog page functionality - updated with image support
 
 let allProducts = [];
 
@@ -29,9 +29,11 @@ function renderProducts(productos) {
 
     grid.innerHTML = productos.map(producto => `
         <div class="product-card">
-            <div class="product-image" style="display: flex; align-items: center; justify-content: center; font-size: 4rem;">
-                🔨
-            </div>
+            ${producto.imagen_url
+            ? `<img src="${producto.imagen_url}" alt="${producto.nombre}" class="product-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                   <div class="product-image-placeholder" style="display:none;">🔨</div>`
+            : `<div class="product-image product-image-placeholder">🔨</div>`
+        }
             <h3 class="product-name">${producto.nombre}</h3>
             <p class="product-description">${producto.descripcion || 'Producto de ferretería de alta calidad'}</p>
             ${producto.stock_actual > 0 ?

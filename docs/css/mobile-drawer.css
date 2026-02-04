@@ -1,0 +1,218 @@
+/* =================================================
+   MOBILE DRAWER MENU - MODERN SIDEBAR
+   ================================================= */
+
+/* Overlay oscuro de fondo */
+.mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 999;
+    backdrop-filter: blur(2px);
+}
+
+.mobile-menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Drawer menu lateral */
+.mobile-menu-drawer {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 320px;
+    height: 100vh;
+    background: white;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.mobile-menu-drawer.active {
+    right: 0;
+}
+
+/* Header del drawer */
+.drawer-header {
+    padding: 2rem 1.5rem 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+}
+
+.drawer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.drawer-logo img {
+    height: 50px;
+    filter: brightness(0) invert(1);
+}
+
+.drawer-logo-text {
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.drawer-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.drawer-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Navegación del drawer */
+.drawer-nav {
+    padding: 1rem 0;
+}
+
+.drawer-nav a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
+}
+
+.drawer-nav a:hover {
+    background-color: var(--bg-secondary);
+    border-left-color: var(--accent);
+    color: var(--primary);
+}
+
+.drawer-nav a.active {
+    background-color: rgba(249, 115, 22, 0.1);
+    border-left-color: var(--accent);
+    color: var(--primary);
+}
+
+/* Icono del link */
+.drawer-nav a::before {
+    content: attr(data-icon);
+    font-size: 1.5rem;
+    width: 32px;
+    text-align: center;
+}
+
+/* Botón especial de empleados */
+.drawer-nav .btn-employee {
+    margin: 1rem 1.5rem 0.5rem;
+    padding: 0.875rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    border-left: none !important;
+}
+
+.drawer-nav .btn-employee:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 54, 93, 0.3);
+}
+
+/* Footer del drawer */
+.drawer-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* Hamburger button mejorado */
+.navbar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-left: auto;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.navbar-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: currentColor;
+    margin: 5px auto;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 2px;
+}
+
+/* Animación hamburger → X */
+.navbar-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.navbar-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.navbar-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .navbar-toggle {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* Ocultar navbar original en mobile */
+    .navbar-nav {
+        display: none !important;
+    }
+}
+
+/* Prevenir scroll cuando menu está abierto */
+body.drawer-open {
+    overflow: hidden;
+}

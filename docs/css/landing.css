@@ -286,3 +286,7 @@
 .products-count { font-size: 1.125rem; font-weight: 600; margin-bottom: 2rem; color: var(--text-secondary); }
 
 .stock-badge { font-weight: 600; }
+
+
+/* Product image placeholder */
+.product-image-placeholder { width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 4rem; background-color: var(--bg-secondary); border-radius: 8px; margin-bottom: 1rem; }
