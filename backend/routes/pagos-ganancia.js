@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
 
         // Verificar que el pedido existe
         const pedido = await pool.query(
-            'SELECT ganancia_real, ganancia_devuelta FROM pedidos WHERE id = $1',
+            'SELECT ganancia_esperada, ganancia_devuelta FROM pedidos WHERE id = $1',
             [pedido_id]
         );
 
@@ -46,9 +46,9 @@ router.post('/', async (req, res) => {
             return res.status(404).json({ error: 'Pedido no encontrado' });
         }
 
-        const gananciaReal = parseFloat(pedido.rows[0].ganancia_real);
+        const gananciaEsperada = parseFloat(pedido.rows[0].ganancia_esperada);
         const gananciaDevuelta = parseFloat(pedido.rows[0].ganancia_devuelta || 0);
-        const gananciaPendiente = gananciaReal - gananciaDevuelta;
+        const gananciaPendiente = gananciaEsperada - gananciaDevuelta;
 
         if (parseFloat(monto) > gananciaPendiente) {
             return res.status(400).json({
@@ -69,12 +69,12 @@ router.post('/', async (req, res) => {
              SET ganancia_devuelta_monto = (
                SELECT COALESCE(SUM(monto), 0) FROM pagos_ganancia WHERE pedido_id = $1
              ),
-             ganancia_pendiente = ganancia_real - (
+             ganancia_pendiente = ganancia_esperada - (
                SELECT COALESCE(SUM(monto), 0) FROM pagos_ganancia WHERE pedido_id = $1
              ),
              estado = CASE 
                WHEN COALESCE(capital_pendiente, 0) <= 0.01 
-                 AND (ganancia_real - (SELECT COALESCE(SUM(monto), 0) FROM pagos_ganancia WHERE pedido_id = $1)) <= 0.01 
+                 AND (ganancia_esperada - (SELECT COALESCE(SUM(monto), 0) FROM pagos_ganancia WHERE pedido_id = $1)) <= 0.01 
                THEN 'completado' 
                ELSE 'pendiente' 
              END
