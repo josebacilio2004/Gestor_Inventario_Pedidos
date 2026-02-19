@@ -9,26 +9,29 @@
     <link rel="stylesheet" href="css/corporate-theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: var(--spacing-md);
+            padding: 1rem;
+            background: linear-gradient(135deg, #0f2442 0%, #1a365d 50%, #1e4a8a 100%);
         }
 
         .login-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 460px;
         }
 
         .login-card {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1.5px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            padding: var(--spacing-xl);
-            box-shadow: var(--shadow-xl);
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
             position: relative;
             overflow: hidden;
         }
@@ -39,83 +42,168 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
+            height: 5px;
+            background: linear-gradient(90deg, #1a365d, #f97316, #1a365d);
         }
 
+        /* === HEADER === */
         .login-header {
             text-align: center;
-            margin-bottom: var(--spacing-xl);
+            margin-bottom: 1.75rem;
         }
 
         .login-logo {
-            font-size: 4rem;
-            margin-bottom: var(--spacing-sm);
-            filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.5));
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #1a365d;
+            padding: 10px;
+            margin: 0 auto 0.875rem;
+            display: block;
+            box-shadow: 0 8px 20px rgba(26, 54, 93, 0.3);
         }
 
         .login-title {
-            font-size: 1.875rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: var(--spacing-xs);
+            color: #1a365d;
+            margin: 0 0 0.25rem;
+            background: none;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: #1a365d;
+            background-clip: unset;
         }
 
         .login-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.9375rem;
+            color: #64748b;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        /* === ROL SELECTOR 2x2 === */
+        .role-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #94a3b8;
+            margin-bottom: 0.625rem;
         }
 
         .role-selector {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-lg);
+            gap: 0.625rem;
+            margin-bottom: 1.5rem;
         }
 
         .role-btn {
-            padding: var(--spacing-md);
-            border: 2px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            background: transparent;
-            color: var(--text-secondary);
+            padding: 0.875rem 0.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f8fafc;
+            color: #64748b;
             font-weight: 600;
+            font-size: 0.8rem;
             cursor: pointer;
-            transition: all var(--transition-base);
+            transition: all 0.2s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: var(--spacing-xs);
+            gap: 0.35rem;
+            font-family: 'Inter', sans-serif;
         }
 
         .role-btn:hover {
-            border-color: var(--primary);
-            background: var(--bg-hover);
-            color: var(--text-primary);
+            border-color: #1a365d;
+            background: #eff6ff;
+            color: #1a365d;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 54, 93, 0.15);
         }
 
         .role-btn.active {
-            border-color: var(--primary);
-            background: var(--primary-gradient);
+            border-color: #1a365d;
+            background: linear-gradient(135deg, #1a365d, #2563eb);
             color: white;
-            box-shadow: var(--shadow-glow);
+            box-shadow: 0 6px 16px rgba(26, 54, 93, 0.35);
+            transform: translateY(-2px);
         }
 
         .role-icon {
-            font-size: 2rem;
+            font-size: 1.5rem;
+            line-height: 1;
         }
 
+        .role-name {
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        /* === FORM === */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.375rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: #1a365d;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 0.875rem;
+            background: linear-gradient(135deg, #1a365d, #2563eb);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(135deg, #0f2442, #1a365d);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 54, 93, 0.4);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        /* === ERROR === */
         .error-message {
-            background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(236, 72, 153, 0.15));
-            border: 1px solid rgba(244, 63, 94, 0.3);
-            color: #fca5a5;
-            padding: var(--spacing-sm) var(--spacing-md);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--spacing-md);
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            color: #dc2626;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
             font-size: 0.875rem;
+            font-weight: 500;
             display: none;
         }
 
@@ -132,31 +220,67 @@
             }
 
             25% {
-                transform: translateX(-10px);
+                transform: translateX(-8px);
             }
 
             75% {
-                transform: translateX(10px);
+                transform: translateX(8px);
             }
         }
 
+        /* === FOOTER LINK === */
         .admin-link {
             text-align: center;
-            margin-top: var(--spacing-lg);
-            padding-top: var(--spacing-lg);
-            border-top: 1px solid var(--glass-border);
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.8rem;
+            color: #94a3b8;
         }
 
         .admin-link a {
-            color: var(--primary);
+            color: #1a365d;
             text-decoration: none;
             font-weight: 600;
-            transition: all var(--transition-base);
         }
 
         .admin-link a:hover {
-            color: var(--primary-light);
-            text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+            text-decoration: underline;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 480px) {
+            body {
+                padding: 0.75rem;
+                align-items: flex-start;
+                padding-top: 2rem;
+            }
+
+            .login-card {
+                padding: 1.5rem 1.25rem;
+                border-radius: 16px;
+            }
+
+            .login-title {
+                font-size: 1.25rem;
+            }
+
+            .login-logo {
+                width: 56px;
+                height: 56px;
+            }
+
+            .role-btn {
+                padding: 0.75rem 0.25rem;
+            }
+
+            .role-icon {
+                font-size: 1.25rem;
+            }
+
+            .role-name {
+                font-size: 0.72rem;
+            }
         }
     </style>
 </head>
@@ -165,28 +289,30 @@
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <div class="login-logo">🏪</div>
-                <h1 class="login-title">Gestor de Inventario</h1>
-                <p class="login-subtitle">Sistema de Control de Capital e Inversión</p>
+                <img src="assets/logo.png" alt="ALY" class="login-logo"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                <div style="display:none; font-size:3rem; margin-bottom:0.875rem;">🏪</div>
+                <h1 class="login-title">Comercializadora ALY</h1>
+                <p class="login-subtitle">Sistema de Gestión de Capital e Inventario</p>
             </div>
 
-            <div class="role-selector" style="grid-template-columns: 1fr 1fr 1fr;">
+            <p class="role-label">Selecciona tu rol</p>
+            <div class="role-selector">
                 <button type="button" class="role-btn" onclick="selectRole('inversionista')">
                     <span class="role-icon">💰</span>
-                    <span>Inversionista</span>
+                    <span class="role-name">Inversionista</span>
                 </button>
                 <button type="button" class="role-btn" onclick="selectRole('comprador')">
                     <span class="role-icon">🛒</span>
-                    <span>Comprador</span>
+                    <span class="role-name">Comprador</span>
                 </button>
                 <button type="button" class="role-btn" onclick="selectRole('operador')">
                     <span class="role-icon">🔧</span>
-                    <span>Operador</span>
+                    <span class="role-name">Operador</span>
                 </button>
-                <button type="button" class="role-btn active" onclick="selectRole('admin')"
-                    style="grid-column: 1 / -1;">
+                <button type="button" class="role-btn active" onclick="selectRole('admin')">
                     <span class="role-icon">👨‍💼</span>
-                    <span>Administrador</span>
+                    <span class="role-name">Administrador</span>
                 </button>
             </div>
 
@@ -207,8 +333,7 @@
                         placeholder="Ingresa tu contraseña" autocomplete="current-password">
                 </div>
 
-                <button type="submit" class="btn btn-primary"
-                    style="width: 100%; margin-top: var(--spacing-md); justify-content: center;">
+                <button type="submit" class="btn-login">
                     🔐 Iniciar Sesión
                 </button>
             </form>
