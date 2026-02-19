@@ -1,9 +1,11 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
+const isNeon = (process.env.DATABASE_URL || '').includes('neon.tech');
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5433/gestor_inventario',
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+    ssl: isNeon ? { rejectUnauthorized: false } : (process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false)
 });
 
 // Prueba de conexión
