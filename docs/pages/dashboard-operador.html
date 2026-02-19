@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Operador - Comercializadora ALY</title>
+    <link rel="icon" type="image/png" href="../assets/favicon.png">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/corporate-theme.css">
+    <link rel="stylesheet" href="../css/mobile-drawer.css">
+    <link rel="stylesheet" href="../css/operador.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Overlay menú móvil -->
+    <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Drawer Móvil -->
+    <div class="mobile-menu-drawer">
+        <div class="drawer-header">
+            <div class="drawer-logo">
+                <img src="../assets/logo.png" alt="Logo">
+                <span class="drawer-logo-text">Operador<br>Panel</span>
+            </div>
+            <button class="drawer-close" onclick="closeMobileMenu()">×</button>
+        </div>
+        <nav class="drawer-nav">
+            <a href="#pedidos" data-icon="📋">Pedidos</a>
+            <a href="#nuevo-pedido" data-icon="➕">Nuevo Pedido</a>
+            <a href="../login.html" class="btn-employee" data-icon="🚪">Cerrar Sesión</a>
+        </nav>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" style="background: linear-gradient(135deg, var(--primary) 0%, #0f2d52 100%);">
+        <div class="navbar-container">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+                <img src="../assets/logo.png" alt="ALY"
+                    style="height:40px; border-radius:50%; background:white; padding:4px;">
+                <div>
+                    <div style="color:white; font-weight:700; font-size:1rem;">Comercializadora ALY</div>
+                    <div style="color:rgba(255,255,255,0.7); font-size:0.75rem;">Panel Operador</div>
+                </div>
+            </div>
+            <div class="navbar-nav" style="align-items:center; gap:1rem;">
+                <span id="operador-nombre-nav" style="color:rgba(255,255,255,0.8); font-size:0.875rem;"></span>
+                <a href="#nuevo-pedido" class="btn"
+                    style="background:var(--accent); color:white; padding:0.5rem 1rem; border-radius:8px; font-weight:600; text-decoration:none;">
+                    ➕ Nuevo Pedido
+                </a>
+                <a href="../login.html" class="btn" onclick="logout()"
+                    style="background:rgba(255,255,255,0.15); color:white; padding:0.5rem 1rem; border-radius:8px;">
+                    🚪 Salir
+                </a>
+            </div>
+            <button class="navbar-toggle" onclick="toggleMobileMenu()" style="color:white;">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="operador-main">
+
+        <!-- Header de bienvenida -->
+        <div class="operador-welcome">
+            <div class="welcome-info">
+                <h1>👋 Hola, <span id="operador-nombre">Operador</span></h1>
+                <p>Panel de gestión de pedidos de herramientas</p>
+            </div>
+            <div class="welcome-stats" id="welcome-stats">
+                <div class="stat-chip stat-pendiente">
+                    <span id="count-pendiente">0</span>
+                    <label>Pendientes</label>
+                </div>
+                <div class="stat-chip stat-proceso">
+                    <span id="count-proceso">0</span>
+                    <label>En Proceso</label>
+                </div>
+                <div class="stat-chip stat-completado">
+                    <span id="count-completado">0</span>
+                    <label>Completados</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario Nuevo Pedido -->
+        <section class="operador-section" id="nuevo-pedido">
+            <div class="section-card">
+                <div class="section-card-header">
+                    <h2>➕ Nuevo Pedido de Herramientas</h2>
+                    <p>Agrega los items solicitados por el comprador</p>
+                </div>
+
+                <form id="form-nuevo-pedido">
+                    <!-- Info pedido -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Comprador</label>
+                            <select id="select-comprador" class="form-control">
+                                <option value="">— Seleccionar comprador —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Notas del pedido</label>
+                            <input type="text" id="notas-pedido" class="form-control" placeholder="Observaciones...">
+                        </div>
+                    </div>
+
+                    <!-- Agregar herramientas -->
+                    <div class="herramienta-builder">
+                        <h3>🛠️ Agregar Herramientas</h3>
+                        <div class="form-row herramienta-row">
+                            <div class="form-group">
+                                <label class="form-label">Tipo</label>
+                                <select id="tipo-herramienta" class="form-control" onchange="actualizarPreviewMO()">
+                                    <option value="Pico">Pico</option>
+                                    <option value="Zapapico">Zapapico</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Marca</label>
+                                <select id="marca-herramienta" class="form-control" onchange="actualizarPreviewMO()">
+                                    <option value="Tramontina">Tramontina</option>
+                                    <option value="Bellota">Bellota</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Cantidad</label>
+                                <input type="number" id="cantidad-herramienta" class="form-control" min="1"
+                                    placeholder="ej: 120" oninput="actualizarPreviewMO()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Mano de Obra</label>
+                                <div class="mano-obra-preview" id="mo-preview">
+                                    <span class="mo-amount" id="mo-amount-preview">S/ 0.00</span>
+                                    <span class="mo-calc" id="mo-calc-preview"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" style="align-self:flex-end;">
+                                <button type="button" class="btn btn-accent" onclick="agregarItem()">
+                                    ➕ Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lista de items agregados -->
+                    <div class="items-list" id="items-list">
+                        <div class="items-empty" id="items-empty">
+                            <span>📦</span>
+                            <p>Agrega herramientas al pedido usando el formulario de arriba</p>
+                        </div>
+                    </div>
+
+                    <!-- Resumen total -->
+                    <div class="pedido-resumen" id="pedido-resumen" style="display:none;">
+                        <div class="resumen-row">
+                            <span>Items totales:</span>
+                            <strong id="resumen-items">0</strong>
+                        </div>
+                        <div class="resumen-row resumen-total">
+                            <span>Total Mano de Obra:</span>
+                            <strong id="resumen-mano-obra">S/ 0.00</strong>
+                        </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">
+                            🗑️ Limpiar
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btn-guardar-pedido">
+                            💾 Guardar Pedido
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Lista de Pedidos -->
+        <section class="operador-section" id="pedidos">
+            <div class="section-card">
+                <div class="section-card-header">
+                    <h2>📋 Pedidos Registrados</h2>
+                    <div class="header-actions">
+                        <select id="filtro-estado" class="form-control" onchange="cargarPedidos()" style="width:auto;">
+                            <option value="">Todos los estados</option>
+                            <option value="pendiente">Pendientes</option>
+                            <option value="en_proceso">En Proceso</option>
+                            <option value="completado">Completados</option>
+                            <option value="cancelado">Cancelados</option>
+                        </select>
+                        <button onclick="cargarPedidos()" class="btn btn-secondary">🔄 Actualizar</button>
+                    </div>
+                </div>
+
+                <div id="pedidos-container">
+                    <!-- Loading skeleton -->
+                    <div class="skeleton-row"></div>
+                    <div class="skeleton-row"></div>
+                    <div class="skeleton-row"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal: Ver detalles de pedido -->
+    <div id="modal-detalle" class="modal-overlay" style="display:none;"
+        onclick="if(event.target===this)closePedidoModal()">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2 id="modal-pedido-titulo">Detalle del Pedido</h2>
+                <button class="close-btn" onclick="closePedidoModal()">×</button>
+            </div>
+            <div id="modal-pedido-body"></div>
+            <div class="modal-footer">
+                <button onclick="closePedidoModal()" class="btn btn-secondary">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/operador-config.js"></script>
+    <script src="../js/mobile-drawer.js"></script>
+    <script src="../js/operador.js"></script>
+</body>
+
+</html>

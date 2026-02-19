@@ -170,7 +170,7 @@
                 <p class="login-subtitle">Sistema de Control de Capital e Inversión</p>
             </div>
 
-            <div class="role-selector">
+            <div class="role-selector" style="grid-template-columns: 1fr 1fr 1fr;">
                 <button type="button" class="role-btn" onclick="selectRole('inversionista')">
                     <span class="role-icon">💰</span>
                     <span>Inversionista</span>
@@ -179,7 +179,12 @@
                     <span class="role-icon">🛒</span>
                     <span>Comprador</span>
                 </button>
-                <button type="button" class="role-btn active" onclick="selectRole('admin')">
+                <button type="button" class="role-btn" onclick="selectRole('operador')">
+                    <span class="role-icon">🔧</span>
+                    <span>Operador</span>
+                </button>
+                <button type="button" class="role-btn active" onclick="selectRole('admin')"
+                    style="grid-column: 1 / -1;">
                     <span class="role-icon">👨‍💼</span>
                     <span>Administrador</span>
                 </button>

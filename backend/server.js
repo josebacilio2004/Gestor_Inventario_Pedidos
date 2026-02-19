@@ -10,6 +10,8 @@ const compradoresRoutes = require('./routes/compradores');
 const pagosCapitalRoutes = require('./routes/pagos-capital');
 const pagosGananciaRoutes = require('./routes/pagos-ganancia');
 const adminRoutes = require('./routes/admin');
+const operadoresRoutes = require('./routes/operadores');
+const pedidosHerramientasRoutes = require('./routes/pedidos-herramientas');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,7 +24,7 @@ app.use(cors({
         'https://josebacilio2004.github.io'
     ],
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
@@ -43,6 +45,8 @@ app.use('/api/compradores', compradoresRoutes);
 app.use('/api/pagos-capital', pagosCapitalRoutes);
 app.use('/api/pagos-ganancia', pagosGananciaRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/operadores', operadoresRoutes);
+app.use('/api/pedidos-herramientas', pedidosHerramientasRoutes);
 
 // Ruta raíz
 app.get('/', (req, res) => {
