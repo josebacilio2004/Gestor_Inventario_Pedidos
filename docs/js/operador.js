@@ -1,30 +1,43 @@
-// ============================================
-// OPERADOR DASHBOARD - JAVASCRIPT
-// ============================================
+// ============================================================
+// OPERADOR DASHBOARD - JAVASCRIPT COMPLETO
+// ============================================================
 
 let operadorSesion = null;
 let itemsPedido = [];
 let compradores = [];
 
-// ============================================
-// INICIALIZACIÓN
-// ============================================
-document.addEventListener('DOMContentLoaded', () => {
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', async () => {
     verificarSesion();
-    cargarCompradores();
-    cargarPedidos();
+    await cargarCompradores();
+    await cargarPedidos();
+
+    // Auto-calcular al cambiar tipo, marca o cantidad
+    ['tipo-herramienta', 'marca-herramienta'].forEach(id => {
+        document.getElementById(id).addEventListener('change', actualizarPreviewMO);
+    });
+    document.getElementById('cantidad-herramienta').addEventListener('input', actualizarPreviewMO);
+
+    // Enviar con Enter en cantidad
+    document.getElementById('cantidad-herramienta').addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); agregarItem(); }
+    });
+
     document.getElementById('form-nuevo-pedido').addEventListener('submit', guardarPedido);
 });
 
+// ============================================================
+// SESIÓN
+// ============================================================
 function verificarSesion() {
     const sesion = localStorage.getItem('operador_sesion');
-    if (!sesion) {
-        window.location.href = '../login.html';
-        return;
-    }
+    if (!sesion) { window.location.href = '../login.html'; return; }
     operadorSesion = JSON.parse(sesion);
-    document.getElementById('operador-nombre').textContent = operadorSesion.nombre.split(' ')[0];
-    document.getElementById('operador-nombre-nav').textContent = operadorSesion.nombre;
+    const nombre = operadorSesion.nombre || 'Operador';
+    document.getElementById('operador-nombre').textContent = nombre.split(' ')[0];
+    document.getElementById('operador-nombre-nav').textContent = nombre;
 }
 
 function logout() {
@@ -32,160 +45,211 @@ function logout() {
     window.location.href = '../login.html';
 }
 
-// ============================================
-// CARGAR COMPRADORES
-// ============================================
+// ============================================================
+// CARGAR COMPRADORES — Con reintentos y feedback visual
+// ============================================================
 async function cargarCompradores() {
+    const select = document.getElementById('select-comprador');
+    select.innerHTML = '<option value="">⏳ Cargando compradores...</option>';
+    select.disabled = true;
+
     try {
-        compradores = await fetchAPI('/compradores');
-        const select = document.getElementById('select-comprador');
-        compradores.forEach(c => {
-            const opt = document.createElement('option');
-            opt.value = c.id;
-            opt.textContent = c.nombre;
-            select.appendChild(opt);
-        });
+        const data = await fetchAPI('/compradores');
+        compradores = Array.isArray(data) ? data : [];
+
+        if (compradores.length === 0) {
+            select.innerHTML = '<option value="">— Sin compradores registrados —</option>';
+        } else {
+            select.innerHTML = '<option value="">— Seleccionar comprador —</option>';
+            compradores.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = `👤 ${c.nombre}`;
+                select.appendChild(opt);
+            });
+        }
     } catch (err) {
-        console.error('Error al cargar compradores:', err);
+        select.innerHTML = '<option value="">❌ Error al cargar (reintenta)</option>';
+        showToast('Error al cargar compradores. Verifica la conexión.', 'error');
+        console.error('cargarCompradores:', err);
+    } finally {
+        select.disabled = false;
     }
 }
 
-// ============================================
-// CALCULADORA MANO DE OBRA (tiempo real)
-// ============================================
+// ============================================================
+// CALCULADORA EN TIEMPO REAL (auto, sin botón)
+// ============================================================
 function actualizarPreviewMO() {
     const tipo = document.getElementById('tipo-herramienta').value;
     const marca = document.getElementById('marca-herramienta').value;
     const cantidad = parseInt(document.getElementById('cantidad-herramienta').value) || 0;
 
     const mo = calcularManoObra(tipo, marca, cantidad);
-    const key = `${tipo}-${marca}`;
-    const tarifa = TARIFAS_MANO_OBRA[key];
+    const cfg = TARIFAS_MANO_OBRA[`${tipo}-${marca}`];
+    const preview = document.getElementById('mo-amount-preview');
+    const calc = document.getElementById('mo-calc-preview');
+    const addBtn = document.getElementById('btn-agregar');
 
-    document.getElementById('mo-amount-preview').textContent = formatCurrency(mo);
+    // Animar cambio
+    preview.classList.remove('mo-updated');
+    void preview.offsetWidth; // reflow para reiniciar animación
+    preview.classList.add('mo-updated');
 
-    if (tarifa && cantidad > 0) {
-        document.getElementById('mo-calc-preview').textContent =
-            `${cantidad} ud × S/${tarifa.tarifa}/${tarifa.base}`;
+    preview.textContent = formatCurrency(mo);
+
+    if (cfg && cantidad > 0) {
+        calc.textContent = `${cantidad} ud ÷ ${cfg.base} × S/${cfg.tarifa} = ${formatCurrency(mo)}`;
+        addBtn.disabled = false;
+        addBtn.classList.add('btn-ready');
     } else {
-        document.getElementById('mo-calc-preview').textContent = '';
+        calc.textContent = cantidad > 0 ? 'Elige tipo y marca' : 'Ingresa la cantidad';
+        addBtn.disabled = false;
+        addBtn.classList.remove('btn-ready');
     }
 }
 
-// ============================================
-// AGREGAR ITEM AL PEDIDO
-// ============================================
+// ============================================================
+// AGREGAR ITEM
+// ============================================================
 function agregarItem() {
     const tipo = document.getElementById('tipo-herramienta').value;
     const marca = document.getElementById('marca-herramienta').value;
-    const cantidadInput = document.getElementById('cantidad-herramienta');
-    const cantidad = parseInt(cantidadInput.value);
+    const input = document.getElementById('cantidad-herramienta');
+    const cantidad = parseInt(input.value);
 
     if (!cantidad || cantidad <= 0) {
-        showToast('Ingresa una cantidad válida', 'error');
-        cantidadInput.focus();
+        input.classList.add('input-error');
+        showToast('⚠️ Ingresa una cantidad válida', 'error');
+        input.focus();
+        setTimeout(() => input.classList.remove('input-error'), 1000);
         return;
     }
 
+    // Vibración en iPhone (si está disponible)
+    if (navigator.vibrate) navigator.vibrate(30);
+
     const manoObra = calcularManoObra(tipo, marca, cantidad);
-    const id = Date.now(); // ID temporal para el frontend
-
-    const item = { id, tipo, marca, cantidad, mano_obra: manoObra };
-    itemsPedido.push(item);
+    const id = Date.now();
+    itemsPedido.push({ id, tipo, marca, cantidad, mano_obra: manoObra });
 
     renderItems();
     updateResumen();
 
-    // Limpiar cantidad
-    cantidadInput.value = '';
-    document.getElementById('mo-amount-preview').textContent = 'S/ 0.00';
-    document.getElementById('mo-calc-preview').textContent = '';
-    cantidadInput.focus();
+    // Limpiar y enfocar para el siguiente item
+    input.value = '';
+    actualizarPreviewMO();
+    input.focus();
+
+    // Feedback visual en botón
+    const btn = document.getElementById('btn-agregar');
+    btn.textContent = '✅ Agregado!';
+    btn.style.background = 'var(--success)';
+    setTimeout(() => {
+        btn.textContent = '➕ Agregar';
+        btn.style.background = '';
+    }, 1200);
 }
 
-// ============================================
+// ============================================================
 // ELIMINAR ITEM
-// ============================================
+// ============================================================
 function eliminarItem(id) {
-    itemsPedido = itemsPedido.filter(item => item.id !== id);
-    renderItems();
-    updateResumen();
+    const el = document.getElementById(`item-${id}`);
+    if (el) {
+        el.classList.add('item-removing');
+        setTimeout(() => {
+            itemsPedido = itemsPedido.filter(i => i.id !== id);
+            renderItems();
+            updateResumen();
+        }, 250);
+    }
 }
 
-// ============================================
-// RENDER ITEMS EN LISTA
-// ============================================
+// ============================================================
+// RENDER ITEMS
+// ============================================================
 function renderItems() {
     const container = document.getElementById('items-list');
-    const emptyMsg = document.getElementById('items-empty');
+    const iconos = { 'Pico': '⛏️', 'Zapapico': '🪓' };
 
     if (itemsPedido.length === 0) {
         container.innerHTML = `
-            <div class="items-empty" id="items-empty">
+            <div class="items-empty">
                 <span>📦</span>
-                <p>Agrega herramientas al pedido usando el formulario de arriba</p>
+                <p>Agrega herramientas arriba</p>
+                <small>Usa los campos de tipo, marca y cantidad</small>
             </div>`;
         return;
     }
 
-    const iconos = { 'Pico': '⛏️', 'Zapapico': '🪓' };
-
-    container.innerHTML = itemsPedido.map(item => `
+    container.innerHTML = itemsPedido.map(item => {
+        const cfg = TARIFAS_MANO_OBRA[`${item.tipo}-${item.marca}`];
+        return `
         <div class="item-row" id="item-${item.id}">
             <span class="item-icon">${iconos[item.tipo] || '🔧'}</span>
             <div class="item-info">
-                <div class="item-nombre">${item.tipo} ${item.marca}</div>
+                <div class="item-nombre">${item.tipo} <strong>${item.marca}</strong></div>
                 <div class="item-detalle">
-                    ${item.cantidad} unidades
-                    <span style="color:var(--text-light);">•</span>
-                    S/${TARIFAS_MANO_OBRA[`${item.tipo}-${item.marca}`]?.tarifa || 0} por 120 ud
+                    <span class="cantidad-badge">${item.cantidad} und</span>
+                    <span class="tarifa-badge">S/${cfg?.tarifa || 0}/120ud</span>
                 </div>
             </div>
             <div class="item-mo">
                 <div class="item-mo-amount">${formatCurrency(item.mano_obra)}</div>
-                <div class="item-mo-label">Mano de Obra</div>
+                <div class="item-mo-label">M. Obra</div>
             </div>
-            <button class="item-delete" onclick="eliminarItem(${item.id})" title="Eliminar item">🗑️</button>
-        </div>
-    `).join('');
+            <button class="item-delete" onclick="eliminarItem(${item.id})" title="Quitar item">
+                <span>✕</span>
+            </button>
+        </div>`;
+    }).join('');
 }
 
-// ============================================
-// ACTUALIZAR RESUMEN TOTAL
-// ============================================
+// ============================================================
+// RESUMEN TOTAL — Con animación de número
+// ============================================================
 function updateResumen() {
     const resumen = document.getElementById('pedido-resumen');
     const totalItems = itemsPedido.reduce((s, i) => s + i.cantidad, 0);
     const totalMO = itemsPedido.reduce((s, i) => s + i.mano_obra, 0);
+    const tiposCount = itemsPedido.length;
 
-    if (itemsPedido.length > 0) {
+    if (tiposCount > 0) {
         resumen.style.display = 'block';
-        document.getElementById('resumen-items').textContent = `${itemsPedido.length} tipo(s), ${totalItems} ud`;
-        document.getElementById('resumen-mano-obra').textContent = formatCurrency(totalMO);
+        resumen.classList.add('resumen-show');
+        document.getElementById('resumen-items').textContent = `${tiposCount} tipo(s) · ${totalItems} und`;
+        const moEl = document.getElementById('resumen-mano-obra');
+        moEl.textContent = formatCurrency(totalMO);
+        moEl.classList.add('amount-updated');
+        setTimeout(() => moEl.classList.remove('amount-updated'), 500);
     } else {
-        resumen.style.display = 'none';
+        resumen.classList.remove('resumen-show');
+        setTimeout(() => { resumen.style.display = 'none'; }, 300);
     }
 }
 
-// ============================================
+// ============================================================
 // GUARDAR PEDIDO
-// ============================================
+// ============================================================
 async function guardarPedido(e) {
     e.preventDefault();
 
     const compradorId = document.getElementById('select-comprador').value;
     if (!compradorId) {
-        showToast('Selecciona un comprador', 'error');
+        document.getElementById('select-comprador').classList.add('input-error');
+        showToast('⚠️ Selecciona un comprador', 'error');
+        setTimeout(() => document.getElementById('select-comprador').classList.remove('input-error'), 1500);
         return;
     }
     if (itemsPedido.length === 0) {
-        showToast('Agrega al menos una herramienta al pedido', 'error');
+        showToast('⚠️ Agrega al menos una herramienta', 'error');
         return;
     }
 
     const btn = document.getElementById('btn-guardar-pedido');
     btn.disabled = true;
-    btn.textContent = '⏳ Guardando...';
+    btn.innerHTML = '<span class="spinner"></span> Guardando...';
 
     try {
         const payload = {
@@ -195,26 +259,27 @@ async function guardarPedido(e) {
             items: itemsPedido.map(({ tipo, marca, cantidad }) => ({ tipo, marca, cantidad }))
         };
 
-        await fetchAPI('/pedidos-herramientas', {
-            method: 'POST',
-            body: JSON.stringify(payload)
-        });
+        await fetchAPI('/pedidos-herramientas', { method: 'POST', body: JSON.stringify(payload) });
 
+        if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
         showToast('✅ Pedido guardado exitosamente!', 'success');
         limpiarFormulario();
-        cargarPedidos();
+        await cargarPedidos();
+
+        // Scroll a pedidos
+        document.getElementById('pedidos').scrollIntoView({ behavior: 'smooth' });
 
     } catch (err) {
         showToast(`❌ Error: ${err.message}`, 'error');
     } finally {
         btn.disabled = false;
-        btn.textContent = '💾 Guardar Pedido';
+        btn.innerHTML = '💾 Guardar Pedido';
     }
 }
 
-// ============================================
+// ============================================================
 // LIMPIAR FORMULARIO
-// ============================================
+// ============================================================
 function limpiarFormulario() {
     itemsPedido = [];
     renderItems();
@@ -222,13 +287,12 @@ function limpiarFormulario() {
     document.getElementById('notas-pedido').value = '';
     document.getElementById('select-comprador').value = '';
     document.getElementById('cantidad-herramienta').value = '';
-    document.getElementById('mo-amount-preview').textContent = 'S/ 0.00';
-    document.getElementById('mo-calc-preview').textContent = '';
+    actualizarPreviewMO();
 }
 
-// ============================================
+// ============================================================
 // CARGAR PEDIDOS
-// ============================================
+// ============================================================
 async function cargarPedidos() {
     const container = document.getElementById('pedidos-container');
     const estado = document.getElementById('filtro-estado').value;
@@ -236,63 +300,64 @@ async function cargarPedidos() {
     container.innerHTML = `
         <div class="skeleton-row"></div>
         <div class="skeleton-row"></div>
-        <div class="skeleton-row"></div>
-    `;
+        <div class="skeleton-row"></div>`;
 
     try {
-        let url = `/pedidos-herramientas?operador_id=${operadorSesion?.id || ''}`;
-        if (estado) url += `&estado=${estado}`;
+        let url = `/pedidos-herramientas`;
+        const params = [];
+        if (operadorSesion?.id) params.push(`operador_id=${operadorSesion.id}`);
+        if (estado) params.push(`estado=${estado}`);
+        if (params.length) url += '?' + params.join('&');
 
         const pedidos = await fetchAPI(url);
         actualizarStats(pedidos);
         renderPedidos(pedidos);
     } catch (err) {
-        container.innerHTML = `<p class="text-center text-secondary">Error al cargar pedidos: ${err.message}</p>`;
+        container.innerHTML = `
+            <div class="error-state">
+                <span>⚠️</span>
+                <p>No se pudieron cargar los pedidos</p>
+                <button class="btn btn-secondary" onclick="cargarPedidos()">🔄 Reintentar</button>
+            </div>`;
+        console.error('cargarPedidos:', err);
     }
 }
 
-// Actualizar contadores del header
+// Contadores del header
 function actualizarStats(pedidos) {
-    document.getElementById('count-pendiente').textContent =
-        pedidos.filter(p => p.estado === 'pendiente').length;
-    document.getElementById('count-proceso').textContent =
-        pedidos.filter(p => p.estado === 'en_proceso').length;
-    document.getElementById('count-completado').textContent =
-        pedidos.filter(p => p.estado === 'completado').length;
+    document.getElementById('count-pendiente').textContent = pedidos.filter(p => p.estado === 'pendiente').length;
+    document.getElementById('count-proceso').textContent = pedidos.filter(p => p.estado === 'en_proceso').length;
+    document.getElementById('count-completado').textContent = pedidos.filter(p => p.estado === 'completado').length;
 }
 
-// ============================================
-// RENDER LISTA DE PEDIDOS
-// ============================================
+// ============================================================
+// RENDER PEDIDOS — Cards interactivas
+// ============================================================
 function renderPedidos(pedidos) {
     const container = document.getElementById('pedidos-container');
+    const iconos = { 'Pico': '⛏️', 'Zapapico': '🪓' };
 
     if (pedidos.length === 0) {
         container.innerHTML = `
-            <div class="items-empty" style="padding:3rem;">
+            <div class="items-empty" style="padding:2.5rem 1rem;">
                 <span>📋</span>
-                <p>No hay pedidos registrados aún</p>
-                <a href="#nuevo-pedido" class="btn btn-primary" style="margin-top:1rem;">
-                    ➕ Crear primer pedido
-                </a>
+                <p>No hay pedidos aún</p>
+                <small>Crea tu primer pedido arriba ↑</small>
             </div>`;
         return;
     }
 
-    const iconos = { 'Pico': '⛏️', 'Zapapico': '🪓' };
-
     container.innerHTML = pedidos.map(pedido => {
         const items = pedido.items || [];
-        const itemTags = items.map(i =>
-            `<span class="item-tag">${iconos[i.tipo] || '🔧'} ${i.tipo} ${i.marca} × ${i.cantidad}</span>`
-        ).join('');
-
         const fecha = new Date(pedido.created_at).toLocaleDateString('es-PE', {
             day: '2-digit', month: 'short', year: 'numeric'
         });
+        const tagsHTML = items.map(i =>
+            `<span class="item-tag">${iconos[i.tipo] || '🔧'} ${i.tipo} ${i.marca} ×${i.cantidad}</span>`
+        ).join('') || `<span class="item-tag" style="color:var(--text-secondary)">Sin items</span>`;
 
         return `
-        <div class="pedido-card">
+        <div class="pedido-card" onclick="verDetalle(${pedido.id})" style="cursor:pointer;">
             <div class="pedido-card-header">
                 <div>
                     <div class="pedido-card-id">#${String(pedido.id).padStart(4, '0')} · ${fecha}</div>
@@ -301,93 +366,111 @@ function renderPedidos(pedidos) {
                 <span class="badge-estado badge-${pedido.estado}">${estadoLabel(pedido.estado)}</span>
             </div>
             <div class="pedido-card-body">
-                <div class="pedido-items-preview">
-                    ${itemTags || '<span class="item-tag" style="color:var(--text-secondary);">Sin items</span>'}
-                </div>
-                ${pedido.notas ? `<p style="font-size:0.85rem; color:var(--text-secondary); margin:0;">📝 ${pedido.notas}</p>` : ''}
+                <div class="pedido-items-preview">${tagsHTML}</div>
+                ${pedido.notas ? `<p class="pedido-nota">📝 ${pedido.notas}</p>` : ''}
             </div>
-            <div class="pedido-card-footer">
-                <div class="pedido-mano-obra">🔧 M.O: ${formatCurrency(pedido.total_mano_obra)}</div>
+            <div class="pedido-card-footer" onclick="event.stopPropagation()">
+                <div class="pedido-mano-obra">🔧 ${formatCurrency(pedido.total_mano_obra)}</div>
                 <div class="pedido-actions">
-                    <select class="select-estado" onchange="cambiarEstado(${pedido.id}, this.value)">
-                        <option value="pendiente" ${pedido.estado === 'pendiente' ? 'selected' : ''}>⏳ Pendiente</option>
-                        <option value="en_proceso" ${pedido.estado === 'en_proceso' ? 'selected' : ''}>🔄 En Proceso</option>
-                        <option value="completado" ${pedido.estado === 'completado' ? 'selected' : ''}>✅ Completado</option>
-                        <option value="cancelado" ${pedido.estado === 'cancelado' ? 'selected' : ''}>❌ Cancelado</option>
+                    <select class="select-estado badge-estado badge-${pedido.estado}"
+                            onchange="cambiarEstado(${pedido.id}, this.value, this)">
+                        <option value="pendiente"   ${pedido.estado === 'pendiente' ? 'selected' : ''}>⏳ Pendiente</option>
+                        <option value="en_proceso"  ${pedido.estado === 'en_proceso' ? 'selected' : ''}>🔄 En Proceso</option>
+                        <option value="completado"  ${pedido.estado === 'completado' ? 'selected' : ''}>✅ Completado</option>
+                        <option value="cancelado"   ${pedido.estado === 'cancelado' ? 'selected' : ''}>❌ Cancelado</option>
                     </select>
-                    <button class="btn btn-sm btn-secondary" onclick="verDetalle(${pedido.id})">
-                        👁️ Ver
-                    </button>
+                    <button class="btn-icon-ver" onclick="verDetalle(${pedido.id})">👁️</button>
                 </div>
             </div>
         </div>`;
     }).join('');
 }
 
-// ============================================
-// CAMBIAR ESTADO
-// ============================================
-async function cambiarEstado(pedidoId, nuevoEstado) {
+// ============================================================
+// CAMBIAR ESTADO — Con feedback inmediato
+// ============================================================
+async function cambiarEstado(pedidoId, nuevoEstado, selectEl) {
+    const prev = selectEl ? Array.from(selectEl.options).find(o => o.selected)?.value : null;
     try {
         await fetchAPI(`/pedidos-herramientas/${pedidoId}/estado`, {
             method: 'PATCH',
             body: JSON.stringify({ estado: nuevoEstado })
         });
-        showToast(`Estado actualizado: ${estadoLabel(nuevoEstado)}`, 'success');
+        if (navigator.vibrate) navigator.vibrate(20);
+        showToast(`✅ ${estadoLabel(nuevoEstado)}`, 'success');
+        // Actualizar clase del select sin recargar todo
+        if (selectEl) {
+            selectEl.className = `select-estado badge-estado badge-${nuevoEstado}`;
+        }
         cargarPedidos();
     } catch (err) {
-        showToast(`Error: ${err.message}`, 'error');
-        cargarPedidos(); // Restaurar
+        showToast(`❌ Error: ${err.message}`, 'error');
+        cargarPedidos(); // restaurar
     }
 }
 
-// ============================================
-// VER DETALLE DE PEDIDO
-// ============================================
+// ============================================================
+// MODAL DETALLE
+// ============================================================
 async function verDetalle(pedidoId) {
+    const modal = document.getElementById('modal-detalle');
+    const body = document.getElementById('modal-pedido-body');
+    const iconos = { 'Pico': '⛏️', 'Zapapico': '🪓' };
+
+    modal.style.display = 'flex';
+    body.innerHTML = `<div style="padding:2rem;text-align:center;">
+        <div class="spinner-lg"></div><p>Cargando...</p></div>`;
+
     try {
         const pedido = await fetchAPI(`/pedidos-herramientas/${pedidoId}`);
-        const modal = document.getElementById('modal-detalle');
-        const body = document.getElementById('modal-pedido-body');
-        const iconos = { 'Pico': '⛏️', 'Zapapico': '🪓' };
-
         document.getElementById('modal-pedido-titulo').textContent =
             `Pedido #${String(pedido.id).padStart(4, '0')}`;
 
-        const items = (pedido.items || []).map(item => `
+        const itemsHTML = (pedido.items || []).map(item => `
             <div class="item-row">
                 <span class="item-icon">${iconos[item.tipo] || '🔧'}</span>
                 <div class="item-info">
-                    <div class="item-nombre">${item.tipo} ${item.marca}</div>
-                    <div class="item-detalle">${item.cantidad} unidades</div>
+                    <div class="item-nombre">${item.tipo} <strong>${item.marca}</strong></div>
+                    <div class="item-detalle"><span class="cantidad-badge">${item.cantidad} und</span></div>
                 </div>
                 <div class="item-mo">
                     <div class="item-mo-amount">${formatCurrency(item.mano_obra)}</div>
-                    <div class="item-mo-label">Mano de Obra</div>
+                    <div class="item-mo-label">M. Obra</div>
                 </div>
-            </div>
-        `).join('');
+            </div>`).join('');
 
         body.innerHTML = `
-            <div style="padding: 1.5rem;">
-                <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1rem;">
-                    <div><strong>Comprador:</strong> ${pedido.comprador_nombre}</div>
-                    <div><strong>Estado:</strong> <span class="badge-estado badge-${pedido.estado}">${estadoLabel(pedido.estado)}</span></div>
-                    <div><strong>Fecha:</strong> ${new Date(pedido.created_at).toLocaleString('es-PE')}</div>
+            <div style="padding:1.25rem 1.5rem;">
+                <div class="detalle-meta">
+                    <div class="detalle-meta-item">
+                        <label>Comprador</label>
+                        <span>👤 ${pedido.comprador_nombre || '—'}</span>
+                    </div>
+                    <div class="detalle-meta-item">
+                        <label>Estado</label>
+                        <span class="badge-estado badge-${pedido.estado}">${estadoLabel(pedido.estado)}</span>
+                    </div>
+                    <div class="detalle-meta-item">
+                        <label>Fecha</label>
+                        <span>${new Date(pedido.created_at).toLocaleString('es-PE')}</span>
+                    </div>
                 </div>
-                ${pedido.notas ? `<div style="margin-bottom:1rem;"><strong>Notas:</strong> ${pedido.notas}</div>` : ''}
-                <div class="items-list">${items || '<div class="items-empty"><span>📦</span><p>Sin items</p></div>'}</div>
+                ${pedido.notas ? `<div class="detalle-nota">📝 ${pedido.notas}</div>` : ''}
+                <div class="items-list" style="margin:1rem 0;">
+                    ${itemsHTML || '<div class="items-empty"><span>📦</span><p>Sin items</p></div>'}
+                </div>
                 <div class="pedido-resumen" style="display:block;">
                     <div class="resumen-row resumen-total">
-                        <span>Total Mano de Obra:</span>
+                        <span>Total Mano de Obra</span>
                         <strong>${formatCurrency(pedido.total_mano_obra)}</strong>
                     </div>
                 </div>
             </div>`;
-
-        modal.style.display = 'flex';
     } catch (err) {
-        showToast(`Error al cargar detalle: ${err.message}`, 'error');
+        body.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--danger);">
+            ❌ No se pudo cargar el detalle<br>
+            <button class="btn btn-secondary" onclick="verDetalle(${pedidoId})" style="margin-top:1rem;">Reintentar</button>
+        </div>`;
     }
 }
 
@@ -395,17 +478,19 @@ function closePedidoModal() {
     document.getElementById('modal-detalle').style.display = 'none';
 }
 
-// ============================================
+// Cerrar modal con ESC
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePedidoModal();
+});
+
+// ============================================================
 // HELPERS
-// ============================================
+// ============================================================
 function estadoLabel(estado) {
-    const labels = {
-        pendiente: '⏳ Pendiente',
-        en_proceso: '🔄 En Proceso',
-        completado: '✅ Completado',
-        cancelado: '❌ Cancelado'
-    };
-    return labels[estado] || estado;
+    return {
+        pendiente: '⏳ Pendiente', en_proceso: '🔄 En Proceso',
+        completado: '✅ Completado', cancelado: '❌ Cancelado'
+    }[estado] || estado;
 }
 
 function showToast(message, type = 'info') {
@@ -415,7 +500,8 @@ function showToast(message, type = 'info') {
     toast.innerHTML = `<span>${message}</span>`;
     container.appendChild(toast);
     setTimeout(() => {
-        toast.style.animation = 'toastIn 0.3s ease reverse';
-        setTimeout(() => toast.remove(), 300);
-    }, 3500);
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(120%)';
+        setTimeout(() => toast.remove(), 350);
+    }, 3000);
 }

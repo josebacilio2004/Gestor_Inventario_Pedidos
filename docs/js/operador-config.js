@@ -1,39 +1,37 @@
-// Configuración API
-const API_CONFIG = {
-    // Detectar entorno automáticamente
-    BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:3002/api'
-        : 'https://gestor-inventario-backend.onrender.com/api'
-};
+// ============================================================
+// OPERADOR CONFIG - usa window.API_URL definido en config.js
+// ============================================================
 
-// Tarifas de mano de obra (mismas que backend)
+// Tarifas de mano de obra (sincronizadas con backend)
 const TARIFAS_MANO_OBRA = {
-    'Pico-Tramontina': { base: 120, tarifa: 50, label: 'Pico Tramontina' },
-    'Pico-Bellota': { base: 120, tarifa: 60, label: 'Pico Bellota' },
-    'Zapapico-Tramontina': { base: 120, tarifa: 50, label: 'Zapapico Tramontina' },
-    'Zapapico-Bellota': { base: 120, tarifa: 60, label: 'Zapapico Bellota' },
+    'Pico-Tramontina': { base: 120, tarifa: 50 },
+    'Pico-Bellota': { base: 120, tarifa: 60 },
+    'Zapapico-Tramontina': { base: 120, tarifa: 50 },
+    'Zapapico-Bellota': { base: 120, tarifa: 60 },
 };
 
 function calcularManoObra(tipo, marca, cantidad) {
     const key = `${tipo}-${marca}`;
-    const config = TARIFAS_MANO_OBRA[key];
-    if (!config || !cantidad) return 0;
-    return parseFloat(((cantidad / config.base) * config.tarifa).toFixed(2));
+    const cfg = TARIFAS_MANO_OBRA[key];
+    if (!cfg || !cantidad || cantidad <= 0) return 0;
+    return parseFloat(((cantidad / cfg.base) * cfg.tarifa).toFixed(2));
 }
 
 function formatCurrency(amount) {
     return `S/ ${parseFloat(amount || 0).toFixed(2)}`;
 }
 
+// fetchAPI: usa window.API_URL + /api + endpoint
 async function fetchAPI(endpoint, options = {}) {
-    const url = `${API_CONFIG.BASE_URL}${endpoint}`;
-    const response = await fetch(url, {
+    const base = (window.API_URL || '').replace(/\/$/, '');
+    const url = `${base}/api${endpoint}`;
+    const res = await fetch(url, {
         headers: { 'Content-Type': 'application/json', ...options.headers },
         ...options
     });
-    if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        throw new Error(err.error || `Error ${response.status}`);
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `Error ${res.status}`);
     }
-    return response.json();
+    return res.json();
 }
