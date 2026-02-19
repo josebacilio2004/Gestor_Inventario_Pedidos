@@ -285,6 +285,22 @@
                     console.log('✅ Admin login exitoso');
                     window.location.href = 'dashboard.html';
                     return;
+                } else if (currentRole === 'operador') {
+                    const response = await fetch(`${window.API_URL}/api/operadores/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ usuario, password })
+                    });
+                    if (!response.ok) {
+                        showError('❌ Credenciales de operador incorrectas');
+                        return;
+                    }
+                    const operador = await response.json();
+                    localStorage.setItem('operador_sesion', JSON.stringify(operador));
+                    sessionStorage.setItem('userRole', 'operador');
+                    console.log('✅ Operador login exitoso');
+                    window.location.href = 'pages/dashboard-operador.html';
+                    return;
                 } else {
                     // Inversionistas y compradores
                     const endpoint = currentRole === 'inversionista' ? 'inversionistas' : 'compradores';
