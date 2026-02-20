@@ -5,9 +5,9 @@
 // Tarifas de mano de obra (sincronizadas con backend)
 const TARIFAS_MANO_OBRA = {
     'Pico-Tramontina': { base: 120, tarifa: 50 },
-    'Pico-Bellota': { base: 120, tarifa: 60 },
+    'Pico-Bellota': { base: 120, tarifa: 65 },
     'Zapapico-Tramontina': { base: 120, tarifa: 50 },
-    'Zapapico-Bellota': { base: 120, tarifa: 60 },
+    'Zapapico-Bellota': { base: 120, tarifa: 65 },
 };
 
 function calcularManoObra(tipo, marca, cantidad) {
