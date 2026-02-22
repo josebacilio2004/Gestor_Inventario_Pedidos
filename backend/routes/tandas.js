@@ -8,8 +8,9 @@ router.get('/', async (req, res) => {
         const result = await pool.query(`
             SELECT t.*,
                    o.nombre AS operador_nombre,
-                   (SELECT COUNT(*) FROM pedidos_herramientas p WHERE p.tanda_id = t.id) AS total_pedidos,
-                   (SELECT COALESCE(SUM(s.cantidad),0) FROM stock_herramientas s WHERE s.tanda_id = t.id) AS total_stock
+                   (SELECT COUNT(*)           FROM pedidos_herramientas p WHERE p.tanda_id = t.id)::int                AS total_pedidos,
+                   (SELECT COALESCE(SUM(p.total_mano_obra), 0) FROM pedidos_herramientas p WHERE p.tanda_id = t.id)   AS total_mano_obra,
+                   (SELECT COALESCE(SUM(s.cantidad), 0) FROM stock_herramientas s WHERE s.tanda_id = t.id)            AS total_stock
             FROM tandas t
             LEFT JOIN operadores o ON t.operador_id = o.id
             ORDER BY t.created_at DESC

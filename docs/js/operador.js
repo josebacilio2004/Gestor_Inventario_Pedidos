@@ -139,12 +139,23 @@ function renderHistorialTandas(tandas) {
         pausada: { bg: '#fff7ed', border: '#fed7aa', badge: '#ea580c', label: '⏸️ Pausada' },
     };
 
+    // Parsea "YYYY-MM-DD" como fecha LOCAL (evita desfase UTC -5h)
+    function parseFecha(str) {
+        if (!str) return null;
+        const [y, m, d] = str.slice(0, 10).split('-').map(Number);
+        return new Date(y, m - 1, d);
+    }
+    const fmtCorto = { day: '2-digit', month: 'short', year: 'numeric' };
+
     el.innerHTML = tandas.map(t => {
         const c = colores[t.estado] || colores.cerrada;
-        const fechaInicio = new Date(t.fecha_inicio).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' });
+        const fechaInicio = parseFecha(t.fecha_inicio)?.toLocaleDateString('es-PE', fmtCorto) ?? '—';
         const fechaCierre = t.fecha_cierre
-            ? new Date(t.fecha_cierre).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' })
+            ? parseFecha(t.fecha_cierre).toLocaleDateString('es-PE', fmtCorto)
             : '—';
+        const totalMO = t.total_mano_obra != null && Number(t.total_mano_obra) > 0
+            ? `<div style="font-size:.78rem; color:#059669; font-weight:700; margin-top:.25rem;">S/ ${Number(t.total_mano_obra).toFixed(2)}</div><div style="font-size:.68rem;color:#64748b;">total MO</div>`
+            : '';
         return `
         <div class="tanda-item" style="background:${c.bg}; border-color:${c.border};">
             <div class="tanda-item-left">
@@ -153,15 +164,17 @@ function renderHistorialTandas(tandas) {
                 <div class="tanda-meta">
                     📅 ${fechaInicio}
                     ${t.estado !== 'activa' ? ` → ${fechaCierre}` : ''}
-                    · 📋 ${t.total_pedidos ?? 0} pedido(s)
+                    · 📋 ${Number(t.total_pedidos ?? 0)} pedido(s)
                 </div>
             </div>
             <div class="tanda-item-right">
-                ${t.total_stock !== null ? `<div class="tanda-stock-total">${Number(t.total_stock).toLocaleString('es-PE')} und</div><div style="font-size:.68rem;color:#64748b;">stock total</div>` : ''}
+                ${t.total_stock != null ? `<div class="tanda-stock-total">${Number(t.total_stock).toLocaleString('es-PE')} und</div><div style="font-size:.68rem;color:#64748b;">stock restante</div>` : ''}
+                ${totalMO}
             </div>
         </div>`;
     }).join('');
 }
+
 
 function toggleFormTanda() {
     const form = document.getElementById('form-tanda-container');
@@ -580,6 +593,7 @@ async function guardarPedido(e) {
         limpiarFormulario();
         await cargarStock();   // actualizar stock visual
         await cargarPedidos();
+        await cargarTandas();  // actualizar contador de pedidos y total MO
         document.getElementById('pedidos').scrollIntoView({ behavior: 'smooth' });
 
     } catch (err) {
