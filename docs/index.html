@@ -3,159 +3,1406 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comercializadora ALY - Ferretería en Huancayo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description"
+        content="Comercializadora ALY – Tu ferretería de confianza en Huancayo. Picos, zapapicos, herramientas de construcción. RUC: 1043224765">
+    <meta name="theme-color" content="#0f2137">
+    <title>Comercializadora ALY | Ferretería en Huancayo</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/corporate-theme.css">
-    <link rel="stylesheet" href="css/navbar-improved.css">`n  <link rel="stylesheet" href="css/landing.css">
-    <link rel="stylesheet" href="css/mobile-drawer.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* ====================================================
+       TOKENS & RESET
+    ==================================================== */
+        :root {
+            --navy: #0f2137;
+            --navy-mid: #1a365d;
+            --navy-lite: #1e4a8a;
+            --orange: #f97316;
+            --orange-dk: #ea6010;
+            --gold: #fbbf24;
+            --white: #ffffff;
+            --light: #f1f5f9;
+            --muted: #94a3b8;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --radius: 14px;
+            --radius-lg: 20px;
+            --shadow: 0 4px 24px rgba(15, 33, 55, .10);
+            --shadow-md: 0 8px 40px rgba(15, 33, 55, .18);
+            --transition: .25s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background: var(--white);
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* ====================================================
+       UTILITIES
+    ==================================================== */
+        .container {
+            width: min(1100px, 100% - 2rem);
+            margin-inline: auto;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-orange {
+            color: var(--orange);
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-sm {
+            padding: 3rem 0;
+        }
+
+        /* Section headings */
+        .section-label {
+            display: inline-block;
+            background: rgba(249, 115, 22, .12);
+            color: var(--orange);
+            font-size: .75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            padding: .3rem .8rem;
+            border-radius: 20px;
+            margin-bottom: .75rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-weight: 800;
+            color: var(--navy);
+            line-height: 1.15;
+            margin-bottom: .75rem;
+        }
+
+        .section-sub {
+            color: var(--muted);
+            font-size: 1rem;
+            max-width: 520px;
+            margin-inline: auto;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            padding: .75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: .9rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            border: none;
+            transition: all var(--transition);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn:active {
+            transform: scale(.97);
+        }
+
+        .btn-primary {
+            background: var(--orange);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--orange-dk);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(249, 115, 22, .4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, .5);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, .12);
+            border-color: white;
+        }
+
+        .btn-navy {
+            background: var(--navy);
+            color: white;
+        }
+
+        .btn-navy:hover {
+            background: var(--navy-mid);
+            transform: translateY(-2px);
+        }
+
+        .btn-lg {
+            padding: .95rem 2rem;
+            font-size: 1rem;
+            border-radius: 12px;
+        }
+
+        .btn-whatsapp {
+            background: #25d366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background: #1ebe5d;
+        }
+
+        /* ====================================================
+       NAVBAR
+    ==================================================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 1rem;
+            transition: background var(--transition), box-shadow var(--transition);
+        }
+
+        .navbar.scrolled {
+            background: rgba(15, 33, 55, .97) !important;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, .2);
+        }
+
+        .navbar-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            color: white;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: var(--orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-name {
+            color: white;
+            line-height: 1.1;
+        }
+
+        .brand-name small {
+            display: block;
+            font-size: .65rem;
+            font-weight: 500;
+            opacity: .7;
+            letter-spacing: .04em;
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: .25rem;
+        }
+
+        .navbar-links a {
+            color: rgba(255, 255, 255, .85);
+            font-weight: 500;
+            font-size: .9rem;
+            padding: .5rem .9rem;
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+
+        .navbar-links a:hover {
+            color: white;
+            background: rgba(255, 255, 255, .1);
+        }
+
+        .navbar-links .btn-nav-cta {
+            background: var(--orange);
+            color: white;
+            font-weight: 700;
+            margin-left: .5rem;
+        }
+
+        .navbar-links .btn-nav-cta:hover {
+            background: var(--orange-dk);
+        }
+
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: .5rem;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: white;
+            border-radius: 2px;
+            transition: all var(--transition);
+        }
+
+        .hamburger.open span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.open span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Mobile drawer */
+        .mobile-nav {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--navy);
+            z-index: 999;
+            transform: translateX(100%);
+            transition: transform .3s ease;
+            padding: 1.5rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+        }
+
+        .mobile-nav.open {
+            transform: translateX(0);
+        }
+
+        .mobile-nav a {
+            color: rgba(255, 255, 255, .85);
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: .875rem 1rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            border: 1px solid rgba(255, 255, 255, .08);
+            transition: all var(--transition);
+        }
+
+        .mobile-nav a:hover {
+            background: rgba(255, 255, 255, .08);
+            color: white;
+        }
+
+        .mobile-nav .icon-nav {
+            font-size: 1.2rem;
+        }
+
+        /* ====================================================
+       HERO
+    ==================================================== */
+        .hero {
+            min-height: 100vh;
+            background:
+                linear-gradient(to bottom, rgba(10, 22, 40, .80) 0%, rgba(10, 22, 40, .65) 60%, rgba(10, 22, 40, .90) 100%),
+                url('https://images.unsplash.com/photo-1504148455328-c376907d081c?w=1600&q=80') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            padding: 90px 1rem 60px;
+        }
+
+        .hero-content {
+            max-width: 680px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: rgba(249, 115, 22, .2);
+            border: 1px solid rgba(249, 115, 22, .4);
+            color: var(--gold);
+            font-size: .78rem;
+            font-weight: 700;
+            padding: .35rem .85rem;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-size: clamp(2.4rem, 7vw, 4rem);
+            font-weight: 900;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-title .highlight {
+            color: var(--orange);
+        }
+
+        .hero-sub {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: rgba(255, 255, 255, .8);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 540px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: .875rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-trust {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, .12);
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .trust-item {
+            color: rgba(255, 255, 255, .75);
+            font-size: .85rem;
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        .trust-item strong {
+            color: white;
+            font-weight: 700;
+        }
+
+        /* ====================================================
+       INFO BAR (RUC + Phone)
+    ==================================================== */
+        .info-bar {
+            background: var(--orange);
+            padding: .875rem 1rem;
+        }
+
+        .info-bar-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .info-chip {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            color: white;
+            font-weight: 600;
+            font-size: .9rem;
+        }
+
+        .info-chip-icon {
+            font-size: 1.1rem;
+        }
+
+        /* ====================================================
+       CATEGORIES
+    ==================================================== */
+        .categories {
+            background: var(--light);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin-top: 2.5rem;
+        }
+
+        .cat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.75rem 1.25rem;
+            text-align: center;
+            border: 1.5px solid var(--border);
+            transition: all var(--transition);
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cat-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--orange), var(--orange-dk));
+            transform: translateY(100%);
+            transition: transform var(--transition);
+            z-index: 0;
+        }
+
+        .cat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
+            border-color: transparent;
+        }
+
+        .cat-card:hover::before {
+            transform: translateY(0);
+        }
+
+        .cat-card:hover .cat-icon,
+        .cat-card:hover .cat-name,
+        .cat-card:hover .cat-desc {
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cat-icon {
+            font-size: 3rem;
+            margin-bottom: .875rem;
+            transition: all var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        .cat-name {
+            font-weight: 800;
+            color: var(--navy);
+            font-size: 1rem;
+            margin-bottom: .3rem;
+            transition: all var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        .cat-desc {
+            color: var(--muted);
+            font-size: .82rem;
+            transition: all var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ====================================================
+       FEATURED PRODUCTS
+    ==================================================== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 1.25rem;
+            margin-top: 2.5rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: var(--radius);
+            border: 1.5px solid var(--border);
+            overflow: hidden;
+            transition: all var(--transition);
+        }
+
+        .product-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
+            border-color: var(--orange);
+        }
+
+        .product-card-img {
+            height: 180px;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .product-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-card-body {
+            padding: 1.1rem;
+        }
+
+        .product-card-brand {
+            font-size: .7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: var(--orange);
+            margin-bottom: .25rem;
+        }
+
+        .product-card-name {
+            font-weight: 700;
+            color: var(--navy);
+            font-size: .95rem;
+            margin-bottom: .3rem;
+        }
+
+        .product-card-desc {
+            color: var(--muted);
+            font-size: .8rem;
+            line-height: 1.5;
+        }
+
+        /* ====================================================
+       WHY US
+    ==================================================== */
+        .whyus {
+            background: var(--navy);
+        }
+
+        .whyus .section-label {
+            background: rgba(249, 115, 22, .2);
+            color: var(--gold);
+        }
+
+        .whyus .section-title {
+            color: white;
+        }
+
+        .whyus .section-sub {
+            color: rgba(255, 255, 255, .65);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: var(--radius);
+            padding: 1.75rem 1.5rem;
+            transition: all var(--transition);
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, .1);
+            transform: translateY(-3px);
+        }
+
+        .feature-icon {
+            font-size: 2.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-name {
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: .4rem;
+        }
+
+        .feature-desc {
+            color: rgba(255, 255, 255, .65);
+            font-size: .85rem;
+            line-height: 1.6;
+        }
+
+        /* ====================================================
+       STATS BAND
+    ==================================================== */
+        .stats-band {
+            background: var(--orange);
+            padding: 3rem 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            color: white;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, .85);
+            font-size: .85rem;
+            font-weight: 600;
+            margin-top: .35rem;
+        }
+
+        /* ====================================================
+       CONTACT
+    ==================================================== */
+        .contact {
+            background: var(--light);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+            margin-top: 2.5rem;
+        }
+
+        .contact-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem 1.5rem;
+            border: 1.5px solid var(--border);
+            text-align: center;
+            transition: box-shadow var(--transition);
+        }
+
+        .contact-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .contact-icon-wrap {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(249, 115, 22, .1);
+            border: 2px solid rgba(249, 115, 22, .25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin: 0 auto 1rem;
+        }
+
+        .contact-card h3 {
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: .4rem;
+        }
+
+        .contact-card p {
+            color: var(--muted);
+            font-size: .9rem;
+            line-height: 1.6;
+        }
+
+        .contact-card a.contact-link {
+            display: inline-block;
+            margin-top: .75rem;
+            color: var(--orange);
+            font-weight: 700;
+            font-size: .85rem;
+        }
+
+        .contact-card a.contact-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Map placeholder */
+        .map-placeholder {
+            margin-top: 2.5rem;
+            background: white;
+            border-radius: var(--radius);
+            border: 1.5px solid var(--border);
+            overflow: hidden;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+            color: var(--muted);
+        }
+
+        .map-placeholder span {
+            font-size: 3rem;
+        }
+
+        /* ====================================================
+       FOOTER
+    ==================================================== */
+        .footer {
+            background: var(--navy);
+            padding: 3.5rem 1rem 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr repeat(2, 1fr);
+            gap: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        .footer-brand-name {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: .3rem;
+        }
+
+        .footer-brand-desc {
+            color: rgba(255, 255, 255, .5);
+            font-size: .85rem;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+        }
+
+        .footer-col h4 {
+            color: white;
+            font-weight: 700;
+            font-size: .9rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            margin-bottom: 1rem;
+            padding-bottom: .5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .1);
+        }
+
+        .footer-col ul li {
+            margin-bottom: .6rem;
+        }
+
+        .footer-col ul li a {
+            color: rgba(255, 255, 255, .6);
+            font-size: .88rem;
+            transition: color var(--transition);
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--orange);
+        }
+
+        .footer-col p {
+            color: rgba(255, 255, 255, .6);
+            font-size: .88rem;
+            margin-bottom: .5rem;
+            display: flex;
+            gap: .4rem;
+            align-items: center;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, .08);
+            padding: 1.25rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: .5rem;
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, .4);
+            font-size: .8rem;
+        }
+
+        .footer-badge {
+            background: rgba(249, 115, 22, .15);
+            border: 1px solid rgba(249, 115, 22, .25);
+            color: var(--orange);
+            font-size: .72rem;
+            font-weight: 700;
+            padding: .25rem .6rem;
+            border-radius: 6px;
+        }
+
+        /* ====================================================
+       SCROLL TO TOP
+    ==================================================== */
+        #scrollTop {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--orange);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(249, 115, 22, .5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition), transform var(--transition);
+            z-index: 500;
+        }
+
+        #scrollTop.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #scrollTop:hover {
+            transform: translateY(-3px);
+        }
+
+        /* ====================================================
+       RESPONSIVE
+    ==================================================== */
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-trust {
+                gap: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .section {
+                padding: 3.5rem 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .hero-actions .btn {
+                text-align: center;
+                justify-content: center;
+            }
+
+            .info-bar-inner {
+                gap: 1rem;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Overlay oscuro -->
-    <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
 
-    <!-- Mobile Drawer Menu -->
-    <div class="mobile-menu-drawer">
-        <div class="drawer-header">
-            <div class="drawer-logo">
-                <img src="assets/logo.png" alt="Comercializadora ALY">
-                <span class="drawer-logo-text">Comercializadora<br>ALY</span>
-            </div>
-            <button class="drawer-close" onclick="closeMobileMenu()" aria-label="Cerrar menú">×</button>
-        </div>
-        <nav class="drawer-nav">
-            <a href="#productos" data-icon="🛠️">Productos</a>
-            <a href="#contacto" data-icon="📞">Contacto</a>
-            <a href="catalogo.html" data-icon="📋">Catálogo Completo</a>
-            <a href="login.html" class="btn-employee" data-icon="🔐">Acceso Empleados</a>
-        </nav>
-        <div class="drawer-footer">
-            © 2026 Comercializadora ALY<br>
-            Huancayo - Perú
-        </div>
-    </div>
-
-    <!-- Navegación Principal -->
-    <nav class="navbar" style="background-color: var(--primary); color: white;">
-        <div class="navbar-container">
-            <a href="index.html" class="navbar-brand" style="color: white;">
-                <img src="assets/logo.png" alt="Comercializadora ALY"
-                    style="height: 40px; vertical-align: middle; margin-right: 8px;">
-                Comercializadora ALY
+    <!-- ================================================
+       NAVBAR
+  ================================================ -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="#" class="navbar-brand">
+                <div class="brand-logo">
+                    <img src="assets/logo.png" alt="ALY"
+                        onerror="this.style.display='none';this.parentElement.textContent='⛏️'">
+                </div>
+                <div class="brand-name">
+                    Comercializadora ALY
+                    <small>Ferretería · Huancayo</small>
+                </div>
             </a>
-            <button class="navbar-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation"
-                style="color: white;">
-                <span></span>
-                <span></span>
-                <span></span>
+
+            <div class="navbar-links">
+                <a href="#categorias">Productos</a>
+                <a href="#nosotros">Nosotros</a>
+                <a href="#contacto">Contacto</a>
+                <a href="catalogo.html">📋 Catálogo</a>
+                <a href="login.html" class="btn-nav-cta btn">🔐 Acceso Empleados</a>
+            </div>
+
+            <button class="hamburger" id="hamburger" aria-label="Menú" onclick="toggleNav()">
+                <span></span><span></span><span></span>
             </button>
-            <ul class="navbar-nav">
-                <li><a href="#productos" class="nav-link" style="color: white;">Productos</a></li>
-                <li><a href="#contacto" class="nav-link" style="color: white;">Contacto</a></li>
-                <li><a href="catalogo.html" class="nav-link" style="color: white;">📋 Catálogo</a></li>
-                <li><a href="login.html" class="btn btn-secondary" style="margin-left: 1rem;">🔐 Acceso Empleados</a>
-                </li>
-            </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <img src="assets/logo.png" alt="Comercializadora ALY" class="hero-logo">
-            <h1 class="hero-title">Comercializadora ALY</h1>
-            <p class="hero-subtitle">Tu ferretería de confianza en Huancayo</p>
-            <p class="hero-description">
-                Herramientas de calidad, productos de construcción y ferretería<br>
-                RUC: 1043224765 | Cel: +51951679240
-            </p>
-            <div class="hero-actions">
-                <a href="#productos" class="btn btn-primary btn-lg">Ver Productos</a>
-                <a href="catalogo.html" class="btn btn-secondary btn-lg">📋 Catálogo Completo</a>
+    <!-- Mobile Nav -->
+    <div class="mobile-nav" id="mobileNav">
+        <a href="#categorias" onclick="closeNav()"><span class="icon-nav">🛠️</span> Productos</a>
+        <a href="#nosotros" onclick="closeNav()"><span class="icon-nav">🏪</span> Nosotros</a>
+        <a href="#contacto" onclick="closeNav()"><span class="icon-nav">📞</span> Contacto</a>
+        <a href="catalogo.html"><span class="icon-nav">📋</span> Catálogo Completo</a>
+        <a href="login.html"
+            style="background:rgba(249,115,22,.15); border-color:rgba(249,115,22,.3); color:var(--gold);">
+            <span class="icon-nav">🔐</span> Acceso Empleados
+        </a>
+    </div>
+
+    <!-- ================================================
+       HERO
+  ================================================ -->
+    <section class="hero" id="inicio">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">⛏️ &nbsp;Ferretería especializada · Huancayo, Perú</div>
+
+                <h1 class="hero-title">
+                    Tu ferretería de<br>
+                    <span class="highlight">confianza</span> en Huancayo
+                </h1>
+
+                <p class="hero-sub">
+                    Picos, zapapicos, herramientas de construcción y más.<br>
+                    Calidad garantizada para profesionales y particulares.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#categorias" class="btn btn-primary btn-lg">🛠️ Ver Productos</a>
+                    <a href="catalogo.html" class="btn btn-outline btn-lg">📋 Catálogo Completo</a>
+                </div>
+
+                <div class="hero-trust">
+                    <div class="trust-item">✅ <strong>RUC:</strong> 1043224765</div>
+                    <div class="trust-item">📱 <strong>+51 951 679 240</strong></div>
+                    <div class="trust-item">📍 <strong>Huancayo · Perú</strong></div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Productos Destacados -->
-    <section class="featured-products" id="productos">
-        <div class="container">
-            <div class="section-header">
-                <h2>⭐ Productos Destacados</h2>
-                <p class="text-secondary">Nuestros productos más populares</p>
+    <!-- ================================================
+       INFO BAR
+  ================================================ -->
+    <div class="info-bar">
+        <div class="info-bar-inner">
+            <div class="info-chip"><span class="info-chip-icon">🏢</span> RUC: 1043224765</div>
+            <div class="info-chip"><span class="info-chip-icon">📱</span>
+                <a href="tel:+51951679240" style="color:white">+51 951 679 240</a>
             </div>
-            <div id="featured-products-grid" class="products-grid">
-                <div class="product-card-skeleton"></div>
-                <div class="product-card-skeleton"></div>
-                <div class="product-card-skeleton"></div>
-                <div class="product-card-skeleton"></div>
-            </div>
-            <div class="text-center mt-2">
-                <a href="catalogo.html" class="btn btn-primary">Ver todos los productos →</a>
+            <div class="info-chip"><span class="info-chip-icon">⏰</span> Lun-Sáb 8am – 6pm</div>
+            <a href="https://wa.me/51951679240?text=Hola%2C+quiero+información+de+sus+productos" target="_blank"
+                class="btn btn-navy"
+                style="background:rgba(0,0,0,.2); border:1px solid rgba(255,255,255,.3); color:white; padding:.45rem 1rem; font-size:.82rem;">
+                💬 WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <!-- ================================================
+       CATEGORÍAS
+  ================================================ -->
+    <section class="section categories" id="categorias">
+        <div class="container text-center">
+            <span class="section-label">🛠️ Nuestros Productos</span>
+            <h2 class="section-title">Categorías Principales</h2>
+            <p class="section-sub">Todo lo que necesitas para construcción y trabajo en campo</p>
+
+            <div class="categories-grid">
+                <div class="cat-card">
+                    <div class="cat-icon">⛏️</div>
+                    <div class="cat-name">Picos</div>
+                    <div class="cat-desc">Tramontina · Bellota<br>Resistencia profesional</div>
+                </div>
+                <div class="cat-card">
+                    <div class="cat-icon">🪓</div>
+                    <div class="cat-name">Zapapicos</div>
+                    <div class="cat-desc">Tramontina · Bellota<br>Para terreno duro</div>
+                </div>
+                <div class="cat-card">
+                    <div class="cat-icon">🔨</div>
+                    <div class="cat-name">Herramientas</div>
+                    <div class="cat-desc">Martillos, hachas<br>y más accesorios</div>
+                </div>
+                <div class="cat-card">
+                    <div class="cat-icon">🧱</div>
+                    <div class="cat-name">Construcción</div>
+                    <div class="cat-desc">Materiales para<br>obra y acabados</div>
+                </div>
+                <div class="cat-card">
+                    <div class="cat-icon">🔩</div>
+                    <div class="cat-name">Ferretería</div>
+                    <div class="cat-desc">Tornillos, clavos<br>anclajes y fijaciones</div>
+                </div>
+                <div class="cat-card">
+                    <div class="cat-icon">🪣</div>
+                    <div class="cat-name">Acabados</div>
+                    <div class="cat-desc">Pinturas, selladores<br>y revestimientos</div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Contacto -->
-    <section class="contact-section" id="contacto">
-        <div class="container">
-            <div class="section-header">
-                <h2>📞 Contáctanos</h2>
-                <p class="text-secondary">Estamos aquí para ayudarte</p>
+    <!-- ================================================
+       FEATURED PRODUCTS
+  ================================================ -->
+    <section class="section" id="destacados">
+        <div class="container text-center">
+            <span class="section-label">⭐ Más Vendidos</span>
+            <h2 class="section-title">Productos Destacados</h2>
+            <p class="section-sub">Los favoritos de nuestros clientes</p>
+
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-card-img">
+                        <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400&q=80"
+                            alt="Pico Tramontina" onerror="this.parentElement.innerHTML='⛏️'">
+                    </div>
+                    <div class="product-card-body">
+                        <div class="product-card-brand">Tramontina</div>
+                        <div class="product-card-name">Pico Profesional</div>
+                        <div class="product-card-desc">Alta resistencia, mango reforzado. Ideal para minería y
+                            construcción.</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-card-img">
+                        <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&q=80"
+                            alt="Pico Bellota" onerror="this.parentElement.innerHTML='⛏️'">
+                    </div>
+                    <div class="product-card-body">
+                        <div class="product-card-brand">Bellota</div>
+                        <div class="product-card-name">Pico Premium</div>
+                        <div class="product-card-desc">Forjado en acero de alta calidad. Durabilidad comprobada.</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-card-img">
+                        <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&q=80"
+                            alt="Zapapico" onerror="this.parentElement.innerHTML='🪓'">
+                    </div>
+                    <div class="product-card-body">
+                        <div class="product-card-brand">Tramontina</div>
+                        <div class="product-card-name">Zapapico Doble Punta</div>
+                        <div class="product-card-desc">Multiusos para terrenos rocosos y trabajos de campo.</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-card-img">
+                        <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=80"
+                            alt="Zapapico Bellota" onerror="this.parentElement.innerHTML='🪓'">
+                    </div>
+                    <div class="product-card-body">
+                        <div class="product-card-brand">Bellota</div>
+                        <div class="product-card-name">Zapapico Industrial</div>
+                        <div class="product-card-desc">Para uso intensivo en minería, agricultura y obra civil.</div>
+                    </div>
+                </div>
             </div>
+
+            <div style="margin-top:2.5rem;">
+                <a href="catalogo.html" class="btn btn-primary btn-lg">Ver catálogo completo →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================
+       STATS BAND
+  ================================================ -->
+    <div class="stats-band">
+        <div class="container">
+            <div class="stats-grid">
+                <div>
+                    <div class="stat-num">500+</div>
+                    <div class="stat-label">Clientes satisfechos</div>
+                </div>
+                <div>
+                    <div class="stat-num">10+</div>
+                    <div class="stat-label">Años de experiencia</div>
+                </div>
+                <div>
+                    <div class="stat-num">50+</div>
+                    <div class="stat-label">Productos disponibles</div>
+                </div>
+                <div>
+                    <div class="stat-num">100%</div>
+                    <div class="stat-label">Calidad garantizada</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================
+       WHY US
+  ================================================ -->
+    <section class="section whyus" id="nosotros">
+        <div class="container text-center">
+            <span class="section-label">💎 ¿Por qué elegirnos?</span>
+            <h2 class="section-title">Tu trabajo merece las mejores herramientas</h2>
+            <p class="section-sub">Años de confianza respaldando a profesionales y emprendedores en Huancayo</p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <div class="feature-name">Marcas Líderes</div>
+                    <div class="feature-desc">Trabajamos con Tramontina, Bellota y otras marcas reconocidas por su
+                        calidad y durabilidad.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <div class="feature-name">Precios Competitivos</div>
+                    <div class="feature-desc">Precios justos para trabajadores, contratistas y pequeños negocios de
+                        construcción.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <div class="feature-name">Atención Personalizada</div>
+                    <div class="feature-desc">Te asesoramos para elegir la herramienta correcta según tu tipo de trabajo
+                        y presupuesto.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <div class="feature-name">Stock Disponible</div>
+                    <div class="feature-desc">Siempre con inventario actualizado para atender pedidos grandes sin
+                        demoras.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================
+       CONTACTO
+  ================================================ -->
+    <section class="section contact" id="contacto">
+        <div class="container text-center">
+            <span class="section-label">📞 Contáctanos</span>
+            <h2 class="section-title">Estamos aquí para ayudarte</h2>
+            <p class="section-sub">Consulta disponibilidad, precios o haz tu pedido directamente</p>
+
             <div class="contact-grid">
                 <div class="contact-card">
-                    <div class="contact-icon">📱</div>
-                    <h3>Teléfono</h3>
-                    <p>+51 951 679 240</p>
-                    <a href="tel:+51951679240" class="btn btn-secondary">Llamarnos</a>
+                    <div class="contact-icon-wrap">📱</div>
+                    <h3>Teléfono / WhatsApp</h3>
+                    <p>+51 951 679 240<br>Lunes a Sábado<br>8:00 am – 6:00 pm</p>
+                    <a href="https://wa.me/51951679240?text=Hola%2C+quiero+información+de+sus+productos" target="_blank"
+                        class="btn btn-whatsapp" style="margin-top:.875rem; font-size:.85rem;">
+                        💬 Escribir por WhatsApp
+                    </a>
                 </div>
+
                 <div class="contact-card">
-                    <div class="contact-icon">📍</div>
+                    <div class="contact-icon-wrap">📍</div>
                     <h3>Ubicación</h3>
-                    <p>Huancayo - Perú</p>
+                    <p>Huancayo, Junín<br>Perú<br>Visítanos en nuestra tienda</p>
+                    <a href="https://maps.google.com/?q=Huancayo,Junin,Peru" target="_blank" class="contact-link">Ver en
+                        Google Maps →</a>
                 </div>
+
                 <div class="contact-card">
-                    <div class="contact-icon">🏢</div>
-                    <h3>RUC</h3>
-                    <p>1043224765</p>
+                    <div class="contact-icon-wrap">🏢</div>
+                    <h3>Datos Legales</h3>
+                    <p>RUC: 1043224765<br>Comercializadora ALY<br>Huancayo · Perú</p>
                 </div>
+            </div>
+
+            <!-- Map placeholder -->
+            <div class="map-placeholder">
+                <span>🗺️</span>
+                <p style="font-weight:600; color:var(--nav)">Huancayo, Junín — Perú</p>
+                <a href="https://maps.google.com/?q=Huancayo,Junin,Peru" target="_blank" class="btn btn-navy">Abrir en
+                    Google Maps</a>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- ================================================
+       FOOTER
+  ================================================ -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <img src="assets/logo.png" alt="Comercializadora ALY" style="height: 60px; margin-bottom: 1rem;">
-                    <p class="text-secondary">Tu ferretería de confianza desde hace años</p>
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand-name">⛏️ Comercializadora ALY</div>
+                    <p class="footer-brand-desc">Tu ferretería de confianza en Huancayo. Calidad, precio justo y
+                        atención personalizada para tus proyectos de construcción.</p>
+                    <a href="https://wa.me/51951679240" target="_blank" class="btn btn-whatsapp"
+                        style="font-size:.82rem; padding:.5rem 1rem;">
+                        💬 WhatsApp Directo
+                    </a>
                 </div>
-                <div class="footer-section">
+
+                <div class="footer-col">
+                    <h4>Enlaces</h4>
+                    <ul>
+                        <li><a href="#categorias">Productos</a></li>
+                        <li><a href="#nosotros">Nosotros</a></li>
+                        <li><a href="catalogo.html">Catálogo</a></li>
+                        <li><a href="login.html">Acceso Empleados</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
                     <h4>Contacto</h4>
                     <p>📱 +51 951 679 240</p>
-                    <p>📍 Huancayo - Perú</p>
+                    <p>📍 Huancayo · Junín · Perú</p>
                     <p>🏢 RUC: 1043224765</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Enlaces</h4>
-                    <p><a href="catalogo.html">Catálogo</a></p>
-                    <p><a href="login.html">Acceso Empleados</a></p>
+                    <p>⏰ Lun–Sáb 8am–6pm</p>
                 </div>
             </div>
+
             <div class="footer-bottom">
-                <p>&copy; 2026 Comercializadora ALY. Todos los derechos reservados.</p>
+                <p>© 2026 Comercializadora ALY. Todos los derechos reservados.</p>
+                <span class="footer-badge">Huancayo · Perú 🇵🇪</span>
             </div>
         </div>
     </footer>
 
-    <script src="js/config.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/mobile-drawer.js"></script>
-    <script src="js/landing.js"></script>
+    <!-- Scroll to top -->
+    <button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">▲</button>
+
+    <!-- ================================================
+       JAVASCRIPT
+  ================================================ -->
+    <script>
+        // ── Navbar scroll effect ──────────────────────────
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 60);
+            document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 400);
+        }, { passive: true });
+
+        // ── Mobile Nav ────────────────────────────────────
+        function toggleNav() {
+            const nav = document.getElementById('mobileNav');
+            const btn = document.getElementById('hamburger');
+            const open = nav.classList.toggle('open');
+            btn.classList.toggle('open', open);
+            document.body.style.overflow = open ? 'hidden' : '';
+        }
+        function closeNav() {
+            document.getElementById('mobileNav').classList.remove('open');
+            document.getElementById('hamburger').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        // Close on outside click
+        document.getElementById('mobileNav').addEventListener('click', e => {
+            if (e.target === e.currentTarget) closeNav();
+        });
+
+        // ── Smooth scroll for anchor links ───────────────
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const target = document.querySelector(a.getAttribute('href'));
+                if (!target) return;
+                e.preventDefault();
+                const offset = 75;
+                window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+            });
+        });
+
+        // ── Animate elements on scroll (IntersectionObserver) ──
+        const style = document.createElement('style');
+        style.textContent = `
+      .reveal { opacity:0; transform:translateY(28px); transition:opacity .55s ease, transform .55s ease; }
+      .reveal.visible { opacity:1; transform:translateY(0); }
+    `;
+        document.head.appendChild(style);
+
+        document.querySelectorAll('.cat-card, .product-card, .feature-card, .contact-card')
+            .forEach(el => el.classList.add('reveal'));
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+        }, { threshold: .12 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+
 </body>
 
 </html>

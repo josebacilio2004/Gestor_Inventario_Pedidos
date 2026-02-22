@@ -1193,3 +1193,91 @@ form#form-nuevo-pedido {
         padding-right: max(0.75rem, env(safe-area-inset-right));
     }
 }
+
+/* ─── STOCK CARDS ──────────────────────────────────────────── */
+.stock-card {
+    background: white;
+    border: 1.5px solid var(--op-border);
+    border-radius: 12px;
+    padding: .875rem 1rem;
+    transition: all .2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stock-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .1);
+    transform: translateY(-2px);
+    border-color: var(--op-blue);
+}
+
+.stock-card-top {
+    display: flex;
+    align-items: center;
+    gap: .625rem;
+    margin-bottom: .5rem;
+}
+
+.stock-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+}
+
+.stock-nombre {
+    font-weight: 700;
+    font-size: .9rem;
+    color: var(--op-navy);
+}
+
+.stock-nivel-label {
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.stock-cantidad {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--op-navy);
+    line-height: 1;
+    margin-bottom: .45rem;
+}
+
+.stock-ud {
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--op-muted);
+}
+
+.stock-bar-wrap {
+    background: var(--op-border);
+    border-radius: 99px;
+    height: 5px;
+    margin-bottom: .4rem;
+}
+
+.stock-bar {
+    height: 100%;
+    border-radius: 99px;
+    transition: width .4s ease;
+}
+
+.stock-updated {
+    font-size: .68rem;
+    color: var(--op-muted);
+}
+
+/* Status tint on card left border */
+.stock-ok {
+    border-left: 4px solid #10b981;
+}
+
+.stock-bajo {
+    border-left: 4px solid #f97316;
+}
+
+.stock-agotado {
+    border-left: 4px solid #ef4444;
+    background: #fff5f5;
+}

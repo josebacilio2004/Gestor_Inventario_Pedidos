@@ -1,31 +1,36 @@
 // ============================================================
 // OPERADOR DASHBOARD - JAVASCRIPT COMPLETO
+// Incluye: sesión, compradores, calculadora MO, stock, pedidos
 // ============================================================
 
 let operadorSesion = null;
 let itemsPedido = [];
 let compradores = [];
+let stockActual = {};   // { 'Pico-Tramontina': 240, ... }
 
 // ============================================================
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', async () => {
     verificarSesion();
-    await cargarCompradores();
+    await Promise.all([cargarCompradores(), cargarStock()]);
     await cargarPedidos();
 
-    // Auto-calcular al cambiar tipo, marca o cantidad
+    // Auto-calcular MO + mostrar stock disponible al cambiar selects
     ['tipo-herramienta', 'marca-herramienta'].forEach(id => {
-        document.getElementById(id).addEventListener('change', actualizarPreviewMO);
+        document.getElementById(id).addEventListener('change', () => {
+            actualizarPreviewMO();
+            mostrarStockEnFormulario();
+        });
     });
     document.getElementById('cantidad-herramienta').addEventListener('input', actualizarPreviewMO);
-
-    // Enviar con Enter en cantidad
     document.getElementById('cantidad-herramienta').addEventListener('keydown', e => {
         if (e.key === 'Enter') { e.preventDefault(); agregarItem(); }
     });
 
     document.getElementById('form-nuevo-pedido').addEventListener('submit', guardarPedido);
+    actualizarPreviewMO();
+    mostrarStockEnFormulario();
 });
 
 // ============================================================
@@ -46,19 +51,17 @@ function logout() {
 }
 
 // ============================================================
-// CARGAR COMPRADORES — Con reintentos y feedback visual
+// CARGAR COMPRADORES
 // ============================================================
 async function cargarCompradores() {
     const select = document.getElementById('select-comprador');
-    select.innerHTML = '<option value="">⏳ Cargando compradores...</option>';
+    select.innerHTML = '<option value="">⏳ Cargando...</option>';
     select.disabled = true;
-
     try {
         const data = await fetchAPI('/compradores');
         compradores = Array.isArray(data) ? data : [];
-
         if (compradores.length === 0) {
-            select.innerHTML = '<option value="">— Sin compradores registrados —</option>';
+            select.innerHTML = '<option value="">— Sin compradores —</option>';
         } else {
             select.innerHTML = '<option value="">— Seleccionar comprador —</option>';
             compradores.forEach(c => {
@@ -69,48 +72,159 @@ async function cargarCompradores() {
             });
         }
     } catch (err) {
-        select.innerHTML = '<option value="">❌ Error al cargar (reintenta)</option>';
-        showToast('Error al cargar compradores. Verifica la conexión.', 'error');
-        console.error('cargarCompradores:', err);
+        select.innerHTML = '<option value="">❌ Error al cargar</option>';
+        showToast('Error al cargar compradores.', 'error');
     } finally {
         select.disabled = false;
     }
 }
 
 // ============================================================
-// CALCULADORA EN TIEMPO REAL (auto, sin botón)
+// STOCK — cargar y renderizar
+// ============================================================
+async function cargarStock() {
+    const grid = document.getElementById('stock-grid');
+    if (!grid) return;
+    try {
+        const data = await fetchAPI('/stock-herramientas');
+        // Guardar en mapa para consulta rápida
+        stockActual = {};
+        data.forEach(s => { stockActual[`${s.tipo}-${s.marca}`] = s.cantidad; });
+        renderStock(data);
+        mostrarStockEnFormulario();  // refrescar etiqueta en formulario
+    } catch (err) {
+        grid.innerHTML = `<div style="color:#ef4444;padding:1rem;">⚠️ No se pudo cargar el stock</div>`;
+    }
+}
+
+function renderStock(data) {
+    const grid = document.getElementById('stock-grid');
+    if (!grid) return;
+
+    const iconos = { Pico: '⛏️', Zapapico: '🪓' };
+
+    grid.innerHTML = data.map(s => {
+        const pct = s.minimo_alerta > 0 ? (s.cantidad / (s.minimo_alerta * 2)) * 100 : 50;
+        const nivel = s.cantidad === 0 ? 'agotado' : s.cantidad <= s.minimo_alerta ? 'bajo' : 'ok';
+        const colores = { agotado: '#ef4444', bajo: '#f97316', ok: '#10b981' };
+        const labels = { agotado: '🔴 Agotado', bajo: '🟡 Stock bajo', ok: '🟢 Disponible' };
+        return `
+        <div class="stock-card stock-${nivel}" onclick="preseleccionarStockForm('${s.tipo}','${s.marca}')"
+             style="cursor:pointer;" title="Click para seleccionar en el formulario">
+            <div class="stock-card-top">
+                <span class="stock-icon">${iconos[s.tipo] || '🔧'}</span>
+                <div>
+                    <div class="stock-nombre">${s.tipo} ${s.marca}</div>
+                    <div class="stock-nivel-label" style="color:${colores[nivel]}">${labels[nivel]}</div>
+                </div>
+            </div>
+            <div class="stock-cantidad">${s.cantidad.toLocaleString('es-PE')}<span class="stock-ud"> und</span></div>
+            <div class="stock-bar-wrap">
+                <div class="stock-bar" style="width:${Math.min(pct, 100)}%; background:${colores[nivel]};"></div>
+            </div>
+            <div class="stock-updated">Act: ${new Date(s.updated_at).toLocaleString('es-PE', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })}</div>
+        </div>`;
+    }).join('');
+}
+
+// Preselecciona tipo/marca en el formulario al hacer clic en stock-card
+function preseleccionarStockForm(tipo, marca) {
+    document.getElementById('tipo-herramienta').value = tipo;
+    document.getElementById('marca-herramienta').value = marca;
+    actualizarPreviewMO();
+    mostrarStockEnFormulario();
+    document.getElementById('cantidad-herramienta').focus();
+    document.getElementById('nuevo-pedido').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Muestra el stock disponible debajo del campo cantidad
+function mostrarStockEnFormulario() {
+    const tipo = document.getElementById('tipo-herramienta').value;
+    const marca = document.getElementById('marca-herramienta').value;
+    const key = `${tipo}-${marca}`;
+    const disp = stockActual[key] ?? null;
+    let el = document.getElementById('stock-disponible-label');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'stock-disponible-label';
+        el.style.cssText = 'font-size:.75rem;margin-top:.3rem;font-weight:600;';
+        document.getElementById('cantidad-herramienta').parentElement.appendChild(el);
+    }
+    if (disp === null) {
+        el.textContent = '';
+    } else if (disp === 0) {
+        el.innerHTML = '🔴 Sin stock disponible';
+        el.style.color = '#ef4444';
+    } else if (disp <= 50) {
+        el.innerHTML = `🟡 Solo ${disp} und disponibles`;
+        el.style.color = '#f97316';
+    } else {
+        el.innerHTML = `🟢 ${disp} und disponibles`;
+        el.style.color = '#10b981';
+    }
+}
+
+// ============================================================
+// AGREGAR STOCK (desde el panel de inventario)
+// ============================================================
+async function agregarStock() {
+    const tipo = document.getElementById('stock-tipo').value;
+    const marca = document.getElementById('stock-marca').value;
+    const cantidad = parseInt(document.getElementById('stock-cantidad').value);
+    const btn = document.getElementById('btn-agregar-stock');
+
+    if (!cantidad || cantidad <= 0) {
+        showToast('⚠️ Ingresa una cantidad válida', 'error');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Guardando...';
+    try {
+        await fetchAPI('/stock-herramientas/agregar', {
+            method: 'POST',
+            body: JSON.stringify({ tipo, marca, cantidad })
+        });
+        document.getElementById('stock-cantidad').value = '';
+        if (navigator.vibrate) navigator.vibrate([40, 20, 40]);
+        showToast(`✅ +${cantidad} und de ${tipo} ${marca} agregadas`, 'success');
+        await cargarStock();
+    } catch (err) {
+        showToast(`❌ Error: ${err.message}`, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '✅ Confirmar Ingreso';
+    }
+}
+
+// ============================================================
+// CALCULADORA MO EN TIEMPO REAL
 // ============================================================
 function actualizarPreviewMO() {
     const tipo = document.getElementById('tipo-herramienta').value;
     const marca = document.getElementById('marca-herramienta').value;
     const cantidad = parseInt(document.getElementById('cantidad-herramienta').value) || 0;
-
     const mo = calcularManoObra(tipo, marca, cantidad);
     const cfg = TARIFAS_MANO_OBRA[`${tipo}-${marca}`];
     const preview = document.getElementById('mo-amount-preview');
     const calc = document.getElementById('mo-calc-preview');
     const addBtn = document.getElementById('btn-agregar');
 
-    // Animar cambio
     preview.classList.remove('mo-updated');
-    void preview.offsetWidth; // reflow para reiniciar animación
+    void preview.offsetWidth;
     preview.classList.add('mo-updated');
-
     preview.textContent = formatCurrency(mo);
 
     if (cfg && cantidad > 0) {
         calc.textContent = `${cantidad} ud ÷ ${cfg.base} × S/${cfg.tarifa} = ${formatCurrency(mo)}`;
-        addBtn.disabled = false;
-        addBtn.classList.add('btn-ready');
     } else {
         calc.textContent = cantidad > 0 ? 'Elige tipo y marca' : 'Ingresa la cantidad';
-        addBtn.disabled = false;
-        addBtn.classList.remove('btn-ready');
     }
+    if (addBtn) addBtn.disabled = false;
 }
 
 // ============================================================
-// AGREGAR ITEM
+// AGREGAR ITEM AL PEDIDO (con validación de stock)
 // ============================================================
 function agregarItem() {
     const tipo = document.getElementById('tipo-herramienta').value;
@@ -126,29 +240,40 @@ function agregarItem() {
         return;
     }
 
-    // Vibración en iPhone (si está disponible)
-    if (navigator.vibrate) navigator.vibrate(30);
+    // Verificar stock disponible
+    const key = `${tipo}-${marca}`;
+    const disp = stockActual[key] ?? null;
 
+    // Calcular cuánto ya se ha comprometido en los items del formulario actual
+    const comprometido = itemsPedido
+        .filter(i => i.tipo === tipo && i.marca === marca)
+        .reduce((s, i) => s + i.cantidad, 0);
+
+    if (disp !== null && (comprometido + cantidad) > disp) {
+        const restante = Math.max(0, disp - comprometido);
+        showToast(`⚠️ Stock insuficiente. Solo ${restante} und disponibles de ${tipo} ${marca}.`, 'error');
+        input.classList.add('input-error');
+        setTimeout(() => input.classList.remove('input-error'), 1200);
+        return;
+    }
+
+    if (navigator.vibrate) navigator.vibrate(30);
     const manoObra = calcularManoObra(tipo, marca, cantidad);
-    const id = Date.now();
-    itemsPedido.push({ id, tipo, marca, cantidad, mano_obra: manoObra });
+    itemsPedido.push({ id: Date.now(), tipo, marca, cantidad, mano_obra: manoObra });
 
     renderItems();
     updateResumen();
-
-    // Limpiar y enfocar para el siguiente item
     input.value = '';
     actualizarPreviewMO();
+    mostrarStockEnFormulario();
     input.focus();
 
-    // Feedback visual en botón
     const btn = document.getElementById('btn-agregar');
-    btn.textContent = '✅ Agregado!';
-    btn.style.background = 'var(--success)';
-    setTimeout(() => {
-        btn.textContent = '➕ Agregar';
-        btn.style.background = '';
-    }, 1200);
+    if (btn) {
+        btn.textContent = '✅ Agregado!';
+        btn.style.background = '#10b981';
+        setTimeout(() => { btn.textContent = '➕ Agregar'; btn.style.background = ''; }, 1200);
+    }
 }
 
 // ============================================================
@@ -162,6 +287,7 @@ function eliminarItem(id) {
             itemsPedido = itemsPedido.filter(i => i.id !== id);
             renderItems();
             updateResumen();
+            mostrarStockEnFormulario();
         }, 250);
     }
 }
@@ -199,7 +325,7 @@ function renderItems() {
                 <div class="item-mo-amount">${formatCurrency(item.mano_obra)}</div>
                 <div class="item-mo-label">M. Obra</div>
             </div>
-            <button class="item-delete" onclick="eliminarItem(${item.id})" title="Quitar item">
+            <button class="item-delete" onclick="eliminarItem(${item.id})" title="Quitar">
                 <span>✕</span>
             </button>
         </div>`;
@@ -207,18 +333,17 @@ function renderItems() {
 }
 
 // ============================================================
-// RESUMEN TOTAL — Con animación de número
+// RESUMEN
 // ============================================================
 function updateResumen() {
     const resumen = document.getElementById('pedido-resumen');
     const totalItems = itemsPedido.reduce((s, i) => s + i.cantidad, 0);
     const totalMO = itemsPedido.reduce((s, i) => s + i.mano_obra, 0);
-    const tiposCount = itemsPedido.length;
 
-    if (tiposCount > 0) {
+    if (itemsPedido.length > 0) {
         resumen.style.display = 'block';
         resumen.classList.add('resumen-show');
-        document.getElementById('resumen-items').textContent = `${tiposCount} tipo(s) · ${totalItems} und`;
+        document.getElementById('resumen-items').textContent = `${itemsPedido.length} tipo(s) · ${totalItems} und`;
         const moEl = document.getElementById('resumen-mano-obra');
         moEl.textContent = formatCurrency(totalMO);
         moEl.classList.add('amount-updated');
@@ -234,7 +359,6 @@ function updateResumen() {
 // ============================================================
 async function guardarPedido(e) {
     e.preventDefault();
-
     const compradorId = document.getElementById('select-comprador').value;
     if (!compradorId) {
         document.getElementById('select-comprador').classList.add('input-error');
@@ -258,19 +382,18 @@ async function guardarPedido(e) {
             notas: document.getElementById('notas-pedido').value,
             items: itemsPedido.map(({ tipo, marca, cantidad }) => ({ tipo, marca, cantidad }))
         };
-
         await fetchAPI('/pedidos-herramientas', { method: 'POST', body: JSON.stringify(payload) });
 
         if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
-        showToast('✅ Pedido guardado exitosamente!', 'success');
+        showToast('✅ Pedido guardado y stock descontado!', 'success');
         limpiarFormulario();
+        await cargarStock();   // actualizar stock visual
         await cargarPedidos();
-
-        // Scroll a pedidos
         document.getElementById('pedidos').scrollIntoView({ behavior: 'smooth' });
 
     } catch (err) {
-        showToast(`❌ Error: ${err.message}`, 'error');
+        // Si es 409 = stock insuficiente (backend lo validó también)
+        showToast(`❌ ${err.message}`, 'error');
     } finally {
         btn.disabled = false;
         btn.innerHTML = '💾 Guardar Pedido';
@@ -288,6 +411,7 @@ function limpiarFormulario() {
     document.getElementById('select-comprador').value = '';
     document.getElementById('cantidad-herramienta').value = '';
     actualizarPreviewMO();
+    mostrarStockEnFormulario();
 }
 
 // ============================================================
@@ -296,34 +420,28 @@ function limpiarFormulario() {
 async function cargarPedidos() {
     const container = document.getElementById('pedidos-container');
     const estado = document.getElementById('filtro-estado').value;
-
     container.innerHTML = `
         <div class="skeleton-row"></div>
         <div class="skeleton-row"></div>
         <div class="skeleton-row"></div>`;
-
     try {
         let url = `/pedidos-herramientas`;
         const params = [];
         if (operadorSesion?.id) params.push(`operador_id=${operadorSesion.id}`);
         if (estado) params.push(`estado=${estado}`);
         if (params.length) url += '?' + params.join('&');
-
         const pedidos = await fetchAPI(url);
         actualizarStats(pedidos);
         renderPedidos(pedidos);
     } catch (err) {
         container.innerHTML = `
             <div class="error-state">
-                <span>⚠️</span>
-                <p>No se pudieron cargar los pedidos</p>
+                <span>⚠️</span><p>No se pudieron cargar los pedidos</p>
                 <button class="btn btn-secondary" onclick="cargarPedidos()">🔄 Reintentar</button>
             </div>`;
-        console.error('cargarPedidos:', err);
     }
 }
 
-// Contadores del header
 function actualizarStats(pedidos) {
     document.getElementById('count-pendiente').textContent = pedidos.filter(p => p.estado === 'pendiente').length;
     document.getElementById('count-proceso').textContent = pedidos.filter(p => p.estado === 'en_proceso').length;
@@ -331,7 +449,7 @@ function actualizarStats(pedidos) {
 }
 
 // ============================================================
-// RENDER PEDIDOS — Cards interactivas
+// RENDER PEDIDOS
 // ============================================================
 function renderPedidos(pedidos) {
     const container = document.getElementById('pedidos-container');
@@ -340,8 +458,7 @@ function renderPedidos(pedidos) {
     if (pedidos.length === 0) {
         container.innerHTML = `
             <div class="items-empty" style="padding:2.5rem 1rem;">
-                <span>📋</span>
-                <p>No hay pedidos aún</p>
+                <span>📋</span><p>No hay pedidos aún</p>
                 <small>Crea tu primer pedido arriba ↑</small>
             </div>`;
         return;
@@ -374,10 +491,10 @@ function renderPedidos(pedidos) {
                 <div class="pedido-actions">
                     <select class="select-estado badge-estado badge-${pedido.estado}"
                             onchange="cambiarEstado(${pedido.id}, this.value, this)">
-                        <option value="pendiente"   ${pedido.estado === 'pendiente' ? 'selected' : ''}>⏳ Pendiente</option>
-                        <option value="en_proceso"  ${pedido.estado === 'en_proceso' ? 'selected' : ''}>🔄 En Proceso</option>
-                        <option value="completado"  ${pedido.estado === 'completado' ? 'selected' : ''}>✅ Completado</option>
-                        <option value="cancelado"   ${pedido.estado === 'cancelado' ? 'selected' : ''}>❌ Cancelado</option>
+                        <option value="pendiente"  ${pedido.estado === 'pendiente' ? 'selected' : ''}>⏳ Pendiente</option>
+                        <option value="en_proceso" ${pedido.estado === 'en_proceso' ? 'selected' : ''}>🔄 En Proceso</option>
+                        <option value="completado" ${pedido.estado === 'completado' ? 'selected' : ''}>✅ Completado</option>
+                        <option value="cancelado"  ${pedido.estado === 'cancelado' ? 'selected' : ''}>❌ Cancelado</option>
                     </select>
                     <button class="btn-icon-ver" onclick="verDetalle(${pedido.id})">👁️</button>
                 </div>
@@ -387,10 +504,9 @@ function renderPedidos(pedidos) {
 }
 
 // ============================================================
-// CAMBIAR ESTADO — Con feedback inmediato
+// CAMBIAR ESTADO
 // ============================================================
 async function cambiarEstado(pedidoId, nuevoEstado, selectEl) {
-    const prev = selectEl ? Array.from(selectEl.options).find(o => o.selected)?.value : null;
     try {
         await fetchAPI(`/pedidos-herramientas/${pedidoId}/estado`, {
             method: 'PATCH',
@@ -398,14 +514,11 @@ async function cambiarEstado(pedidoId, nuevoEstado, selectEl) {
         });
         if (navigator.vibrate) navigator.vibrate(20);
         showToast(`✅ ${estadoLabel(nuevoEstado)}`, 'success');
-        // Actualizar clase del select sin recargar todo
-        if (selectEl) {
-            selectEl.className = `select-estado badge-estado badge-${nuevoEstado}`;
-        }
+        if (selectEl) selectEl.className = `select-estado badge-estado badge-${nuevoEstado}`;
         cargarPedidos();
     } catch (err) {
-        showToast(`❌ Error: ${err.message}`, 'error');
-        cargarPedidos(); // restaurar
+        showToast(`❌ ${err.message}`, 'error');
+        cargarPedidos();
     }
 }
 
@@ -416,16 +529,11 @@ async function verDetalle(pedidoId) {
     const modal = document.getElementById('modal-detalle');
     const body = document.getElementById('modal-pedido-body');
     const iconos = { 'Pico': '⛏️', 'Zapapico': '🪓' };
-
     modal.style.display = 'flex';
-    body.innerHTML = `<div style="padding:2rem;text-align:center;">
-        <div class="spinner-lg"></div><p>Cargando...</p></div>`;
-
+    body.innerHTML = `<div style="padding:2rem;text-align:center;"><div class="spinner-lg"></div><p>Cargando...</p></div>`;
     try {
         const pedido = await fetchAPI(`/pedidos-herramientas/${pedidoId}`);
-        document.getElementById('modal-pedido-titulo').textContent =
-            `Pedido #${String(pedido.id).padStart(4, '0')}`;
-
+        document.getElementById('modal-pedido-titulo').textContent = `Pedido #${String(pedido.id).padStart(4, '0')}`;
         const itemsHTML = (pedido.items || []).map(item => `
             <div class="item-row">
                 <span class="item-icon">${iconos[item.tipo] || '🔧'}</span>
@@ -438,27 +546,15 @@ async function verDetalle(pedidoId) {
                     <div class="item-mo-label">M. Obra</div>
                 </div>
             </div>`).join('');
-
         body.innerHTML = `
             <div style="padding:1.25rem 1.5rem;">
                 <div class="detalle-meta">
-                    <div class="detalle-meta-item">
-                        <label>Comprador</label>
-                        <span>👤 ${pedido.comprador_nombre || '—'}</span>
-                    </div>
-                    <div class="detalle-meta-item">
-                        <label>Estado</label>
-                        <span class="badge-estado badge-${pedido.estado}">${estadoLabel(pedido.estado)}</span>
-                    </div>
-                    <div class="detalle-meta-item">
-                        <label>Fecha</label>
-                        <span>${new Date(pedido.created_at).toLocaleString('es-PE')}</span>
-                    </div>
+                    <div class="detalle-meta-item"><label>Comprador</label><span>👤 ${pedido.comprador_nombre || '—'}</span></div>
+                    <div class="detalle-meta-item"><label>Estado</label><span class="badge-estado badge-${pedido.estado}">${estadoLabel(pedido.estado)}</span></div>
+                    <div class="detalle-meta-item"><label>Fecha</label><span>${new Date(pedido.created_at).toLocaleString('es-PE')}</span></div>
                 </div>
                 ${pedido.notas ? `<div class="detalle-nota">📝 ${pedido.notas}</div>` : ''}
-                <div class="items-list" style="margin:1rem 0;">
-                    ${itemsHTML || '<div class="items-empty"><span>📦</span><p>Sin items</p></div>'}
-                </div>
+                <div class="items-list" style="margin:1rem 0;">${itemsHTML || '<div class="items-empty"><span>📦</span><p>Sin items</p></div>'}</div>
                 <div class="pedido-resumen" style="display:block;">
                     <div class="resumen-row resumen-total">
                         <span>Total Mano de Obra</span>
@@ -467,21 +563,15 @@ async function verDetalle(pedidoId) {
                 </div>
             </div>`;
     } catch (err) {
-        body.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--danger);">
+        body.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--op-red);">
             ❌ No se pudo cargar el detalle<br>
             <button class="btn btn-secondary" onclick="verDetalle(${pedidoId})" style="margin-top:1rem;">Reintentar</button>
         </div>`;
     }
 }
 
-function closePedidoModal() {
-    document.getElementById('modal-detalle').style.display = 'none';
-}
-
-// Cerrar modal con ESC
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closePedidoModal();
-});
+function closePedidoModal() { document.getElementById('modal-detalle').style.display = 'none'; }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePedidoModal(); });
 
 // ============================================================
 // HELPERS
@@ -503,5 +593,5 @@ function showToast(message, type = 'info') {
         toast.style.opacity = '0';
         toast.style.transform = 'translateX(120%)';
         setTimeout(() => toast.remove(), 350);
-    }, 3000);
+    }, 3200);
 }

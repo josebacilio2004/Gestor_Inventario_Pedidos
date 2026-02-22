@@ -81,7 +81,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// POST - Crear nuevo pedido con items
+// POST - Crear nuevo pedido con items (descuenta stock automáticamente)
 router.post('/', async (req, res) => {
     const client = await pool.connect();
     try {
@@ -92,7 +92,34 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ error: 'Debe agregar al menos un item al pedido' });
         }
 
-        // Calcular total mano de obra
+        // ── 1. Verificar y descontar stock (dentro de la transacción) ──
+        for (const item of items) {
+            const stockRes = await client.query(
+                `SELECT cantidad FROM stock_herramientas
+                 WHERE tipo = $1 AND marca = $2
+                 FOR UPDATE`,                      // bloquea la fila
+                [item.tipo, item.marca]
+            );
+
+            const stockActual = stockRes.rows[0]?.cantidad ?? 0;
+            if (stockActual < item.cantidad) {
+                await client.query('ROLLBACK');
+                return res.status(409).json({
+                    error: `Stock insuficiente: ${item.tipo} ${item.marca}`,
+                    disponible: stockActual,
+                    solicitado: item.cantidad
+                });
+            }
+
+            await client.query(
+                `UPDATE stock_herramientas
+                 SET cantidad = cantidad - $3, updated_at = NOW()
+                 WHERE tipo = $1 AND marca = $2`,
+                [item.tipo, item.marca, item.cantidad]
+            );
+        }
+
+        // ── 2. Calcular mano de obra ──────────────────────────────────
         let totalManoObra = 0;
         const itemsConManoObra = items.map(item => {
             const mo = calcularManoObra(item.tipo, item.marca, item.cantidad);
@@ -100,7 +127,7 @@ router.post('/', async (req, res) => {
             return { ...item, mano_obra: mo };
         });
 
-        // Insertar pedido
+        // ── 3. Insertar pedido ────────────────────────────────────────
         const pedidoResult = await client.query(
             `INSERT INTO pedidos_herramientas (operador_id, comprador_id, notas, total_mano_obra, estado)
              VALUES ($1, $2, $3, $4, 'pendiente') RETURNING *`,
@@ -108,7 +135,7 @@ router.post('/', async (req, res) => {
         );
         const pedido = pedidoResult.rows[0];
 
-        // Insertar items
+        // ── 4. Insertar items ─────────────────────────────────────────
         for (const item of itemsConManoObra) {
             await client.query(
                 `INSERT INTO items_pedido_herramienta (pedido_id, tipo, marca, cantidad, mano_obra)
