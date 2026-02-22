@@ -1,34 +1,37 @@
 // ============================================================
 // OPERADOR DASHBOARD - JAVASCRIPT COMPLETO
-// Incluye: sesión, compradores, calculadora MO, stock, pedidos
+// Incluye: sesión, tandas, compradores, stock, pedidos
 // ============================================================
 
 let operadorSesion = null;
 let itemsPedido = [];
 let compradores = [];
-let stockActual = {};   // { 'Pico-Tramontina': 240, ... }
+let stockActual = {};   // { 'Pico': 240, 'Zapapico': 180 }
+let tandaActiva = null; // objeto tanda activa actual
 
 // ============================================================
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', async () => {
     verificarSesion();
+    // Cargar todo en paralelo (las tandas primero para tener tanda activa)
+    await cargarTandas();
     await Promise.all([cargarCompradores(), cargarStock()]);
     await cargarPedidos();
 
     // Auto-calcular MO + mostrar stock disponible al cambiar selects
     ['tipo-herramienta', 'marca-herramienta'].forEach(id => {
-        document.getElementById(id).addEventListener('change', () => {
+        document.getElementById(id)?.addEventListener('change', () => {
             actualizarPreviewMO();
             mostrarStockEnFormulario();
         });
     });
-    document.getElementById('cantidad-herramienta').addEventListener('input', actualizarPreviewMO);
-    document.getElementById('cantidad-herramienta').addEventListener('keydown', e => {
+    document.getElementById('cantidad-herramienta')?.addEventListener('input', actualizarPreviewMO);
+    document.getElementById('cantidad-herramienta')?.addEventListener('keydown', e => {
         if (e.key === 'Enter') { e.preventDefault(); agregarItem(); }
     });
 
-    document.getElementById('form-nuevo-pedido').addEventListener('submit', guardarPedido);
+    document.getElementById('form-nuevo-pedido')?.addEventListener('submit', guardarPedido);
     actualizarPreviewMO();
     mostrarStockEnFormulario();
 });
@@ -49,6 +52,170 @@ function logout() {
     localStorage.removeItem('operador_sesion');
     window.location.href = '../login.html';
 }
+
+// ============================================================
+// GESTIÓN DE TANDAS
+// ============================================================
+async function cargarTandas() {
+    try {
+        const data = await fetchAPI('/tandas');
+        // Buscar tanda activa
+        tandaActiva = data.find(t => t.estado === 'activa') || null;
+        renderBannerTandaActiva();
+        renderHistorialTandas(data);
+    } catch (err) {
+        console.error('Error al cargar tandas:', err);
+        tandaActiva = null;
+        renderBannerTandaActiva();
+        document.getElementById('tandas-historial').innerHTML =
+            `<div style="padding:.75rem;color:#ef4444;font-size:.85rem;">⚠️ No se pudieron cargar las tandas</div>`;
+    }
+}
+
+function renderBannerTandaActiva() {
+    const bannerActiva = document.getElementById('tanda-activa-banner');
+    const bannerSin = document.getElementById('sin-tanda-banner');
+    const btnForm = document.getElementById('btn-toggle-nueva-tanda');
+
+    if (tandaActiva) {
+        bannerActiva.style.display = 'block';
+        bannerSin.style.display = 'none';
+        document.getElementById('tanda-activa-nombre').textContent = `🏭 ${tandaActiva.nombre}`;
+        const fechaInicio = new Date(tandaActiva.fecha_inicio).toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' });
+        const pedidos = tandaActiva.total_pedidos ?? '—';
+        document.getElementById('tanda-activa-meta').textContent =
+            `Activa desde ${fechaInicio} · ${pedidos} pedido(s) registrados`;
+        if (btnForm) btnForm.textContent = '＋ Nueva Tanda';
+    } else {
+        bannerActiva.style.display = 'none';
+        bannerSin.style.display = 'block';
+        if (btnForm) btnForm.textContent = '🚀 Crear Primera Tanda';
+    }
+}
+
+function renderHistorialTandas(tandas) {
+    const el = document.getElementById('tandas-historial');
+    if (!tandas.length) {
+        el.innerHTML = `
+            <div style="padding:1.5rem; text-align:center; color:#94a3b8;">
+                <div style="font-size:2rem; margin-bottom:.5rem;">🏭</div>
+                <p style="font-weight:600;">No hay tandas registradas</p>
+                <p style="font-size:.78rem;">Crea la primera tanda para comenzar</p>
+            </div>`;
+        return;
+    }
+
+    const colores = {
+        activa: { bg: '#ecfdf5', border: '#6ee7b7', badge: '#059669', label: '🟢 Activa' },
+        cerrada: { bg: '#f8fafc', border: '#e2e8f0', badge: '#64748b', label: '⚫ Cerrada' },
+        pausada: { bg: '#fff7ed', border: '#fed7aa', badge: '#ea580c', label: '⏸️ Pausada' },
+    };
+
+    el.innerHTML = tandas.map(t => {
+        const c = colores[t.estado] || colores.cerrada;
+        const fechaInicio = new Date(t.fecha_inicio).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' });
+        const fechaCierre = t.fecha_cierre
+            ? new Date(t.fecha_cierre).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' })
+            : '—';
+        return `
+        <div class="tanda-item" style="background:${c.bg}; border-color:${c.border};">
+            <div class="tanda-item-left">
+                <span class="tanda-badge" style="color:${c.badge};">${c.label}</span>
+                <div class="tanda-nombre">${t.nombre}</div>
+                <div class="tanda-meta">
+                    📅 ${fechaInicio}
+                    ${t.estado !== 'activa' ? ` → ${fechaCierre}` : ''}
+                    · 📋 ${t.total_pedidos ?? 0} pedido(s)
+                </div>
+            </div>
+            <div class="tanda-item-right">
+                ${t.total_stock !== null ? `<div class="tanda-stock-total">${Number(t.total_stock).toLocaleString('es-PE')} und</div><div style="font-size:.68rem;color:#64748b;">stock total</div>` : ''}
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function toggleFormTanda() {
+    const form = document.getElementById('form-tanda-container');
+    const isHidden = form.style.display === 'none';
+    form.style.display = isHidden ? 'block' : 'none';
+    const btn = document.getElementById('btn-toggle-nueva-tanda');
+    btn.textContent = isHidden ? '✕ Cancelar' : (tandaActiva ? '＋ Nueva Tanda' : '🚀 Crear Primera Tanda');
+    if (isHidden) document.getElementById('tanda-nombre').focus();
+}
+
+async function crearTanda() {
+    const nombre = document.getElementById('tanda-nombre').value.trim();
+    const picos = parseInt(document.getElementById('tanda-picos').value) || 0;
+    const zapapicos = parseInt(document.getElementById('tanda-zapapicos').value) || 0;
+    const descripcion = document.getElementById('tanda-descripcion').value.trim();
+
+    if (!nombre) {
+        document.getElementById('tanda-nombre').classList.add('input-error');
+        showToast('⚠️ Ingresa un nombre para la tanda', 'error');
+        setTimeout(() => document.getElementById('tanda-nombre').classList.remove('input-error'), 1200);
+        return;
+    }
+
+    const btn = document.getElementById('btn-crear-tanda');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Creando...';
+
+    try {
+        const data = await fetchAPI('/tandas', {
+            method: 'POST',
+            body: JSON.stringify({
+                nombre,
+                descripcion: descripcion || null,
+                operador_id: operadorSesion?.id || null,
+                picos,
+                zapapicos,
+                minimo_alerta: 100
+            })
+        });
+
+        if (navigator.vibrate) navigator.vibrate([30, 20, 50]);
+        showToast(`✅ Tanda "${data.nombre}" creada con éxito`, 'success');
+
+        // Limpiar y cerrar form
+        document.getElementById('tanda-nombre').value = '';
+        document.getElementById('tanda-picos').value = '0';
+        document.getElementById('tanda-zapapicos').value = '0';
+        document.getElementById('tanda-descripcion').value = '';
+        document.getElementById('form-tanda-container').style.display = 'none';
+        document.getElementById('btn-toggle-nueva-tanda').textContent = '＋ Nueva Tanda';
+
+        // Recargar tandas y stock
+        await cargarTandas();
+        await cargarStock();
+        await cargarPedidos();
+    } catch (err) {
+        showToast(`❌ Error: ${err.message}`, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '🚀 Crear Tanda';
+    }
+}
+
+async function cerrarTandaActiva() {
+    if (!tandaActiva) return;
+    if (!confirm(`¿Seguro que deseas cerrar la tanda "${tandaActiva.nombre}"?\nNo podrás agregar más pedidos a esta tanda.`)) return;
+
+    const btn = document.getElementById('btn-cerrar-tanda');
+    if (btn) { btn.disabled = true; btn.textContent = 'Cerrando...'; }
+
+    try {
+        await fetchAPI(`/tandas/${tandaActiva.id}/cerrar`, { method: 'PATCH' });
+        showToast(`🔒 Tanda "${tandaActiva.nombre}" cerrada`, 'info');
+        tandaActiva = null;
+        await cargarTandas();
+        await cargarStock();
+    } catch (err) {
+        showToast(`❌ Error: ${err.message}`, 'error');
+        if (btn) { btn.disabled = false; btn.textContent = '🔒 Cerrar Tanda'; }
+    }
+}
+
 
 // ============================================================
 // CARGAR COMPRADORES

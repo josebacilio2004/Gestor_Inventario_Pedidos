@@ -1281,3 +1281,62 @@ form#form-nuevo-pedido {
     border-left: 4px solid #ef4444;
     background: #fff5f5;
 }
+
+/* ── TANDA ITEMS ──────────────────────────────────────────────────────── */
+
+.tanda-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .625rem .875rem;
+    border: 1px solid;
+    border-radius: 10px;
+    margin-bottom: .5rem;
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.tanda-item:hover {
+    transform: translateX(2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .07);
+}
+
+.tanda-item-left {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.tanda-badge {
+    font-size: .68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.tanda-nombre {
+    font-weight: 700;
+    font-size: .88rem;
+    color: var(--op-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tanda-meta {
+    font-size: .72rem;
+    color: var(--op-muted);
+}
+
+.tanda-item-right {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.tanda-stock-total {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--op-dark);
+}
