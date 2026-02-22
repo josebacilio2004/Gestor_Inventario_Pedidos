@@ -91,6 +91,34 @@ function renderBannerTandaActiva() {
         bannerSin.style.display = 'block';
         if (btnForm) btnForm.textContent = '🚀 Crear Primera Tanda';
     }
+    actualizarVisibilidadSecciones();
+}
+
+// Muestra u oculta las secciones de Stock y Pedido según si hay tanda activa
+function actualizarVisibilidadSecciones() {
+    const activa = !!tandaActiva;
+
+    // Stock
+    const stockBloq = document.getElementById('stock-bloqueado');
+    const stockCont = document.getElementById('stock-contenido');
+    if (stockBloq) stockBloq.style.display = activa ? 'none' : 'block';
+    if (stockCont) stockCont.style.display = activa ? 'block' : 'none';
+
+    // Pedido
+    const pedidoBloq = document.getElementById('pedido-bloqueado');
+    const pedidoCont = document.getElementById('pedido-contenido');
+    if (pedidoBloq) pedidoBloq.style.display = activa ? 'none' : 'block';
+    if (pedidoCont) pedidoCont.style.display = activa ? 'block' : 'none';
+}
+
+// Helper: scroll hacia el panel de tandas y abre el formulario
+function scrollYCrearTanda() {
+    document.getElementById('tandas').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+        if (document.getElementById('form-tanda-container').style.display === 'none') {
+            toggleFormTanda();
+        }
+    }, 350);
 }
 
 function renderHistorialTandas(tandas) {
