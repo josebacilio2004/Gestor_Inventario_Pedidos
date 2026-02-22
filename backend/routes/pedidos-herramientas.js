@@ -92,32 +92,39 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ error: 'Debe agregar al menos un item al pedido' });
         }
 
-        // ── 1. Verificar y descontar stock (dentro de la transacción) ──
+        // ── 1. Verificar y descontar stock POR TIPO (sin distinción de marca) ──
+        // Agrupa la cantidad total requerida por tipo
+        const totalPorTipo = {};
         for (const item of items) {
+            totalPorTipo[item.tipo] = (totalPorTipo[item.tipo] || 0) + item.cantidad;
+        }
+
+        for (const [tipo, cantidadRequerida] of Object.entries(totalPorTipo)) {
             const stockRes = await client.query(
                 `SELECT cantidad FROM stock_herramientas
-                 WHERE tipo = $1 AND marca = $2
-                 FOR UPDATE`,                      // bloquea la fila
-                [item.tipo, item.marca]
+                 WHERE tipo = $1
+                 FOR UPDATE`,
+                [tipo]
             );
 
             const stockActual = stockRes.rows[0]?.cantidad ?? 0;
-            if (stockActual < item.cantidad) {
+            if (stockActual < cantidadRequerida) {
                 await client.query('ROLLBACK');
                 return res.status(409).json({
-                    error: `Stock insuficiente: ${item.tipo} ${item.marca}`,
+                    error: `Stock insuficiente de ${tipo}`,
                     disponible: stockActual,
-                    solicitado: item.cantidad
+                    solicitado: cantidadRequerida
                 });
             }
 
             await client.query(
                 `UPDATE stock_herramientas
-                 SET cantidad = cantidad - $3, updated_at = NOW()
-                 WHERE tipo = $1 AND marca = $2`,
-                [item.tipo, item.marca, item.cantidad]
+                 SET cantidad = cantidad - $2, updated_at = NOW()
+                 WHERE tipo = $1`,
+                [tipo, cantidadRequerida]
             );
         }
+
 
         // ── 2. Calcular mano de obra ──────────────────────────────────
         let totalManoObra = 0;

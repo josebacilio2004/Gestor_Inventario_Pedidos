@@ -95,46 +95,44 @@
             <div class="section-card-header">
                 <div>
                     <h2>📦 Inventario de Herramientas</h2>
-                    <p>Stock disponible · Se descuenta automáticamente con cada pedido</p>
+                    <p>Stock total por tipo · Se descuenta al guardar cada pedido</p>
                 </div>
                 <button class="btn btn-secondary" onclick="cargarStock()" id="btn-refresh-stock">
                     🔄 Actualizar
                 </button>
             </div>
 
-            <!-- Mini-form para agregar stock -->
+            <!-- Mini-form para agregar stock (solo tipo + cantidad) -->
             <div style="padding:1rem 1.25rem; background:#f0f7ff; border-bottom:1px solid #e2e8f0;">
                 <p
                     style="font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#1a365d; margin-bottom:.625rem;">
-                    ➕ Agregar unidades al stock
+                    ➕ Ingresar unidades al inventario
                 </p>
                 <div style="display:flex; gap:.625rem; flex-wrap:wrap; align-items:flex-end;">
-                    <select id="stock-tipo" class="form-control" style="flex:1; min-width:120px; max-width:160px;">
-                        <option value="Pico">⛏️ Pico</option>
-                        <option value="Zapapico">🪓 Zapapico</option>
+                    <select id="stock-tipo" class="form-control" style="flex:1; min-width:140px; max-width:180px;">
+                        <option value="Pico">⛏️ Picos</option>
+                        <option value="Zapapico">🪓 Zapapicos</option>
                     </select>
-                    <select id="stock-marca" class="form-control" style="flex:1; min-width:130px; max-width:170px;">
-                        <option value="Tramontina">Tramontina</option>
-                        <option value="Bellota">Bellota</option>
-                    </select>
-                    <input type="number" id="stock-cantidad" class="form-control" min="1" placeholder="Cant. a agregar"
-                        style="flex:1; min-width:130px; max-width:170px;"
+                    <input type="number" id="stock-cantidad" class="form-control" min="1"
+                        placeholder="Cantidad a ingresar" style="flex:2; min-width:150px;"
                         onkeydown="if(event.key==='Enter'){agregarStock();}">
                     <button class="btn btn-primary" onclick="agregarStock()" id="btn-agregar-stock">
                         ✅ Confirmar Ingreso
                     </button>
                 </div>
+                <p style="font-size:.72rem; color:#64748b; margin-top:.5rem;">
+                    💡 El stock total se comparte entre las marcas (Tramontina y Bellota).
+                    Al crear un pedido se descuenta según la cantidad total del tipo elegido.
+                </p>
             </div>
 
-            <!-- Grid de stock -->
-            <div id="stock-grid"
-                style="padding:1rem 1.25rem; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:.75rem;">
-                <div class="skeleton-row" style="height:80px;"></div>
-                <div class="skeleton-row" style="height:80px;"></div>
-                <div class="skeleton-row" style="height:80px;"></div>
-                <div class="skeleton-row" style="height:80px;"></div>
+            <!-- 2 cards: Picos y Zapapicos -->
+            <div id="stock-grid" style="padding:1rem 1.25rem; display:grid; grid-template-columns:1fr 1fr; gap:.75rem;">
+                <div class="skeleton-row" style="height:90px;"></div>
+                <div class="skeleton-row" style="height:90px;"></div>
             </div>
         </section>
+
 
         <!-- Formulario Nuevo Pedido -->
         <section class="operador-section" id="nuevo-pedido">

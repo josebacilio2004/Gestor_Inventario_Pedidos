@@ -89,7 +89,7 @@ async function cargarStock() {
         const data = await fetchAPI('/stock-herramientas');
         // Guardar en mapa para consulta rápida
         stockActual = {};
-        data.forEach(s => { stockActual[`${s.tipo}-${s.marca}`] = s.cantidad; });
+        data.forEach(s => { stockActual[s.tipo] = s.cantidad; });  // key = tipo only
         renderStock(data);
         mostrarStockEnFormulario();  // refrescar etiqueta en formulario
     } catch (err) {
@@ -102,19 +102,19 @@ function renderStock(data) {
     if (!grid) return;
 
     const iconos = { Pico: '⛏️', Zapapico: '🪓' };
+    const colores = { agotado: '#ef4444', bajo: '#f97316', ok: '#10b981' };
+    const labels = { agotado: '🔴 Agotado', bajo: '🟡 Stock bajo', ok: '🟢 Disponible' };
 
     grid.innerHTML = data.map(s => {
         const pct = s.minimo_alerta > 0 ? (s.cantidad / (s.minimo_alerta * 2)) * 100 : 50;
         const nivel = s.cantidad === 0 ? 'agotado' : s.cantidad <= s.minimo_alerta ? 'bajo' : 'ok';
-        const colores = { agotado: '#ef4444', bajo: '#f97316', ok: '#10b981' };
-        const labels = { agotado: '🔴 Agotado', bajo: '🟡 Stock bajo', ok: '🟢 Disponible' };
         return `
-        <div class="stock-card stock-${nivel}" onclick="preseleccionarStockForm('${s.tipo}','${s.marca}')"
-             style="cursor:pointer;" title="Click para seleccionar en el formulario">
+        <div class="stock-card stock-${nivel}" onclick="preseleccionarStockForm('${s.tipo}')"
+             style="cursor:pointer;" title="Click para seleccionar tipo en formulario">
             <div class="stock-card-top">
                 <span class="stock-icon">${iconos[s.tipo] || '🔧'}</span>
                 <div>
-                    <div class="stock-nombre">${s.tipo} ${s.marca}</div>
+                    <div class="stock-nombre">${s.tipo}s (Tramontina + Bellota)</div>
                     <div class="stock-nivel-label" style="color:${colores[nivel]}">${labels[nivel]}</div>
                 </div>
             </div>
@@ -127,22 +127,19 @@ function renderStock(data) {
     }).join('');
 }
 
-// Preselecciona tipo/marca en el formulario al hacer clic en stock-card
-function preseleccionarStockForm(tipo, marca) {
+// Preselecciona tipo en el formulario al hacer clic en stock-card
+function preseleccionarStockForm(tipo) {
     document.getElementById('tipo-herramienta').value = tipo;
-    document.getElementById('marca-herramienta').value = marca;
     actualizarPreviewMO();
     mostrarStockEnFormulario();
     document.getElementById('cantidad-herramienta').focus();
     document.getElementById('nuevo-pedido').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Muestra el stock disponible debajo del campo cantidad
+// Muestra el stock disponible debajo del campo cantidad (por tipo)
 function mostrarStockEnFormulario() {
     const tipo = document.getElementById('tipo-herramienta').value;
-    const marca = document.getElementById('marca-herramienta').value;
-    const key = `${tipo}-${marca}`;
-    const disp = stockActual[key] ?? null;
+    const disp = stockActual[tipo] ?? null;
     let el = document.getElementById('stock-disponible-label');
     if (!el) {
         el = document.createElement('div');
@@ -153,13 +150,13 @@ function mostrarStockEnFormulario() {
     if (disp === null) {
         el.textContent = '';
     } else if (disp === 0) {
-        el.innerHTML = '🔴 Sin stock disponible';
+        el.innerHTML = '🔴 Sin stock de ' + tipo + 's';
         el.style.color = '#ef4444';
-    } else if (disp <= 50) {
-        el.innerHTML = `🟡 Solo ${disp} und disponibles`;
+    } else if (disp <= 100) {
+        el.innerHTML = `🟡 Solo ${disp} ${tipo}s disponibles`;
         el.style.color = '#f97316';
     } else {
-        el.innerHTML = `🟢 ${disp} und disponibles`;
+        el.innerHTML = `🟢 ${disp} ${tipo}s disponibles`;
         el.style.color = '#10b981';
     }
 }
@@ -169,7 +166,6 @@ function mostrarStockEnFormulario() {
 // ============================================================
 async function agregarStock() {
     const tipo = document.getElementById('stock-tipo').value;
-    const marca = document.getElementById('stock-marca').value;
     const cantidad = parseInt(document.getElementById('stock-cantidad').value);
     const btn = document.getElementById('btn-agregar-stock');
 
@@ -183,11 +179,11 @@ async function agregarStock() {
     try {
         await fetchAPI('/stock-herramientas/agregar', {
             method: 'POST',
-            body: JSON.stringify({ tipo, marca, cantidad })
+            body: JSON.stringify({ tipo, cantidad })
         });
         document.getElementById('stock-cantidad').value = '';
         if (navigator.vibrate) navigator.vibrate([40, 20, 40]);
-        showToast(`✅ +${cantidad} und de ${tipo} ${marca} agregadas`, 'success');
+        showToast(`✅ +${cantidad} ${tipo}s ingresados al inventario`, 'success');
         await cargarStock();
     } catch (err) {
         showToast(`❌ Error: ${err.message}`, 'error');
@@ -241,17 +237,17 @@ function agregarItem() {
     }
 
     // Verificar stock disponible
-    const key = `${tipo}-${marca}`;
-    const disp = stockActual[key] ?? null;
+    // Verificar stock disponible por TIPO (sin distinción de marca)
+    const disp = stockActual[tipo] ?? null;
 
-    // Calcular cuánto ya se ha comprometido en los items del formulario actual
+    // Sumar lo ya comprometido en el formulario para ese tipo (todas las marcas)
     const comprometido = itemsPedido
-        .filter(i => i.tipo === tipo && i.marca === marca)
+        .filter(i => i.tipo === tipo)
         .reduce((s, i) => s + i.cantidad, 0);
 
     if (disp !== null && (comprometido + cantidad) > disp) {
         const restante = Math.max(0, disp - comprometido);
-        showToast(`⚠️ Stock insuficiente. Solo ${restante} und disponibles de ${tipo} ${marca}.`, 'error');
+        showToast(`⚠️ Stock insuficiente. Solo ${restante} ${tipo}s disponibles en total.`, 'error');
         input.classList.add('input-error');
         setTimeout(() => input.classList.remove('input-error'), 1200);
         return;
