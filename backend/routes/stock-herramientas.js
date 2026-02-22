@@ -2,62 +2,74 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/database');
 
-// ── GET: todo el stock ────────────────────────────────
+// Helper: obtener tanda activa
+async function getTandaActiva(client) {
+    const res = await client.query("SELECT id FROM tandas WHERE estado = 'activa' LIMIT 1");
+    return res.rows[0] || null;
+}
+
+// ── GET /   Stock de la tanda activa ────────────────────────────────
 router.get('/', async (req, res) => {
     try {
+        const tanda = await getTandaActiva(pool);
+        if (!tanda) return res.status(404).json({ error: 'No hay ninguna tanda activa' });
+
         const result = await pool.query(
-            'SELECT * FROM stock_herramientas ORDER BY tipo ASC'
+            'SELECT * FROM stock_herramientas WHERE tanda_id = $1 ORDER BY tipo',
+            [tanda.id]
         );
         res.json(result.rows);
     } catch (err) {
-        console.error('Error al obtener stock:', err);
         res.status(500).json({ error: 'Error al obtener stock', detail: err.message });
     }
 });
 
-// ── POST /agregar : operador suma unidades por TIPO ───
+// ── POST /agregar   Agregar stock a la tanda activa ─────────────────
 // Body: { tipo, cantidad }
 router.post('/agregar', async (req, res) => {
     try {
         const { tipo, cantidad } = req.body;
-        if (!tipo || !cantidad || Number(cantidad) <= 0) {
+        if (!tipo || !cantidad || Number(cantidad) <= 0)
             return res.status(400).json({ error: 'tipo y cantidad > 0 son requeridos' });
-        }
+
+        const tanda = await getTandaActiva(pool);
+        if (!tanda) return res.status(409).json({ error: 'No hay ninguna tanda activa. Crea una tanda primero.' });
 
         const result = await pool.query(`
-            INSERT INTO stock_herramientas (tipo, cantidad)
-            VALUES ($1, $2)
-            ON CONFLICT (tipo) DO UPDATE
-                SET cantidad   = stock_herramientas.cantidad + EXCLUDED.cantidad,
-                    updated_at = NOW()
+            UPDATE stock_herramientas
+            SET cantidad = cantidad + $3, updated_at = NOW()
+            WHERE tanda_id = $1 AND tipo = $2
             RETURNING *
-        `, [tipo, Number(cantidad)]);
+        `, [tanda.id, tipo, Number(cantidad)]);
+
+        if (!result.rows.length)
+            return res.status(404).json({ error: `Stock de ${tipo} no encontrado en la tanda activa.` });
 
         res.json(result.rows[0]);
     } catch (err) {
-        console.error('Error al agregar stock:', err);
         res.status(500).json({ error: 'Error al agregar stock', detail: err.message });
     }
 });
 
-// ── PATCH /ajustar : corrección manual (total absoluto) ──
+// ── PATCH /ajustar   Ajuste absoluto (admin) ──────────────────────
 // Body: { tipo, cantidad }
 router.patch('/ajustar', async (req, res) => {
     try {
         const { tipo, cantidad } = req.body;
-        if (!tipo || cantidad === undefined || cantidad < 0) {
+        if (!tipo || cantidad === undefined || cantidad < 0)
             return res.status(400).json({ error: 'tipo y cantidad >= 0 requeridos' });
-        }
+
+        const tanda = await getTandaActiva(pool);
+        if (!tanda) return res.status(409).json({ error: 'No hay tanda activa' });
 
         const result = await pool.query(`
             UPDATE stock_herramientas
-            SET cantidad = $2, updated_at = NOW()
-            WHERE tipo = $1
+            SET cantidad = $3, updated_at = NOW()
+            WHERE tanda_id = $1 AND tipo = $2
             RETURNING *
-        `, [tipo, Number(cantidad)]);
+        `, [tanda.id, tipo, Number(cantidad)]);
 
-        if (result.rows.length === 0)
-            return res.status(404).json({ error: 'Tipo de herramienta no encontrado' });
+        if (!result.rows.length) return res.status(404).json({ error: 'Tipo no encontrado en tanda activa' });
         res.json(result.rows[0]);
     } catch (err) {
         res.status(500).json({ error: 'Error al ajustar stock', detail: err.message });
