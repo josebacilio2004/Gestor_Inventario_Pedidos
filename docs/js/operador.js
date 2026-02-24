@@ -81,8 +81,10 @@ function renderBannerTandaActiva() {
         bannerActiva.style.display = 'block';
         bannerSin.style.display = 'none';
         document.getElementById('tanda-activa-nombre').textContent = `🏭 ${tandaActiva.nombre}`;
-        const fechaInicio = new Date(tandaActiva.fecha_inicio).toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' });
-        const pedidos = tandaActiva.total_pedidos ?? '—';
+        // Parsear DATE como local (evita desfase UTC -5h)
+        const [fy, fm, fd] = tandaActiva.fecha_inicio.slice(0, 10).split('-').map(Number);
+        const fechaInicio = new Date(fy, fm - 1, fd).toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' });
+        const pedidos = Number(tandaActiva.total_pedidos ?? 0);
         document.getElementById('tanda-activa-meta').textContent =
             `Activa desde ${fechaInicio} · ${pedidos} pedido(s) registrados`;
         if (btnForm) btnForm.textContent = '＋ Nueva Tanda';
