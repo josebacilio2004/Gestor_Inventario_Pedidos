@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Estado de Cuenta · Corporación Day Lum S.A.C.</title>
+    <title>Facturación · Comprador</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -29,8 +29,7 @@
             --sh: 0 1px 4px rgba(0, 0, 0, .06);
             --sh-md: 0 4px 20px rgba(0, 0, 0, .08);
             --r: 12px;
-            --pw: 500px;
-            --tr: .3s cubic-bezier(.4, 0, .2, 1);
+            --tr: .3s cubic-bezier(.4, 0, .2, 1)
         }
 
         *,
@@ -79,344 +78,334 @@
             letter-spacing: -.02em
         }
 
-        .hdr .sub {
-            font-size: .75rem;
-            opacity: .7;
-            margin-top: 2px
-        }
-
-        .hdr .dt-label {
-            font-size: .68rem;
-            opacity: .65;
-            text-transform: uppercase;
-            letter-spacing: .07em
-        }
-
-        .hdr .dt-val {
-            font-size: .92rem;
-            font-weight: 600;
+        .sub {
+            opacity: .8;
+            font-size: .78rem;
             margin-top: 2px
         }
 
         .badge-hdr {
+            display: inline-block;
+            background: rgba(255, 255, 255, .2);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: .72rem;
+            font-weight: 700;
+            margin-top: 6px
+        }
+
+        .dt-label {
+            font-size: .66rem;
+            opacity: .7;
+            text-transform: uppercase;
+            letter-spacing: .1em
+        }
+
+        .dt-val {
+            font-size: .92rem;
+            font-weight: 700;
+            margin-top: 2px
+        }
+
+        .btn-back {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             background: rgba(255, 255, 255, .15);
+            color: #fff;
             border: 1px solid rgba(255, 255, 255, .25);
-            padding: 3px 10px;
-            border-radius: 99px;
-            font-size: .68rem;
+            border-radius: 8px;
+            padding: 7px 14px;
+            font-size: .78rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: .07em;
-            margin-top: 8px
+            cursor: pointer;
+            transition: background .2s
         }
 
-        /* CLIENT */
-        .client-card {
-            background: var(--white);
-            border-radius: var(--r);
-            padding: 18px 24px;
-            margin-bottom: 18px;
-            box-shadow: var(--sh);
-            border: 1px solid var(--g200);
+        .btn-back:hover {
+            background: rgba(255, 255, 255, .3)
+        }
+
+        /* ═══ PASO 1: DISTRIBUIDORES ═══ */
+        .distribuidores-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px 28px
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 16px
         }
 
-        .client-card .full {
-            grid-column: 1/-1
+        .dist-card {
+            background: var(--white);
+            border: 2px solid var(--g200);
+            border-radius: var(--r);
+            padding: 20px;
+            cursor: pointer;
+            transition: all .25s;
+            position: relative;
+            overflow: hidden
         }
 
-        .cf label {
-            font-size: .65rem;
+        .dist-card:hover {
+            border-color: var(--blue);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, .15);
+            transform: translateY(-2px)
+        }
+
+        .dist-card .emoji {
+            font-size: 2rem;
+            margin-bottom: 8px
+        }
+
+        .dist-card .name {
+            font-size: 1.05rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .07em;
+            color: var(--g800)
+        }
+
+        .dist-card .info {
+            font-size: .75rem;
             color: var(--g400);
-            display: block;
-            margin-bottom: 2px
+            margin-top: 4px
         }
 
-        .cf span {
-            font-size: .85rem;
-            font-weight: 600
+        .dist-card .arrow {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: var(--g200);
+            transition: color .2s
         }
 
-        /* SECTION TITLE */
+        .dist-card:hover .arrow {
+            color: var(--blue)
+        }
+
+        /* ═══ PASO 2: FACTURAS ═══ */
+        #vista-facturas {
+            display: none
+        }
+
         .sec-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: .68rem;
+            font-size: .72rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: .09em;
+            letter-spacing: .08em;
             color: var(--g400);
             margin-bottom: 10px
         }
 
-        .sec-title::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--g200)
-        }
-
-        /* TABLE */
+        /* TABLA */
         .tbl-card {
             background: var(--white);
             border-radius: var(--r);
-            box-shadow: var(--sh);
-            border: 1px solid var(--g200);
             overflow: hidden;
-            margin-bottom: 18px
+            box-shadow: var(--sh)
         }
 
         .tbl-wrap {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch
+            overflow-x: auto
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: .82rem;
-            min-width: 920px
+            font-size: .78rem
         }
 
-        thead tr {
-            background: var(--g50);
+        th {
+            background: var(--g100);
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 700;
+            font-size: .68rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--g600);
             border-bottom: 2px solid var(--g200)
         }
 
-        thead th {
-            padding: 10px 11px;
-            text-align: left;
-            font-size: .66rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .07em;
-            color: var(--g600);
-            white-space: nowrap
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--g100);
+            vertical-align: middle
         }
 
-        th.c,
-        td.c {
+        .c {
             text-align: center
         }
 
-        th.r,
-        td.r {
+        .r {
             text-align: right
         }
 
-        tbody tr {
-            border-bottom: 1px solid var(--g100);
-            transition: background var(--tr)
+        tr.overdue {
+            background: var(--red-lt)
         }
 
-        tbody tr:last-child {
-            border-bottom: none
+        tr.near-due {
+            background: var(--amber-lt)
         }
 
-        tbody tr:hover {
-            background: var(--g50) !important
-        }
-
-        tbody tr.overdue {
-            background: #fff5f5
-        }
-
-        tbody tr.near-due {
-            background: #fefce8
-        }
-
-        tbody tr.done {
-            background: var(--green-lt);
-            opacity: .78
-        }
-
-        td {
-            padding: 10px 11px;
-            vertical-align: middle;
-            white-space: nowrap
-        }
-
-        /* progress bar en tabla */
-        .mini-bar {
-            width: 80px;
-            height: 6px;
-            background: var(--g200);
-            border-radius: 99px;
-            overflow: hidden;
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 6px
-        }
-
-        .mini-bar-fill {
-            height: 100%;
-            border-radius: 99px;
-            background: linear-gradient(90deg, var(--blue), #60a5fa);
-            transition: width .4s
+        tr.done {
+            background: var(--green-lt)
         }
 
         .doc-num {
             font-weight: 700;
-            color: var(--blue-dk);
-            letter-spacing: .02em
+            color: var(--blue-dk)
         }
 
         .dias-badge {
             display: inline-flex;
             align-items: center;
-            gap: 3px;
-            padding: 2px 7px;
-            border-radius: 99px;
-            font-size: .7rem;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: .66rem;
             font-weight: 700
         }
 
         .dias-badge.ov {
-            background: var(--red-lt);
-            color: var(--red)
+            background: #fecaca;
+            color: #991b1b
         }
 
         .dias-badge.nd {
-            background: var(--amber-lt);
-            color: var(--amber)
-        }
-
-        .dias-badge.ok {
-            background: var(--green-lt);
-            color: var(--green)
-        }
-
-        .estado-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: .66rem;
-            font-weight: 600
-        }
-
-        .eb-pend {
-            background: #e0e7ff;
-            color: #3730a3
-        }
-
-        .eb-abono {
             background: #fef3c7;
             color: #92400e
         }
 
-        .eb-done {
-            background: var(--green-lt);
-            color: var(--green)
+        .dias-badge.ok {
+            background: #d1fae5;
+            color: #065f46
+        }
+
+        .estado-badge {
+            display: inline-block;
+            padding: 3px 9px;
+            border-radius: 5px;
+            font-size: .66rem;
+            font-weight: 700
+        }
+
+        .eb-pend {
+            background: var(--g100);
+            color: var(--g600)
         }
 
         .eb-venc {
-            background: var(--red-lt);
-            color: var(--red)
+            background: #fecaca;
+            color: #991b1b
+        }
+
+        .eb-abono {
+            background: #dbeafe;
+            color: #1e40af
+        }
+
+        .eb-done {
+            background: #dcfce7;
+            color: #166534
+        }
+
+        .mini-bar {
+            display: inline-block;
+            width: 60px;
+            height: 6px;
+            background: var(--g200);
+            border-radius: 3px;
+            overflow: hidden;
+            vertical-align: middle
+        }
+
+        .mini-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width .4s
         }
 
         .saldo {
             font-weight: 700;
-            font-size: .88rem
+            font-size: .82rem
+        }
+
+        .saldo.zero {
+            color: var(--green);
+            text-decoration: line-through;
+            opacity: .6
         }
 
         .saldo.rest {
             color: var(--red)
         }
 
-        .saldo.zero {
-            color: var(--g400);
-            text-decoration: line-through
-        }
-
-        .saldo.ok {
-            color: var(--g800)
-        }
-
-        /* TABLE FOOTER */
         .tbl-footer {
-            padding: 14px 20px;
-            background: var(--g50);
+            padding: 14px 16px;
             border-top: 2px solid var(--g200);
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
-            gap: 12px
+            gap: 12px;
+            background: var(--g50)
         }
 
         .chips {
             display: flex;
-            gap: 16px;
+            gap: 14px;
             flex-wrap: wrap
         }
 
+        .chip {
+            background: var(--white);
+            border: 1px solid var(--g200);
+            border-radius: 8px;
+            padding: 8px 14px;
+            min-width: 130px
+        }
+
         .chip .lbl {
-            font-size: .64rem;
+            font-size: .62rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: .07em;
-            color: var(--g400)
+            letter-spacing: .06em;
+            color: var(--g400);
+            margin-bottom: 2px
         }
 
         .chip .val {
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: var(--g800);
-            margin-top: 1px
+            font-size: 1rem;
+            font-weight: 800
         }
 
         .chip .val.blue {
             color: var(--blue)
         }
 
-        .chip .sub {
-            font-size: .68rem;
-            color: var(--g400)
-        }
-
-        /* BUTTONS */
+        /* BOTONES */
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            gap: 6px;
+            padding: 8px 16px;
             border: none;
             border-radius: 8px;
-            padding: 9px 20px;
-            font-family: 'Inter', sans-serif;
-            font-size: .85rem;
+            font-family: 'Inter';
+            font-size: .78rem;
             font-weight: 700;
             cursor: pointer;
-            transition: background var(--tr), transform .1s
-        }
-
-        .btn:active {
-            transform: scale(.97)
+            transition: all .2s
         }
 
         .btn.blue {
             background: var(--blue);
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(29, 78, 216, .3)
+            color: #fff
         }
 
         .btn.blue:hover {
-            background: #1e40af
-        }
-
-        .btn.blue:disabled {
-            background: var(--g200);
-            color: var(--g400);
-            cursor: not-allowed;
-            box-shadow: none
+            background: var(--blue-dk)
         }
 
         .btn.green {
@@ -425,13 +414,12 @@
         }
 
         .btn.green:hover {
-            background: #166534
+            background: #15803d
         }
 
         .btn.ghost {
             background: var(--g100);
-            color: var(--g600);
-            border: 1px solid var(--g200)
+            color: var(--g600)
         }
 
         .btn.ghost:hover {
@@ -439,19 +427,33 @@
         }
 
         .btn.sm {
-            padding: 6px 12px;
-            font-size: .75rem
+            padding: 5px 10px;
+            font-size: .7rem
         }
 
-        /* OVERLAY + PANEL */
+        .btn:disabled {
+            opacity: .45;
+            cursor: not-allowed
+        }
+
+        .btn.red {
+            background: var(--red);
+            color: #fff
+        }
+
+        .btn.red:hover {
+            background: #dc2626
+        }
+
+        /* OVERLAY + PANEL (slide-in derecho) */
         .overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, .45);
-            z-index: 100;
+            background: rgba(0, 0, 0, .35);
+            z-index: 90;
             opacity: 0;
             pointer-events: none;
-            transition: opacity var(--tr)
+            transition: opacity .3s
         }
 
         .overlay.open {
@@ -463,17 +465,15 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: var(--pw);
-            max-width: 100vw;
-            height: 100dvh;
+            width: 500px;
+            max-width: 95vw;
+            height: 100vh;
             background: var(--white);
-            z-index: 101;
-            box-shadow: -4px 0 32px rgba(0, 0, 0, .18);
-            display: flex;
-            flex-direction: column;
+            z-index: 100;
             transform: translateX(100%);
-            transition: transform var(--tr);
-            overflow: hidden
+            transition: transform .35s;
+            display: flex;
+            flex-direction: column
         }
 
         .panel.open {
@@ -483,78 +483,60 @@
         .panel-hdr {
             padding: 18px 20px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            flex-shrink: 0
-        }
-
-        .panel-hdr.blue-bg {
-            background: linear-gradient(135deg, var(--blue-dk), var(--blue));
-            color: #fff
-        }
-
-        .panel-hdr.green-bg {
-            background: linear-gradient(135deg, #166534, var(--green));
-            color: #fff
+            align-items: center;
+            border-bottom: 1px solid var(--g200)
         }
 
         .panel-hdr h2 {
-            font-size: .95rem;
-            font-weight: 700;
+            font-size: .92rem;
+            font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 7px
+            gap: 8px
         }
 
-        .btn-x {
-            background: rgba(255, 255, 255, .15);
-            border: none;
-            color: #fff;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: .95rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background .2s
-        }
-
-        .btn-x:hover {
-            background: rgba(255, 255, 255, .3)
+        .panel-hdr.blue-bg {
+            background: var(--blue-lt);
+            color: var(--blue-dk)
         }
 
         .panel-body {
             flex: 1;
             overflow-y: auto;
-            padding: 18px;
+            padding: 18px 20px;
             display: flex;
             flex-direction: column;
             gap: 14px
         }
 
         .panel-footer {
-            padding: 14px 18px;
+            padding: 14px 20px;
             border-top: 1px solid var(--g200);
             display: flex;
-            gap: 9px;
-            background: var(--white);
-            flex-shrink: 0
+            gap: 8px
         }
 
-        /* BOXES inside panel */
+        .btn-x {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            color: var(--g400)
+        }
+
+        .btn-x:hover {
+            color: var(--g800)
+        }
+
+        /* INFO BOX */
         .info-box {
             border-radius: 8px;
-            padding: 13px 15px
+            padding: 12px 14px
         }
 
         .info-box.blue {
             background: var(--blue-lt)
-        }
-
-        .info-box.green {
-            background: var(--green-lt)
         }
 
         .info-box.gray {
@@ -562,160 +544,83 @@
             border: 1px solid var(--g200)
         }
 
-        .info-box label {
-            font-size: .63rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .07em;
-            color: var(--blue);
-            display: block;
-            margin-bottom: 2px
-        }
-
-        .info-box.green label {
-            color: var(--green)
-        }
-
-        .info-box.gray label {
-            color: var(--g600)
-        }
-
-        .info-box .val {
-            font-size: .92rem;
-            font-weight: 800;
-            color: var(--blue-dk)
-        }
-
-        .info-box.green .val {
-            color: #14532d
+        .info-box.green {
+            background: var(--green-lt)
         }
 
         .info-box-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px
+            gap: 8px
         }
 
-        /* ABONO history */
-        .abono-row {
+        .info-box label {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 7px 10px;
-            border-radius: 6px;
-            background: var(--g50);
-            font-size: .78rem;
-            border-left: 3px solid var(--blue)
-        }
-
-        .abono-row .fecha {
-            color: var(--g400);
-            font-size: .68rem
-        }
-
-        .abono-row .monto {
+            gap: 5px;
+            font-size: .64rem;
             font-weight: 700;
-            color: var(--green)
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--g400)
         }
 
-        /* progress bar large */
+        .info-box .val {
+            font-size: .9rem;
+            font-weight: 800;
+            margin-top: 1px
+        }
+
+        /* PROGRESS BAR */
         .prog-bar-bg {
-            height: 10px;
+            height: 8px;
             background: var(--g200);
-            border-radius: 99px;
+            border-radius: 4px;
             overflow: hidden
         }
 
         .prog-bar-fill {
             height: 100%;
-            border-radius: 99px;
-            transition: width .4s
+            border-radius: 4px;
+            transition: width .5s
         }
 
         .prog-bar-fill.blue {
-            background: linear-gradient(90deg, var(--blue), #60a5fa)
+            background: var(--blue)
         }
 
         .prog-bar-fill.green {
-            background: linear-gradient(90deg, var(--green), #4ade80)
+            background: var(--green)
         }
 
         .prog-labels {
             display: flex;
             justify-content: space-between;
-            font-size: .65rem;
-            color: var(--g400);
-            margin-top: 4px
-        }
-
-        /* INVESTOR cards */
-        .inv-card {
-            border: 1px solid var(--g200);
-            border-radius: 8px;
-            padding: 11px 13px;
-            margin-bottom: 7px
-        }
-
-        .inv-top {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px
-        }
-
-        .inv-av {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: .78rem;
-            font-weight: 700;
-            color: #fff;
-            flex-shrink: 0
-        }
-
-        .inv-name {
-            font-weight: 700;
-            font-size: .82rem
-        }
-
-        .inv-sub {
-            font-size: .67rem;
-            color: var(--g400)
-        }
-
-        .inv-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px
-        }
-
-        .ic .l {
             font-size: .62rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .05em;
+            color: var(--g400);
+            margin-top: 3px
+        }
+
+        /* ABONO ROW */
+        .abono-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+            background: var(--white);
+            border-radius: 6px;
+            border: 1px solid var(--g200)
+        }
+
+        .abono-row .fecha {
+            font-size: .66rem;
             color: var(--g400)
         }
 
-        .ic .v {
-            font-size: .8rem;
+        .abono-row .monto {
             font-weight: 700;
-            margin-top: 1px
-        }
-
-        .ic .v.cap {
-            color: var(--g800)
-        }
-
-        .ic .v.gan {
-            color: var(--green)
-        }
-
-        .ic .v.tot {
-            color: var(--blue)
+            color: var(--green);
+            font-size: .82rem
         }
 
         /* AMOUNT INPUT */
@@ -739,7 +644,7 @@
             width: 100%;
             border: 1.5px solid var(--g200);
             border-radius: 7px;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter';
             font-size: .95rem;
             font-weight: 700;
             color: var(--g800);
@@ -751,7 +656,6 @@
             border-color: var(--blue)
         }
 
-        /* NOTA info */
         .nota {
             font-size: .7rem;
             color: var(--g400);
@@ -795,11 +699,92 @@
             background: var(--green)
         }
 
+        .toast.error {
+            background: var(--red)
+        }
+
         .toast.info {
             background: var(--blue)
         }
 
-        /* LEGEND */
+        /* MODAL FACTURA */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .4);
+            z-index: 150;
+            display: none;
+            align-items: center;
+            justify-content: center
+        }
+
+        .modal-overlay.open {
+            display: flex
+        }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: var(--r);
+            padding: 24px;
+            width: 500px;
+            max-width: 92vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, .15)
+        }
+
+        .modal-box h3 {
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .form-row {
+            margin-bottom: 12px
+        }
+
+        .form-row label {
+            display: block;
+            font-size: .72rem;
+            font-weight: 600;
+            color: var(--g600);
+            margin-bottom: 4px
+        }
+
+        .form-row input,
+        .form-row select,
+        .form-row textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1.5px solid var(--g200);
+            border-radius: 7px;
+            font-family: 'Inter';
+            font-size: .84rem;
+            outline: none;
+            transition: border-color .2s
+        }
+
+        .form-row input:focus,
+        .form-row select:focus,
+        .form-row textarea:focus {
+            border-color: var(--blue)
+        }
+
+        .form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px
+        }
+
         .legend {
             display: flex;
             gap: 14px;
@@ -822,70 +807,26 @@
             border-radius: 3px
         }
 
-        /* LIQUIDATION BADGE (on table) */
-        .btn-liq {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: #fef3c7;
-            color: #92400e;
-            border: none;
-            border-radius: 5px;
-            padding: 3px 8px;
-            font-family: 'Inter';
-            font-size: .66rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background .2s
-        }
-
-        .btn-liq:hover {
-            background: #fde68a
-        }
-
         @media(max-width:720px) {
-            :root {
-                --pw: 100vw
-            }
-
-            .client-card {
-                grid-template-columns: 1fr 1fr
+            .distribuidores-grid {
+                grid-template-columns: 1fr
             }
 
             .hdr {
                 flex-direction: column
             }
         }
-
-        @keyframes pop {
-            0% {
-                transform: scale(.9)
-            }
-
-            60% {
-                transform: scale(1.05)
-            }
-
-            100% {
-                transform: scale(1)
-            }
-        }
-
-        .pop {
-            animation: pop .35s ease
-        }
     </style>
 </head>
 
 <body>
-
     <!-- OVERLAY -->
     <div class="overlay" id="overlay" onclick="closePanel()"></div>
 
     <!-- TOAST -->
     <div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toast-msg"></span></div>
 
-    <!-- ═══ PANEL: REGISTRAR ABONO ═════════════════════════════════════════ -->
+    <!-- ═══ PANEL: REGISTRAR ABONO ═══ -->
     <div class="panel" id="panel-abono">
         <div class="panel-hdr blue-bg">
             <h2><i class="fa-solid fa-piggy-bank"></i> Registrar Abono</h2>
@@ -900,187 +841,199 @@
         </div>
     </div>
 
-    <!-- ═══ PANEL: LIQUIDACIÓN INVERSORES ═════════════════════════════════ -->
-    <div class="panel" id="panel-liq">
-        <div class="panel-hdr green-bg">
-            <h2><i class="fa-solid fa-sack-dollar"></i> Liquidación de Inversores</h2>
-            <button class="btn-x" onclick="closeLiq()"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="panel-body" id="panel-liq-body"></div>
-        <div class="panel-footer">
-            <button class="btn ghost" style="flex:1" onclick="closeLiq()">Cerrar</button>
+    <!-- ═══ MODAL: NUEVA/EDITAR FACTURA ═══ -->
+    <div class="modal-overlay" id="modal-factura">
+        <div class="modal-box">
+            <h3 id="modal-factura-title"><i class="fa-solid fa-file-circle-plus"></i> Nueva Factura</h3>
+            <form id="factura-form" onsubmit="guardarFactura(event)">
+                <input type="hidden" id="fac-id" />
+                <div class="form-row">
+                    <label>Nro. Documento *</label>
+                    <input id="fac-numero" type="text" required placeholder="Ej: F002-0009505" />
+                </div>
+                <div class="form-row-2">
+                    <div class="form-row">
+                        <label>Fecha Emisión *</label>
+                        <input id="fac-emision" type="date" required />
+                    </div>
+                    <div class="form-row">
+                        <label>Fecha Vencimiento *</label>
+                        <input id="fac-vencim" type="date" required />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Monto Total (S/) *</label>
+                    <input id="fac-monto" type="number" step="0.01" min="0.01" required placeholder="0.00" />
+                </div>
+                <div class="form-row-2">
+                    <div class="form-row">
+                        <label>Banco</label>
+                        <input id="fac-banco" type="text" placeholder="Ej: BCP" />
+                    </div>
+                    <div class="form-row">
+                        <label>Nro. Letra</label>
+                        <input id="fac-letra" type="text" placeholder="Ej: LT-0001" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Notas</label>
+                    <textarea id="fac-notas" rows="2" placeholder="Observaciones opcionales..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn blue" style="flex:1"><i class="fa-solid fa-save"></i>
+                        Guardar</button>
+                    <button type="button" class="btn ghost" onclick="cerrarModalFactura()">Cancelar</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- ═══ PÁGINA PRINCIPAL ═══════════════════════════════════════════════ -->
+    <!-- ═══ PÁGINA PRINCIPAL ═══ -->
     <div class="page">
 
         <!-- HEADER -->
         <div class="hdr">
             <div>
-                <h1><i class="fa-solid fa-building"></i> CORPORACION DAY LUM S.A.C</h1>
-                <div class="sub">R.U.C: 20601234567 · Huancayo, Junín, Perú</div>
-                <div class="badge-hdr"><i class="fa-solid fa-file-invoice-dollar"></i> Estado de Cuenta</div>
+                <h1><i class="fa-solid fa-file-invoice-dollar"></i> Facturación</h1>
+                <div class="sub">Gestión de facturas y abonos del comprador</div>
+                <div class="badge-hdr"><i class="fa-solid fa-user"></i> <span id="nombre-comprador">Comprador</span>
+                </div>
             </div>
             <div style="text-align:right">
                 <div class="dt-label">Fecha y Hora</div>
                 <div class="dt-val" id="reloj"></div>
+                <a href="../dashboard-comprador.html" class="btn-back" style="margin-top:8px">
+                    <i class="fa-solid fa-arrow-left"></i> Volver al Dashboard
+                </a>
             </div>
         </div>
 
-        <!-- CLIENTE -->
-        <div class="client-card">
-            <div class="cf"><label><i class="fa-solid fa-user"></i> Cliente</label><span>PEÑA GRANILLA ALICIA</span>
+        <!-- ═══ PASO 1: SELECCIONAR DISTRIBUIDOR ═══ -->
+        <div id="vista-distribuidores">
+            <div class="sec-title"><i class="fa-solid fa-truck"></i> Selecciona un distribuidor</div>
+            <div class="nota" style="margin-bottom:14px;border-left-color:var(--blue)">
+                <b><i class="fa-solid fa-circle-info"></i> ¿Cómo funciona?</b><br>
+                Selecciona un distribuidor para ver y gestionar las facturas que tienes con él.
+                Puedes agregar nuevas facturas, registrar abonos y ver el progreso de pago.
             </div>
-            <div class="cf"><label><i class="fa-solid fa-id-card"></i> Nro. RUC</label><span>10432247657</span></div>
-            <div class="cf"><label><i class="fa-solid fa-phone"></i> Teléfono</label><span>951 679 240</span></div>
-            <div class="cf full"><label><i class="fa-solid fa-location-dot"></i> Dirección</label><span>BSJ. LOS
-                    GIRASOLES S/N SEC10 – EL TAMBO – HUANCAYO – JUNÍN</span></div>
-        </div>
-
-        <!-- FLUJO INFO -->
-        <div class="nota" style="margin-bottom:16px;border-left-color:var(--blue)">
-            <b><i class="fa-solid fa-circle-info"></i> ¿Cómo funciona?</b><br>
-            El comprador acumula dinero de sus ventas y lo abona progresivamente a cada factura.
-            Los <b>inversionistas</b> aportaron el capital inicial y recibirán su capital + ganancia (5%)
-            <b>una vez que la factura quede completamente pagada</b>.
-        </div>
-
-        <!-- TABLA -->
-        <div class="sec-title"><i class="fa-solid fa-file-invoice"></i> Facturas de Crédito</div>
-
-        <div class="legend">
-            <div class="legend-item">
-                <div class="ld" style="background:#fee2e2;border:1px solid #fca5a5"></div> Vencida
-            </div>
-            <div class="legend-item">
-                <div class="ld" style="background:#fefce8;border:1px solid #fde047"></div> Próxima a vencer
-            </div>
-            <div class="legend-item">
-                <div class="ld" style="background:#dcfce7;border:1px solid #86efac"></div> Completada
-            </div>
-            <div class="legend-item">
-                <div class="ld" style="background:#fff;border:1px solid #e5e7eb"></div> Sin vencer
-            </div>
-        </div>
-
-        <div class="tbl-card">
-            <div class="tbl-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="c"><input type="checkbox" id="chk-all" title="Seleccionar pendientes" /></th>
-                            <th>Nro. Documento</th>
-                            <th>Fecha Emisión</th>
-                            <th>Fecha Vencim.</th>
-                            <th class="c">Días Venc.</th>
-                            <th class="r">Saldo Deudor (S/)</th>
-                            <th class="r">Abonado (S/)</th>
-                            <th class="r">Progreso</th>
-                            <th>Bancos (Letras)</th>
-                            <th>Nro. Letra</th>
-                            <th class="c">Estado</th>
-                            <th class="c">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody"></tbody>
-                </table>
-            </div>
-            <div class="tbl-footer">
-                <div class="chips">
-                    <div class="chip">
-                        <div class="lbl"><i class="fa-solid fa-sigma"></i> Deuda total</div>
-                        <div class="val" id="total-general">S/ 0.00</div>
-                        <div class="sub" id="total-count-all">— facturas</div>
-                    </div>
-                    <div class="chip">
-                        <div class="lbl"><i class="fa-solid fa-check-square"></i> Seleccionado</div>
-                        <div class="val blue" id="total-sel">S/ 0.00</div>
-                        <div class="sub" id="total-count-sel">0 selec.</div>
-                    </div>
-                    <div class="chip">
-                        <div class="lbl"><i class="fa-solid fa-piggy-bank"></i> Total abonado</div>
-                        <div class="val" style="color:var(--green)" id="total-abonado">S/ 0.00</div>
-                        <div class="sub">acumulado</div>
-                    </div>
+            <div class="distribuidores-grid" id="distribuidores-grid">
+                <div style="text-align:center;padding:40px;color:var(--g400)">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size:1.5rem"></i>
+                    <div style="margin-top:8px">Cargando distribuidores...</div>
                 </div>
-                <button class="btn blue" id="btn-pagar" disabled onclick="openAbonoPanel()">
-                    <i class="fa-solid fa-piggy-bank"></i> Abonar seleccionadas
-                </button>
             </div>
         </div>
 
-        <div style="font-size:.72rem;color:var(--g400);text-align:center;padding:4px">
-            <i class="fa-solid fa-circle-info"></i>
-            Selecciona una o varias facturas y registra el abono que el comprador juntó. La liquidación a inversores se
-            activa al completar el pago total.
+        <!-- ═══ PASO 2: FACTURAS DEL DISTRIBUIDOR ═══ -->
+        <div id="vista-facturas">
+            <div
+                style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+                <div>
+                    <div class="sec-title" style="margin-bottom:2px"><i class="fa-solid fa-file-invoice"></i> Facturas
+                        de: <span id="dist-nombre" style="color:var(--blue)"></span></div>
+                </div>
+                <div style="display:flex;gap:8px">
+                    <button class="btn ghost" onclick="volverDistribuidores()"><i class="fa-solid fa-arrow-left"></i>
+                        Cambiar distribuidor</button>
+                    <button class="btn blue" onclick="abrirModalFactura()"><i class="fa-solid fa-plus"></i> Nueva
+                        Factura</button>
+                </div>
+            </div>
+
+            <div class="nota" style="margin-bottom:14px;border-left-color:var(--blue)">
+                <b><i class="fa-solid fa-circle-info"></i> Nota:</b>
+                El comprador acumula dinero de sus ventas y lo abona progresivamente a cada factura.
+                El comprador se hace cargo de su propio crédito y devolución.
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="ld" style="background:#fff5f5;border:1px solid #fca5a5"></div> Vencida
+                </div>
+                <div class="legend-item">
+                    <div class="ld" style="background:#fffbeb;border:1px solid #fde047"></div> Próxima a vencer
+                </div>
+                <div class="legend-item">
+                    <div class="ld" style="background:#f0fdf4;border:1px solid #86efac"></div> Completada
+                </div>
+                <div class="legend-item">
+                    <div class="ld" style="background:#fff;border:1px solid #e2e8f0"></div> Sin vencer
+                </div>
+            </div>
+
+            <div class="tbl-card">
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="c"><input type="checkbox" id="chk-all" title="Seleccionar pendientes" /></th>
+                                <th>Nro. Documento</th>
+                                <th>Fecha Emisión</th>
+                                <th>Fecha Vencim.</th>
+                                <th class="c">Días Venc.</th>
+                                <th class="r">Saldo Deudor (S/)</th>
+                                <th class="r">Abonado (S/)</th>
+                                <th class="r">Progreso</th>
+                                <th>Banco</th>
+                                <th>Nro. Letra</th>
+                                <th class="c">Estado</th>
+                                <th class="c">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody"></tbody>
+                    </table>
+                </div>
+                <div class="tbl-footer">
+                    <div class="chips">
+                        <div class="chip">
+                            <div class="lbl"><i class="fa-solid fa-sigma"></i> Deuda total</div>
+                            <div class="val" id="total-general">S/ 0.00</div>
+                            <div class="sub" id="total-count-all">— facturas</div>
+                        </div>
+                        <div class="chip">
+                            <div class="lbl"><i class="fa-solid fa-check-square"></i> Seleccionado</div>
+                            <div class="val blue" id="total-sel">S/ 0.00</div>
+                            <div class="sub" id="total-count-sel">0 selec.</div>
+                        </div>
+                        <div class="chip">
+                            <div class="lbl"><i class="fa-solid fa-piggy-bank"></i> Total abonado</div>
+                            <div class="val" style="color:var(--green)" id="total-abonado">S/ 0.00</div>
+                            <div class="sub">acumulado</div>
+                        </div>
+                    </div>
+                    <button class="btn blue" id="btn-pagar" disabled onclick="openAbonoPanel()">
+                        <i class="fa-solid fa-piggy-bank"></i> Abonar seleccionadas
+                    </button>
+                </div>
+            </div>
+
+            <div style="font-size:.72rem;color:var(--g400);text-align:center;padding:8px 4px;margin-top:6px">
+                <i class="fa-solid fa-circle-info"></i>
+                Selecciona una o varias facturas y registra el abono que juntaste de tus ventas.
+            </div>
         </div>
     </div>
 
+    <script src="../js/config.js"></script>
+    <script src="../js/app.js"></script>
     <script>
-        /* ═══ DATOS ═══════════════════════════════════════════════════════════ */
-        const GANANCIA = 0.05; // 5% sobre capital
+        /* ═══ SESIÓN ══════════════════════════════════════════════════════════ */
+        const compradorId = sessionStorage.getItem('userId');
+        const compradorNombre = sessionStorage.getItem('userName');
+        if (!compradorId || sessionStorage.getItem('userRole') !== 'comprador') {
+            window.location.href = '../login.html';
+        }
+        document.getElementById('nombre-comprador').textContent = compradorNombre || 'Comprador';
 
-        // Cada factura tiene: abonos[] = [{fecha, monto}], inversores[]
-        let facturas = [
-            {
-                id: 'F002-0009505', emision: '21/01/2026', vencim: '05/02/2026', diasVenc: 5,
-                total: 3360.36, bancos: 'BCP', numLetra: 'LT-0001',
-                abonos: [],
-                inversores: [
-                    { nombre: 'Ana López', inic: 'AL', color: '#7c3aed', capital: 2000.00 },
-                    { nombre: 'Carlos Ruiz', inic: 'CR', color: '#0369a1', capital: 1360.36 },
-                ]
-            },
-            {
-                id: 'F002-0009558', emision: '28/01/2026', vencim: '12/02/2026', diasVenc: -2,
-                total: 4860.18, bancos: 'BBVA', numLetra: 'LT-0002',
-                abonos: [],
-                inversores: [
-                    { nombre: 'Marta Gómez', inic: 'MG', color: '#0f766e', capital: 3000.00 },
-                    { nombre: 'Luis Pérez', inic: 'LP', color: '#b45309', capital: 1860.18 },
-                ]
-            },
-            {
-                id: 'F002-0009594', emision: '06/02/2026', vencim: '21/02/2026', diasVenc: -11,
-                total: 4110.27, bancos: 'Interbank', numLetra: 'LT-0003',
-                abonos: [],
-                inversores: [
-                    { nombre: 'Ana López', inic: 'AL', color: '#7c3aed', capital: 2500.00 },
-                    { nombre: 'Rosa Mendoza', inic: 'RM', color: '#be185d', capital: 1610.27 },
-                ]
-            },
-            {
-                id: 'F002-0009595', emision: '06/02/2026', vencim: '08/03/2026', diasVenc: -26,
-                total: 2622.27, bancos: 'Scotiabank', numLetra: 'LT-0004',
-                abonos: [],
-                inversores: [
-                    { nombre: 'Carlos Ruiz', inic: 'CR', color: '#0369a1', capital: 1200.00 },
-                    { nombre: 'Luis Pérez', inic: 'LP', color: '#b45309', capital: 822.27 },
-                    { nombre: 'Rosa Mendoza', inic: 'RM', color: '#be185d', capital: 600.00 },
-                ]
-            },
-        ];
-
-        // Factura activa para el panel de abono
+        /* ═══ ESTADO ══════════════════════════════════════════════════════════ */
+        let distribuidorSeleccionado = null;
+        let facturas = [];   // datos reales desde la API
         let idxAbono = [];
 
-        /* ═══ HELPERS ═════════════════════════════════════════════════════════ */
         const fmt = n => new Intl.NumberFormat('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
-        const totalAbonado = f => f.abonos.reduce((s, a) => s + a.monto, 0);
-        const saldoPendiente = f => Math.max(0, f.total - totalAbonado(f));
-        const isDone = f => saldoPendiente(f) < 0.01;
+        const fmtFecha = d => { const dt = new Date(d + 'T00:00:00'); return dt.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' }); };
 
-        function hoy() {
-            const d = new Date();
-            return d.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        }
-        function horaFmt() {
-            const d = new Date();
-            return d.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        }
-
-        /* ═══ RELOJ ═══════════════════════════════════════════════════════════ */
+        /* ═══ RELOJ ══════════════════════════════════════════════════════════ */
         function actualizarReloj() {
             const n = new Date();
             document.getElementById('reloj').textContent =
@@ -1089,86 +1042,155 @@
         }
         actualizarReloj(); setInterval(actualizarReloj, 1000);
 
-        /* ═══ RENDER TABLA ════════════════════════════════════════════════════ */
+        /* ═══ PASO 1: CARGAR DISTRIBUIDORES ══════════════════════════════════ */
+        async function cargarDistribuidores() {
+            try {
+                const response = await fetch(`${window.API_URL}/api/distribuidores`);
+                const data = await response.json();
+                const grid = document.getElementById('distribuidores-grid');
+
+                if (!data.length) {
+                    grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--g400)">No hay distribuidores registrados.</div>';
+                    return;
+                }
+
+                const emojis = ['🏭', '🏢', '🏬', '🏪', '📦', '🚛', '🏗️', '🔧'];
+                grid.innerHTML = data.map((d, i) => `
+                    <div class="dist-card" onclick="seleccionarDistribuidor(${d.id}, '${d.nombre.replace(/'/g, "\\'")}')">
+                        <div class="emoji">${emojis[i % emojis.length]}</div>
+                        <div class="name">${d.nombre}</div>
+                        <div class="info">${d.contacto || ''} ${d.telefono ? '· ' + d.telefono : ''}</div>
+                        <div class="arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Error cargando distribuidores:', err);
+                document.getElementById('distribuidores-grid').innerHTML =
+                    '<div style="padding:40px;text-align:center;color:var(--red)"><i class="fa-solid fa-triangle-exclamation"></i> Error al cargar distribuidores</div>';
+            }
+        }
+
+        function seleccionarDistribuidor(id, nombre) {
+            distribuidorSeleccionado = { id, nombre };
+            document.getElementById('dist-nombre').textContent = nombre;
+            document.getElementById('vista-distribuidores').style.display = 'none';
+            document.getElementById('vista-facturas').style.display = 'block';
+            cargarFacturas();
+        }
+
+        function volverDistribuidores() {
+            distribuidorSeleccionado = null;
+            document.getElementById('vista-distribuidores').style.display = 'block';
+            document.getElementById('vista-facturas').style.display = 'none';
+        }
+
+        /* ═══ PASO 2: CARGAR FACTURAS ════════════════════════════════════════ */
+        async function cargarFacturas() {
+            try {
+                const response = await fetch(`${window.API_URL}/api/facturas-comprador?comprador_id=${compradorId}&distribuidor_id=${distribuidorSeleccionado.id}`);
+                facturas = await response.json();
+
+                // Para cada factura, cargar los abonos
+                for (let f of facturas) {
+                    const resp2 = await fetch(`${window.API_URL}/api/facturas-comprador/${f.id}/abonos`);
+                    f.abonos = await resp2.json();
+                    f.totalAbonado = parseFloat(f.total_abonado) || 0;
+                    f.saldoPendiente = Math.max(0, parseFloat(f.monto_total) - f.totalAbonado);
+                    f.diasVencido = parseInt(f.dias_vencido) || 0;
+                    f.done = f.saldoPendiente < 0.01;
+                }
+
+                renderTabla();
+            } catch (err) {
+                console.error('Error cargando facturas:', err);
+                showToast('Error al cargar facturas', 'error');
+            }
+        }
+
+        /* ═══ RENDER TABLA ═══════════════════════════════════════════════════ */
         function renderTabla() {
             const tbody = document.getElementById('tbody');
             tbody.innerHTML = '';
             let sumTotal = 0, sumAbonado = 0, countPend = 0;
 
+            if (facturas.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="12" class="c" style="padding:30px;color:var(--g400)"><i class="fa-solid fa-inbox" style="font-size:1.5rem;display:block;margin-bottom:8px"></i>No hay facturas con este distribuidor.<br>Haz clic en "+ Nueva Factura" para agregar una.</td></tr>';
+                document.getElementById('total-general').textContent = 'S/ 0.00';
+                document.getElementById('total-abonado').textContent = 'S/ 0.00';
+                document.getElementById('total-count-all').textContent = '0 facturas';
+                return;
+            }
+
             facturas.forEach((f, idx) => {
-                const abonado = totalAbonado(f);
-                const saldo = saldoPendiente(f);
-                const done = isDone(f);
-                const pct = Math.min(100, abonado / f.total * 100);
-                sumTotal += f.total; sumAbonado += abonado;
+                const monto = parseFloat(f.monto_total);
+                const abonado = f.totalAbonado;
+                const saldo = f.saldoPendiente;
+                const done = f.done;
+                const pct = Math.min(100, monto > 0 ? abonado / monto * 100 : 0);
+                const dias = f.diasVencido;
+                sumTotal += monto; sumAbonado += abonado;
                 if (!done) countPend++;
 
-                // fila class
                 let rc = '';
                 if (done) rc = 'done';
-                else if (f.diasVenc > 0) rc = 'overdue';
-                else if (f.diasVenc >= -5) rc = 'near-due';
+                else if (dias > 0) rc = 'overdue';
+                else if (dias >= -5) rc = 'near-due';
 
-                // badge dias
                 let dClass = 'ok', dIcon = 'fa-circle-check', dTxt = 'OK';
-                if (f.diasVenc > 0) { dClass = 'ov'; dIcon = 'fa-triangle-exclamation'; dTxt = 'Vencida'; }
-                else if (f.diasVenc >= -5) { dClass = 'nd'; dIcon = 'fa-clock'; dTxt = 'Pronto'; }
-                const diasStr = f.diasVenc > 0 ? '+' + f.diasVenc : String(f.diasVenc);
+                if (dias > 0) { dClass = 'ov'; dIcon = 'fa-triangle-exclamation'; dTxt = 'Vencida'; }
+                else if (dias >= -5) { dClass = 'nd'; dIcon = 'fa-clock'; dTxt = 'Pronto'; }
+                const diasStr = dias > 0 ? '+' + dias : String(dias);
 
-                // estado badge
                 let eClass = 'eb-pend', eTxt = 'Pendiente';
                 if (done) { eClass = 'eb-done'; eTxt = '✅ Completada'; }
                 else if (abonado > 0) { eClass = 'eb-abono'; eTxt = 'En Abono'; }
-                else if (f.diasVenc > 0) { eClass = 'eb-venc'; eTxt = 'Vencida'; }
+                else if (dias > 0) { eClass = 'eb-venc'; eTxt = 'Vencida'; }
 
-                // saldo visual
                 let saldoHtml = '';
-                if (done) saldoHtml = `<span class="saldo zero">S/ ${fmt(f.total)}</span>`;
-                else if (abonado > 0) saldoHtml = `<span class="saldo rest">S/ ${fmt(saldo)}</span><span style="font-size:.66rem;color:var(--g400);display:block">de S/ ${fmt(f.total)}</span>`;
-                else saldoHtml = `<span class="saldo ok">S/ ${fmt(f.total)}</span>`;
+                if (done) saldoHtml = `<span class="saldo zero">S/ ${fmt(monto)}</span>`;
+                else if (abonado > 0) saldoHtml = `<span class="saldo rest">S/ ${fmt(saldo)}</span><span style="font-size:.66rem;color:var(--g400);display:block">de S/ ${fmt(monto)}</span>`;
+                else saldoHtml = `<span class="saldo">S/ ${fmt(monto)}</span>`;
 
-                // barra progreso
-                const barColor = done ? 'green' : 'blue';
                 const miniBar = `<span class="mini-bar"><span class="mini-bar-fill" style="width:${pct.toFixed(1)}%;background:${done ? 'var(--green)' : 'var(--blue)'}"></span></span>`;
 
-                // botones acciones
                 let acciones = '';
                 if (done) {
-                    acciones = `<button class="btn-liq" onclick="openLiq(${idx})"><i class="fa-solid fa-sack-dollar"></i> Ver liquidación</button>`;
+                    acciones = `<span class="estado-badge eb-done" style="font-size:.62rem">✅ Pagada</span>`;
                 } else {
-                    acciones = `<button class="btn blue sm" onclick="openUnaFactura(${idx})" title="Registrar abono para esta factura"><i class="fa-solid fa-plus"></i> Abonar</button>`;
+                    acciones = `
+                        <button class="btn blue sm" onclick="openUnaFactura(${idx})" title="Registrar abono"><i class="fa-solid fa-plus"></i> Abonar</button>
+                        <button class="btn ghost sm" onclick="editarFactura(${idx})" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                    `;
                 }
 
                 const tr = document.createElement('tr');
                 tr.className = rc; tr.dataset.idx = idx;
                 tr.innerHTML = `
-      <td class="c"><input type="checkbox" class="chk" data-idx="${idx}" ${done ? 'disabled title="Factura completada"' : ''}></td>
-      <td><span class="doc-num">${f.id}</span></td>
-      <td>${f.emision}</td>
-      <td>${f.vencim}</td>
-      <td class="c"><span class="dias-badge ${dClass}"><i class="fa-solid ${dIcon}" style="font-size:.6em"></i> ${diasStr} <span style="font-size:.65em;font-weight:500">${dTxt}</span></span></td>
-      <td class="r">${saldoHtml}</td>
-      <td class="r" style="color:var(--green);font-weight:700">${abonado > 0 ? 'S/ ' + fmt(abonado) : '—'}</td>
-      <td class="c">${miniBar} <span style="font-size:.68rem;color:var(--g400)">${pct.toFixed(0)}%</span></td>
-      <td>${f.bancos}</td>
-      <td style="color:var(--g600)">${f.numLetra}</td>
-      <td class="c"><span class="estado-badge ${eClass}">${eTxt}</span></td>
-      <td class="c">${acciones}</td>
-    `;
+                    <td class="c"><input type="checkbox" class="chk" data-idx="${idx}" ${done ? 'disabled title="Factura completada"' : ''}></td>
+                    <td><span class="doc-num">${f.numero}</span></td>
+                    <td>${fmtFecha(f.fecha_emision)}</td>
+                    <td>${fmtFecha(f.fecha_vencim)}</td>
+                    <td class="c"><span class="dias-badge ${dClass}"><i class="fa-solid ${dIcon}" style="font-size:.6em"></i> ${diasStr} <span style="font-size:.65em;font-weight:500">${dTxt}</span></span></td>
+                    <td class="r">${saldoHtml}</td>
+                    <td class="r" style="color:var(--green);font-weight:700">${abonado > 0 ? 'S/ ' + fmt(abonado) : '—'}</td>
+                    <td class="c">${miniBar} <span style="font-size:.68rem;color:var(--g400)">${pct.toFixed(0)}%</span></td>
+                    <td>${f.banco || '—'}</td>
+                    <td style="color:var(--g600)">${f.num_letra || '—'}</td>
+                    <td class="c"><span class="estado-badge ${eClass}">${eTxt}</span></td>
+                    <td class="c" style="white-space:nowrap">${acciones}</td>
+                `;
                 tbody.appendChild(tr);
             });
 
-            // totales footer
             document.getElementById('total-general').textContent = 'S/ ' + fmt(sumTotal);
             document.getElementById('total-abonado').textContent = 'S/ ' + fmt(sumAbonado);
             document.getElementById('total-count-all').textContent = countPend + ' pendiente(s) · ' + facturas.length + ' total';
 
-            // re-ligar checkboxes
             document.querySelectorAll('.chk').forEach(c => c.addEventListener('change', onChk));
             actualizarSel();
         }
 
-        /* ═══ SELECCIÓN CHECKBOXES ════════════════════════════════════════════ */
+        /* ═══ CHECKBOXES ═════════════════════════════════════════════════════ */
         document.getElementById('chk-all').addEventListener('change', function () {
             document.querySelectorAll('.chk:not(:disabled)').forEach(c => c.checked = this.checked);
             actualizarSel();
@@ -1180,7 +1202,7 @@
         }
         function actualizarSel() {
             const idxs = getIdxsSel();
-            const total = idxs.reduce((s, i) => s + saldoPendiente(facturas[i]), 0);
+            const total = idxs.reduce((s, i) => s + facturas[i].saldoPendiente, 0);
             document.getElementById('total-sel').textContent = 'S/ ' + fmt(total);
             document.getElementById('total-count-sel').textContent = idxs.length + ' selec.';
             document.getElementById('btn-pagar').disabled = idxs.length === 0;
@@ -1189,7 +1211,60 @@
             return [...document.querySelectorAll('.chk:checked')].map(c => +c.dataset.idx);
         }
 
-        /* ═══ PANEL ABONO ════════════════════════════════════════════════════ */
+        /* ═══ MODAL FACTURA (CRUD) ═══════════════════════════════════════════ */
+        function abrirModalFactura(factura = null) {
+            document.getElementById('fac-id').value = factura ? factura.id : '';
+            document.getElementById('fac-numero').value = factura ? factura.numero : '';
+            document.getElementById('fac-emision').value = factura ? factura.fecha_emision : '';
+            document.getElementById('fac-vencim').value = factura ? factura.fecha_vencim : '';
+            document.getElementById('fac-monto').value = factura ? factura.monto_total : '';
+            document.getElementById('fac-banco').value = factura ? (factura.banco || '') : '';
+            document.getElementById('fac-letra').value = factura ? (factura.num_letra || '') : '';
+            document.getElementById('fac-notas').value = factura ? (factura.notas || '') : '';
+            document.getElementById('modal-factura-title').innerHTML = factura
+                ? '<i class="fa-solid fa-pen"></i> Editar Factura'
+                : '<i class="fa-solid fa-file-circle-plus"></i> Nueva Factura';
+            document.getElementById('modal-factura').classList.add('open');
+        }
+        function cerrarModalFactura() {
+            document.getElementById('modal-factura').classList.remove('open');
+        }
+        function editarFactura(idx) {
+            abrirModalFactura(facturas[idx]);
+        }
+
+        async function guardarFactura(e) {
+            e.preventDefault();
+            const id = document.getElementById('fac-id').value;
+            const body = {
+                comprador_id: parseInt(compradorId),
+                distribuidor_id: distribuidorSeleccionado.id,
+                numero: document.getElementById('fac-numero').value,
+                fecha_emision: document.getElementById('fac-emision').value,
+                fecha_vencim: document.getElementById('fac-vencim').value,
+                monto_total: parseFloat(document.getElementById('fac-monto').value),
+                banco: document.getElementById('fac-banco').value || null,
+                num_letra: document.getElementById('fac-letra').value || null,
+                notas: document.getElementById('fac-notas').value || null,
+            };
+            try {
+                const url = id
+                    ? `${window.API_URL}/api/facturas-comprador/${id}`
+                    : `${window.API_URL}/api/facturas-comprador`;
+                const method = id ? 'PUT' : 'POST';
+                const resp = await fetch(url, {
+                    method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+                });
+                if (!resp.ok) { const err = await resp.json(); throw new Error(err.error); }
+                cerrarModalFactura();
+                showToast(id ? 'Factura actualizada ✅' : 'Factura creada ✅', 'success');
+                await cargarFacturas();
+            } catch (err) {
+                showToast('Error: ' + err.message, 'error');
+            }
+        }
+
+        /* ═══ PANEL ABONO ═══════════════════════════════════════════════════ */
         function openAbonoPanel() {
             idxAbono = getIdxsSel();
             if (!idxAbono.length) return;
@@ -1199,7 +1274,6 @@
             document.body.style.overflow = 'hidden';
         }
         function openUnaFactura(idx) {
-            // Deseleccionar todo y forzar solo esta
             document.querySelectorAll('.chk').forEach(c => c.checked = false);
             const chk = document.querySelector(`.chk[data-idx="${idx}"]`);
             if (chk) chk.checked = true;
@@ -1213,102 +1287,92 @@
         function closePanel() {
             document.getElementById('overlay').classList.remove('open');
             document.getElementById('panel-abono').classList.remove('open');
-            document.getElementById('panel-liq').classList.remove('open');
             document.body.style.overflow = '';
         }
 
         function renderPanelAbono() {
             const body = document.getElementById('panel-abono-body');
-            const pendienteTotal = idxAbono.reduce((s, i) => s + saldoPendiente(facturas[i]), 0);
+            const pendienteTotal = idxAbono.reduce((s, i) => s + facturas[i].saldoPendiente, 0);
 
-            // Construir lista de facturas con sus abonos previos
             let facturasHtml = idxAbono.map(i => {
                 const f = facturas[i];
-                const ab = totalAbonado(f);
-                const pend = saldoPendiente(f);
-                const pct = Math.min(100, ab / f.total * 100);
-                const hist = f.abonos.length ? f.abonos.map(a => `
-      <div class="abono-row" style="margin-top:4px">
-        <div><div style="font-weight:600">${a.desc || 'Abono registrado'}</div><div class="fecha">${a.fecha}</div></div>
-        <div class="monto">+S/ ${fmt(a.monto)}</div>
-      </div>`).join('')
+                const ab = f.totalAbonado;
+                const pend = f.saldoPendiente;
+                const pct = Math.min(100, parseFloat(f.monto_total) > 0 ? ab / parseFloat(f.monto_total) * 100 : 0);
+                const hist = f.abonos && f.abonos.length ? f.abonos.map(a => `
+                    <div class="abono-row" style="margin-top:4px">
+                        <div><div style="font-weight:600">${a.descripcion || 'Abono registrado'}</div><div class="fecha">${fmtFecha(a.fecha)}</div></div>
+                        <div class="monto">+S/ ${fmt(parseFloat(a.monto))}</div>
+                    </div>`).join('')
                     : '<div style="font-size:.72rem;color:var(--g400);padding:4px 0">Sin abonos registrados aún.</div>';
 
                 return `
-    <div class="info-box gray" style="margin-bottom:0">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-        <span style="font-weight:700;color:var(--blue-dk)">${f.id}</span>
-        <span style="font-size:.72rem;color:var(--g400)">Vence ${f.vencim}</span>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
-        <div><label>Total factura</label><div class="val" style="font-size:.82rem;font-weight:700">S/ ${fmt(f.total)}</div></div>
-        <div><label>Abonado</label><div style="font-size:.82rem;font-weight:700;color:var(--green)">S/ ${fmt(ab)}</div></div>
-        <div><label>Pendiente</label><div style="font-size:.82rem;font-weight:700;color:var(--red)">S/ ${fmt(pend)}</div></div>
-      </div>
-      <div class="prog-bar-bg" style="margin-bottom:4px"><div class="prog-bar-fill blue" style="width:${pct.toFixed(1)}%"></div></div>
-      <div class="prog-labels"><span>0%</span><span>${pct.toFixed(0)}% abonado</span><span>100%</span></div>
-      <div style="margin-top:8px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:4px">Historial de abonos</div>
-      ${hist}
-    </div>`;
+                    <div class="info-box gray" style="margin-bottom:0">
+                        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+                            <span style="font-weight:700;color:var(--blue-dk)">${f.numero}</span>
+                            <span style="font-size:.72rem;color:var(--g400)">Vence ${fmtFecha(f.fecha_vencim)}</span>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+                            <div><label>Total factura</label><div class="val" style="font-size:.82rem;font-weight:700">S/ ${fmt(parseFloat(f.monto_total))}</div></div>
+                            <div><label>Abonado</label><div style="font-size:.82rem;font-weight:700;color:var(--green)">S/ ${fmt(ab)}</div></div>
+                            <div><label>Pendiente</label><div style="font-size:.82rem;font-weight:700;color:var(--red)">S/ ${fmt(pend)}</div></div>
+                        </div>
+                        <div class="prog-bar-bg" style="margin-bottom:4px"><div class="prog-bar-fill blue" style="width:${pct.toFixed(1)}%"></div></div>
+                        <div class="prog-labels"><span>0%</span><span>${pct.toFixed(0)}% abonado</span><span>100%</span></div>
+                        <div style="margin-top:8px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:4px">Historial de abonos</div>
+                        ${hist}
+                    </div>`;
             }).join('');
 
             body.innerHTML = `
-    <!-- Resumen global -->
-    <div class="info-box blue info-box-grid">
-      <div><label><i class="fa-solid fa-file-invoice"></i> Facturas</label><div class="val">${idxAbono.length} seleccionada${idxAbono.length > 1 ? 's' : ''}</div></div>
-      <div><label><i class="fa-solid fa-money-bill-wave"></i> Saldo total pendiente</label><div class="val">S/ ${fmt(pendienteTotal)}</div></div>
-    </div>
+                <div class="info-box blue info-box-grid">
+                    <div><label><i class="fa-solid fa-file-invoice"></i> Facturas</label><div class="val">${idxAbono.length} seleccionada${idxAbono.length > 1 ? 's' : ''}</div></div>
+                    <div><label><i class="fa-solid fa-money-bill-wave"></i> Saldo total pendiente</label><div class="val">S/ ${fmt(pendienteTotal)}</div></div>
+                </div>
 
-    <!-- Detalle de facturas -->
-    <div>
-      <div class="sec-title" style="font-size:.64rem;margin-bottom:8px"><i class="fa-solid fa-list-check"></i> Detalle por factura</div>
-      <div style="display:flex;flex-direction:column;gap:10px">${facturasHtml}</div>
-    </div>
+                <div>
+                    <div class="sec-title" style="font-size:.64rem;margin-bottom:8px"><i class="fa-solid fa-list-check"></i> Detalle por factura</div>
+                    <div style="display:flex;flex-direction:column;gap:10px">${facturasHtml}</div>
+                </div>
 
-    <!-- Formulario abono -->
-    <div class="info-box gray">
-      <div class="sec-title" style="font-size:.64rem;margin-bottom:10px"><i class="fa-solid fa-piggy-bank"></i> Ingresar nuevo abono</div>
-      <div style="margin-bottom:10px">
-        <label style="font-size:.72rem;font-weight:600;color:var(--g600);display:block;margin-bottom:5px">Descripción del abono</label>
-        <input id="abono-desc" type="text" placeholder="Ej: Venta del día, cobro cliente..." style="width:100%;padding:8px 10px;border:1.5px solid var(--g200);border-radius:7px;font-family:Inter;font-size:.84rem;outline:none" />
-      </div>
-      <div style="margin-bottom:10px">
-        <label style="font-size:.72rem;font-weight:600;color:var(--g600);display:block;margin-bottom:8px">
-          Monto a abonar (S/)
-          <span style="font-weight:400;color:var(--g400)">— máx. S/ ${fmt(pendienteTotal)}</span>
-        </label>
-        <!-- Slider de monto -->
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <input type="range" id="slider-monto" min="0" max="${pendienteTotal.toFixed(2)}" step="0.01" value="0"
-            style="flex:1;height:6px;cursor:pointer;accent-color:var(--blue)"
-            oninput="onSliderInput(this.value)" />
-          <span id="slider-pct-lbl" style="font-size:.75rem;font-weight:700;color:var(--blue);min-width:36px;text-align:right">0%</span>
-        </div>
-        <!-- Input numérico sincronizado -->
-        <div class="amt-wrap">
-          <span class="cur">S/</span>
-          <input class="amt-input" id="abono-monto" type="number" min="0.01" max="${pendienteTotal.toFixed(2)}" step="0.01" placeholder="0.00" oninput="onAbonoInput(this.value)" />
-        </div>
-      </div>
-      <!-- barra de progreso del abono -->
-      <div style="margin-top:8px">
-        <div class="prog-bar-bg"><div class="prog-bar-fill blue" id="abono-bar" style="width:0%"></div></div>
-        <div class="prog-labels"><span>S/ 0</span><span id="abono-pct">0% del saldo pendiente</span><span>S/ ${fmt(pendienteTotal)}</span></div>
-      </div>
-    </div>
+                <div class="info-box gray">
+                    <div class="sec-title" style="font-size:.64rem;margin-bottom:10px"><i class="fa-solid fa-piggy-bank"></i> Ingresar nuevo abono</div>
+                    <div style="margin-bottom:10px">
+                        <label style="font-size:.72rem;font-weight:600;color:var(--g600);display:block;margin-bottom:5px">Descripción del abono</label>
+                        <input id="abono-desc" type="text" placeholder="Ej: Venta del día, cobro cliente..." style="width:100%;padding:8px 10px;border:1.5px solid var(--g200);border-radius:7px;font-family:Inter;font-size:.84rem;outline:none" />
+                    </div>
+                    <div style="margin-bottom:10px">
+                        <label style="font-size:.72rem;font-weight:600;color:var(--g600);display:block;margin-bottom:8px">
+                            Monto a abonar (S/)
+                            <span style="font-weight:400;color:var(--g400)">— máx. S/ ${fmt(pendienteTotal)}</span>
+                        </label>
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                            <input type="range" id="slider-monto" min="0" max="${pendienteTotal.toFixed(2)}" step="0.01" value="0"
+                                style="flex:1;height:6px;cursor:pointer;accent-color:var(--blue)"
+                                oninput="onSliderInput(this.value)" />
+                            <span id="slider-pct-lbl" style="font-size:.75rem;font-weight:700;color:var(--blue);min-width:36px;text-align:right">0%</span>
+                        </div>
+                        <div class="amt-wrap">
+                            <span class="cur">S/</span>
+                            <input class="amt-input" id="abono-monto" type="number" min="0.01" max="${pendienteTotal.toFixed(2)}" step="0.01" placeholder="0.00" oninput="onAbonoInput(this.value)" />
+                        </div>
+                    </div>
+                    <div style="margin-top:8px">
+                        <div class="prog-bar-bg"><div class="prog-bar-fill blue" id="abono-bar" style="width:0%"></div></div>
+                        <div class="prog-labels"><span>S/ 0</span><span id="abono-pct">0% del saldo pendiente</span><span>S/ ${fmt(pendienteTotal)}</span></div>
+                    </div>
+                </div>
 
-    <div class="nota">
-      <b><i class="fa-solid fa-circle-info"></i> Nota:</b>
-      El abono se registra desde las <b>ventas propias del comprador</b>.
-      Los inversores <b>no intervienen</b> en este proceso; recibirán su capital + 5% de ganancia
-      automáticamente al completar el pago de cada factura.
-    </div>
-  `;
+                <div class="nota">
+                    <b><i class="fa-solid fa-circle-info"></i> Nota:</b>
+                    El abono se registra desde las <b>ventas propias del comprador</b>.
+                    Tú te haces cargo de tu crédito y devolución.
+                </div>
+            `;
         }
 
-        // Slider → actualiza input + barra
         function onSliderInput(v) {
-            const pendiente = idxAbono.reduce((s, i) => s + saldoPendiente(facturas[i]), 0);
+            const pendiente = idxAbono.reduce((s, i) => s + facturas[i].saldoPendiente, 0);
             const val = Math.min(parseFloat(v) || 0, pendiente);
             const pct = pendiente > 0 ? val / pendiente * 100 : 0;
             const input = document.getElementById('abono-monto');
@@ -1320,9 +1384,8 @@
             if (pctEl) pctEl.textContent = pct.toFixed(0) + '% del saldo pendiente';
             if (lbl) lbl.textContent = pct.toFixed(0) + '%';
         }
-        // Input numérico → actualiza slider + barra
         function onAbonoInput(v) {
-            const pendiente = idxAbono.reduce((s, i) => s + saldoPendiente(facturas[i]), 0);
+            const pendiente = idxAbono.reduce((s, i) => s + facturas[i].saldoPendiente, 0);
             const val = Math.min(parseFloat(v) || 0, pendiente);
             const pct = pendiente > 0 ? val / pendiente * 100 : 0;
             const slider = document.getElementById('slider-monto');
@@ -1335,128 +1398,45 @@
             if (lbl) lbl.textContent = pct.toFixed(0) + '%';
         }
 
-        /* ═══ CONFIRMAR ABONO ═════════════════════════════════════════════════ */
-        function confirmarAbono() {
+        /* ═══ CONFIRMAR ABONO ════════════════════════════════════════════════ */
+        async function confirmarAbono() {
             const raw = parseFloat(document.getElementById('abono-monto').value) || 0;
             const desc = (document.getElementById('abono-desc').value || 'Abono registrado').trim();
             if (raw <= 0) { showToast('Ingresa un monto mayor a 0', 'error'); return; }
 
-            const pendienteTotal = idxAbono.reduce((s, i) => s + saldoPendiente(facturas[i]), 0);
+            const pendienteTotal = idxAbono.reduce((s, i) => s + facturas[i].saldoPendiente, 0);
             const monto = Math.min(raw, pendienteTotal);
-            const fecha = hoy();
+            const fecha = new Date().toISOString().split('T')[0];
 
-            // Distribuir el monto entre las facturas seleccionadas proporcionalmente a su saldo pendiente
-            let resto = monto;
-            idxAbono.forEach(i => {
-                if (resto <= 0) return;
-                const f = facturas[i];
-                const pend = saldoPendiente(f);
-                if (pend <= 0) return;
-                // proporción: cuánto va a esta factura
-                const prop = pend / pendienteTotal;
-                const abonoFact = Math.min(pend, parseFloat((monto * prop).toFixed(2)));
-                f.abonos.push({ fecha, monto: abonoFact, desc });
-                resto -= abonoFact;
-            });
-            // Si quedó resto por redondeo, sumarlo a la última
-            if (resto > 0.001 && idxAbono.length > 0) {
-                facturas[idxAbono[idxAbono.length - 1]].abonos.push({ fecha, monto: parseFloat(resto.toFixed(2)), desc: 'Ajuste redondeo' });
-            }
+            try {
+                // Distribuir proporcionalmente entre facturas seleccionadas
+                let resto = monto;
+                for (const i of idxAbono) {
+                    if (resto <= 0) break;
+                    const f = facturas[i];
+                    const pend = f.saldoPendiente;
+                    if (pend <= 0) continue;
+                    const prop = pend / pendienteTotal;
+                    const abonoFact = Math.min(pend, parseFloat((monto * prop).toFixed(2)));
 
-            // ¿Alguna factura quedó completada?
-            const completadas = idxAbono.filter(i => isDone(facturas[i]));
+                    await fetch(`${window.API_URL}/api/facturas-comprador/${f.id}/abonos`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ monto: abonoFact, descripcion: desc, fecha })
+                    });
+                    resto -= abonoFact;
+                }
 
-            closePanel();
-            renderTabla();
-            // deseleccionar
-            document.getElementById('chk-all').checked = false;
-
-            const msg = completadas.length > 0
-                ? `✅ Abono S/ ${fmt(monto)} confirmado · ${completadas.length} factura(s) completadas`
-                : `✅ Abono de S/ ${fmt(monto)} registrado correctamente`;
-            showToast(msg, 'success');
-
-            // Si alguna factura se completó, preguntar si quiere ver la liquidación
-            if (completadas.length === 1) {
-                setTimeout(() => openLiq(completadas[0]), 900);
+                closePanel();
+                showToast(`✅ Abono de S/ ${fmt(monto)} registrado correctamente`, 'success');
+                document.getElementById('chk-all').checked = false;
+                await cargarFacturas();
+            } catch (err) {
+                showToast('Error al registrar abono: ' + err.message, 'error');
             }
         }
 
-        /* ═══ PANEL LIQUIDACIÓN INVERSORES ═══════════════════════════════════ */
-        function openLiq(idx) {
-            const f = facturas[idx];
-            const body = document.getElementById('panel-liq-body');
-            const done = isDone(f);
-
-            // Calcular lo que recibirá cada inversor
-            const totalCapital = f.inversores.reduce((s, inv) => s + inv.capital, 0);
-
-            body.innerHTML = `
-    <div class="info-box green info-box-grid">
-      <div><label><i class="fa-solid fa-file-invoice"></i> Factura</label><div class="val">${f.id}</div></div>
-      <div><label><i class="fa-solid fa-circle-check"></i> Estado</label><div class="val">${done ? 'Completada ✅' : 'En Abono ⏳'}</div></div>
-      <div><label><i class="fa-solid fa-coins"></i> Capital total invertido</label><div class="val">S/ ${fmt(totalCapital)}</div></div>
-      <div><label><i class="fa-solid fa-sack-dollar"></i> Total a retornar</label><div class="val">S/ ${fmt(totalCapital * (1 + GANANCIA))}</div></div>
-    </div>
-
-    <div class="nota" style="border-left-color:var(--green)">
-      <b><i class="fa-solid fa-circle-info"></i> Retorno de inversores</b><br>
-      Cada inversor recupera su capital + 5% de ganancia. Este pago es realizado por la empresa
-      <b>una vez cobrada la factura al comprador</b>. El comprador pagó con sus propias ventas.
-    </div>
-
-    <div>
-      <div class="sec-title" style="font-size:.64rem;margin-bottom:8px"><i class="fa-solid fa-users"></i> Detalle por inversor</div>
-      ${f.inversores.map(inv => {
-                const ganancia = parseFloat((inv.capital * GANANCIA).toFixed(2));
-                const total = inv.capital + ganancia;
-                const pct = totalCapital > 0 ? Math.round(inv.capital / totalCapital * 100) : 0;
-                return `
-        <div class="inv-card">
-          <div class="inv-top">
-            <div class="inv-av" style="background:${inv.color}">${inv.inic}</div>
-            <div>
-              <div class="inv-name">${inv.nombre}</div>
-              <div class="inv-sub">Participación: ${pct}% del capital · Tasa: 5%</div>
-            </div>
-          </div>
-          <div class="inv-grid">
-            <div class="ic"><div class="l"><i class="fa-solid fa-coins"></i> Capital</div><div class="v cap">S/ ${fmt(inv.capital)}</div></div>
-            <div class="ic"><div class="l"><i class="fa-solid fa-arrow-trend-up"></i> Ganancia</div><div class="v gan">+ S/ ${fmt(ganancia)}</div></div>
-            <div class="ic"><div class="l"><i class="fa-solid fa-hand-holding-dollar"></i> Recibirá</div><div class="v tot">S/ ${fmt(total)}</div></div>
-          </div>
-        </div>`;
-            }).join('')}
-    </div>
-
-    <!-- Historial de abonos del comprador (informativo) -->
-    <div>
-      <div class="sec-title" style="font-size:.64rem;margin-bottom:8px"><i class="fa-solid fa-history"></i> Abonos del comprador</div>
-      ${f.abonos.length ? f.abonos.map((a, n) => `
-        <div class="abono-row" style="margin-bottom:5px">
-          <div>
-            <span style="font-weight:600">#${n + 1} ${a.desc}</span>
-            <div class="fecha">${a.fecha}</div>
-          </div>
-          <div class="monto">S/ ${fmt(a.monto)}</div>
-        </div>`).join('')
-                    : '<div style="font-size:.72rem;color:var(--g400)">Sin abonos aún.</div>'}
-      <div style="display:flex;justify-content:space-between;padding:8px 10px;margin-top:4px;border-radius:6px;background:var(--green-lt);font-weight:700;font-size:.8rem">
-        <span style="color:var(--green)">Total abonado por el comprador</span>
-        <span style="color:var(--green)">S/ ${fmt(totalAbonado(f))}</span>
-      </div>
-    </div>
-  `;
-
-            document.getElementById('overlay').classList.add('open');
-            document.getElementById('panel-liq').classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeLiq() {
-            closePanel();
-        }
-
-        /* ═══ TOAST ═══════════════════════════════════════════════════════════ */
+        /* ═══ TOAST ══════════════════════════════════════════════════════════ */
         function showToast(msg, tipo = 'success') {
             const t = document.getElementById('toast');
             t.className = 'toast ' + tipo;
@@ -1465,8 +1445,8 @@
             setTimeout(() => t.classList.remove('show'), 4000);
         }
 
-        /* ═══ INIT ════════════════════════════════════════════════════════════ */
-        renderTabla();
+        /* ═══ INIT ═══════════════════════════════════════════════════════════ */
+        cargarDistribuidores();
     </script>
 </body>
 
