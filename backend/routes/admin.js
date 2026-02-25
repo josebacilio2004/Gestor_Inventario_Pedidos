@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/database');
+const bcrypt = require('bcryptjs');
 
 // GET - Obtener todos los administradores
 router.get('/', async (req, res) => {
@@ -25,8 +26,8 @@ router.post('/login', async (req, res) => {
         }
 
         const result = await pool.query(
-            'SELECT * FROM usuarios_admin WHERE usuario = $1 AND password_hash = $2 AND activo = TRUE',
-            [usuario, password]
+            'SELECT * FROM usuarios_admin WHERE usuario = $1 AND activo = TRUE',
+            [usuario]
         );
 
         if (result.rows.length === 0) {
@@ -34,6 +35,11 @@ router.post('/login', async (req, res) => {
         }
 
         const admin = result.rows[0];
+        const isMatch = await bcrypt.compare(password, admin.password_hash);
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Credenciales inválidas' });
+        }
+
         delete admin.password_hash; // No enviar el hash al frontend
 
         res.json(admin);
