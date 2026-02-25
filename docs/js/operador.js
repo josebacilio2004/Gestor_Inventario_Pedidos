@@ -50,6 +50,8 @@ function verificarSesion() {
 
 function logout() {
     localStorage.removeItem('operador_sesion');
+    sessionStorage.clear();
+    localStorage.clear();
     window.location.href = '../login.html';
 }
 
