@@ -145,7 +145,7 @@ body {
 }
 
 .nav-link {
-  color: var(--text-secondary);
+  color: #e2e8f0;
   text-decoration: none;
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--radius-md);
@@ -169,8 +169,8 @@ body {
 }
 
 .nav-link:hover {
-  color: var(--text-primary);
-  background: var(--bg-hover);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
   transform: translateY(-1px);
 }
 
@@ -180,8 +180,8 @@ body {
 }
 
 .nav-link.active {
-  color: var(--text-primary);
-  background: var(--bg-active);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Contenedor principal */
