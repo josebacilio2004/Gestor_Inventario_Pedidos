@@ -1095,20 +1095,92 @@
                 const response = await fetch(`${window.API_URL}/api/facturas-comprador?comprador_id=${compradorId}&distribuidor_id=${distribuidorSeleccionado.id}`);
                 facturas = await response.json();
 
+                // Fecha de hoy (medianoche local)
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+
                 // Para cada factura, cargar los abonos
                 for (let f of facturas) {
                     const resp2 = await fetch(`${window.API_URL}/api/facturas-comprador/${f.id}/abonos`);
                     f.abonos = await resp2.json();
                     f.totalAbonado = parseFloat(f.total_abonado) || 0;
                     f.saldoPendiente = Math.max(0, parseFloat(f.monto_total) - f.totalAbonado);
-                    f.diasVencido = parseInt(f.dias_vencido) || 0;
+
+                    // Cálculo de días vencido (Local Time)
+                    const v = new Date(f.fecha_vencim.split('T')[0] + 'T00:00:00');
+                    f.diasVencido = Math.floor((hoy - v) / (1000 * 60 * 60 * 24));
+
                     f.done = f.saldoPendiente < 0.01;
                 }
 
                 renderTabla();
+                mostrarNotificacionVencimientos();
             } catch (err) {
                 console.error('Error cargando facturas:', err);
                 showToast('Error al cargar facturas', 'error');
+            }
+        }
+
+        /* ═══ NOTIFICACIONES DE VENCIMIENTOS ═════════════════════════════════ */
+        function mostrarNotificacionVencimientos() {
+            const nearDueCount = facturas.filter(f => !f.done && f.diasVencido >= -5 && f.diasVencido <= 0).length;
+            const overdueCount = facturas.filter(f => !f.done && f.diasVencido > 0).length;
+
+            if (nearDueCount > 0 || overdueCount > 0) {
+                let msg = '';
+                if (overdueCount > 0) msg += `<b>${overdueCount}</b> factura(s) vencida(s). `;
+                if (nearDueCount > 0) msg += `<b>${nearDueCount}</b> factura(s) próxima(s) a vencer.`;
+
+                // Crear elemento de notificación tipo flotante en la esquina
+                const notif = document.createElement('div');
+                notif.style.position = 'fixed';
+                notif.style.top = '20px';
+                notif.style.right = '20px';
+                notif.style.background = 'var(--white)';
+                notif.style.color = '#000';
+                notif.style.padding = '12px 16px';
+                notif.style.borderRadius = '8px';
+                notif.style.boxShadow = '0 10px 25px rgba(0,0,0,0.5)';
+                notif.style.borderLeft = '4px solid ' + (overdueCount > 0 ? 'var(--red)' : 'var(--blue)');
+                notif.style.zIndex = '9999';
+                notif.style.fontFamily = 'Inter, sans-serif';
+                notif.style.fontSize = '0.85rem';
+                notif.style.display = 'flex';
+                notif.style.alignItems = 'center';
+                notif.style.gap = '10px';
+                notif.style.animation = 'slideInRight 0.3s forwards';
+
+                notif.innerHTML = `
+                    <i class="fa-solid fa-bell" style="color:var(--${overdueCount > 0 ? 'red' : 'blue'}); font-size:1.2rem;"></i>
+                    <div>
+                        <div style="font-weight:700; margin-bottom:2px;">¡Atención con tus pagos!</div>
+                        <div style="color:var(--g600);">${msg}</div>
+                    </div>
+                    <button style="background:none;border:none;color:var(--g400);cursor:pointer;font-size:1.1rem;align-self:flex-start" onclick="this.parentElement.remove()">×</button>
+                `;
+
+                // Add animation styles if not present
+                if (!document.getElementById('anim-notif')) {
+                    const style = document.createElement('style');
+                    style.id = 'anim-notif';
+                    style.innerHTML = `
+                        @keyframes slideInRight {
+                            from { transform: translateX(100%); opacity: 0; }
+                            to { transform: translateX(0); opacity: 1; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                document.body.appendChild(notif);
+
+                // Autoremove after 8 seconds
+                setTimeout(() => {
+                    if (document.body.contains(notif)) {
+                        notif.style.animation = 'slideInRight 0.3s reverse forwards';
+                        setTimeout(() => notif.remove(), 300);
+                    }
+                }, 8000);
             }
         }
 
