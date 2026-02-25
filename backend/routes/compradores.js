@@ -1,6 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/database');
+const bcrypt = require('bcryptjs');
+
+// POST - Iniciar sesión Comprador
+router.post('/login', async (req, res) => {
+    try {
+        const { usuario, password } = req.body;
+        if (!usuario || !password) return res.status(400).json({ error: 'Usuario y contraseña son requeridos' });
+
+        const result = await pool.query('SELECT * FROM compradores WHERE usuario = $1 AND activo = true', [usuario]);
+        if (result.rows.length === 0) return res.status(401).json({ error: 'Credenciales incorrectas o usuario inactivo' });
+
+        const comprador = result.rows[0];
+
+        // Comprobar contraseña (soporta bcrypt)
+        const isMatch = await bcrypt.compare(password, comprador.password_hash);
+        if (!isMatch) return res.status(401).json({ error: 'Credenciales incorrectas' });
+
+        res.json({
+            id: comprador.id,
+            nombre: comprador.nombre,
+            usuario: comprador.usuario,
+            rol: 'comprador'
+        });
+    } catch (err) {
+        console.error('Error en login comprador:', err);
+        res.status(500).json({ error: 'Error interno en login' });
+    }
+});
 
 // GET - Obtener todos los compradores (incluye password para login)
 router.get('/', async (req, res) => {

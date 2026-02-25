@@ -1,6 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/database');
+const bcrypt = require('bcryptjs');
+
+// POST - Iniciar sesión Inversionista
+router.post('/login', async (req, res) => {
+    try {
+        const { usuario, password } = req.body;
+        if (!usuario || !password) return res.status(400).json({ error: 'Usuario y contraseña son requeridos' });
+
+        const result = await pool.query('SELECT * FROM inversionistas WHERE usuario = $1 AND activo = true', [usuario]);
+        if (result.rows.length === 0) return res.status(401).json({ error: 'Credenciales incorrectas o usuario inactivo' });
+
+        const inversionista = result.rows[0];
+
+        // Comprobar contraseña (soporta bcrypt)
+        const isMatch = await bcrypt.compare(password, inversionista.password_hash);
+        if (!isMatch) return res.status(401).json({ error: 'Credenciales incorrectas' });
+
+        res.json({
+            id: inversionista.id,
+            nombre: inversionista.nombre,
+            usuario: inversionista.usuario,
+            rol: 'inversionista'
+        });
+    } catch (err) {
+        console.error('Error en login inversionista:', err);
+        res.status(500).json({ error: 'Error interno en login' });
+    }
+});
 
 // GET - Obtener todos los inversionistas (incluye password para login)
 router.get('/', async (req, res) => {
