@@ -13,14 +13,7 @@ TRUNCATE TABLE
     pedidos, 
     pagos_capital, 
     pagos_ganancia, 
-    abonos_factura, 
-    tandas, 
-    aportes_tanda, 
-    pagos_tanda, 
-    pedidos_herramientas, 
-    inventario_herramientas,
-    operadores,
-    actividades_operador
+    abonos_factura
 RESTART IDENTITY CASCADE;
 
 -- 2. Eliminar facturas exceptuando las 2 indicadas
