@@ -22,6 +22,7 @@
                 <li><a href="dashboard-comprador.html" class="nav-link active">Mi Dashboard</a></li>
                 <li><a href="pages/pedidos.html" class="nav-link">Gestionar Pedidos</a></li>
                 <li><a href="pages/estado-cuenta.html" class="nav-link">📄 Facturaciones</a></li>
+                <li><a href="pages/ventas-mayoristas.html" class="nav-link">📦 Ventas Mayoristas</a></li>
                 <li style="margin-left: auto;">
                     <span style="color: #ffffff; font-weight: 600; margin-right: 15px;" id="user-name"></span>
                     <a href="login.html" class="nav-link" style="color: var(--danger);"
@@ -32,9 +33,15 @@
     </nav>
 
     <main class="container">
-        <div class="card-header mb-2">
-            <h1 class="card-title">🛒 Panel de Control - Comprador</h1>
-            <p class="text-secondary">Gestiona tus compras y devoluciones de capital y ganancia</p>
+        <div class="card-header mb-2 d-flex justify-between align-center">
+            <div>
+                <h1 class="card-title">🛒 Panel de Control - Comprador</h1>
+                <p class="text-secondary">Gestiona tus compras y devoluciones de capital y ganancia</p>
+            </div>
+            <button class="btn btn-success" style="font-weight: 700; padding: 12px 24px"
+                onclick="window.location.href='pages/ventas-mayoristas.html'">
+                <i class="fa-solid fa-boxes-packing"></i> Ir a Ventas Mayoristas
+            </button>
         </div>
 
         <!-- Estadísticas del Comprador -->
