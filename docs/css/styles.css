@@ -140,6 +140,8 @@ body {
 
 .navbar-nav {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: var(--spacing-sm);
   list-style: none;
 }
@@ -654,8 +656,16 @@ select.form-control {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .navbar-nav {
+  .navbar-container {
     flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .navbar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
     gap: var(--spacing-xs);
   }
 
