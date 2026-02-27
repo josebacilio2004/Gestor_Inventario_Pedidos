@@ -30,6 +30,7 @@ function renderNavigation() {
     navLinks = `
       <li><a href="dashboard-comprador.html" class="nav-link">🏠 Mi Dashboard</a></li>
       <li><a href="pages/pedidos.html" class="nav-link">📋 Mis Pedidos</a></li>
+      <li><a href="pages/ventas-mayoristas.html" class="nav-link">📦 Ventas Mayoristas</a></li>
     `;
   }
 

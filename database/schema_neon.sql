@@ -155,6 +155,39 @@ CREATE TABLE IF NOT EXISTS pagos_ganancia (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Clientes para las ventas al por mayor
+CREATE TABLE IF NOT EXISTS clientes_mayoristas (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    documento VARCHAR(20),
+    telefono VARCHAR(50),
+    direccion TEXT,
+    activo BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Cabecera de la venta mayorista
+CREATE TABLE IF NOT EXISTS ventas_mayoristas (
+    id SERIAL PRIMARY KEY,
+    comprador_id INT NOT NULL REFERENCES compradores(id),
+    cliente_id INT NOT NULL REFERENCES clientes_mayoristas(id),
+    fecha_venta DATE NOT NULL DEFAULT CURRENT_DATE,
+    total NUMERIC(12,2) NOT NULL DEFAULT 0,
+    estado VARCHAR(20) DEFAULT 'completada',
+    notas TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Detalle de los productos vendidos
+CREATE TABLE IF NOT EXISTS detalles_venta_mayorista (
+    id SERIAL PRIMARY KEY,
+    venta_id INT NOT NULL REFERENCES ventas_mayoristas(id) ON DELETE CASCADE,
+    tipo VARCHAR(50) NOT NULL,   -- 'Pico' o 'Zapapico'
+    marca VARCHAR(50) NOT NULL,  -- 'Tramontina' o 'Bellota'
+    cantidad INT NOT NULL CHECK (cantidad > 0),
+    precio_unitario NUMERIC(10,2) NOT NULL
+);
+
 -- ============================================
 -- FOREIGN KEYS
 -- ============================================

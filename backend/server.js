@@ -15,6 +15,7 @@ const pedidosHerramientasRoutes = require('./routes/pedidos-herramientas');
 const stockHerramientasRoutes = require('./routes/stock-herramientas');
 const tandasRoutes = require('./routes/tandas');
 const facturasCompradorRoutes = require('./routes/facturas-comprador');
+const mayoristasRoutes = require('./routes/mayoristas');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -53,6 +54,7 @@ app.use('/api/pedidos-herramientas', pedidosHerramientasRoutes);
 app.use('/api/stock-herramientas', stockHerramientasRoutes);
 app.use('/api/tandas', tandasRoutes);
 app.use('/api/facturas-comprador', facturasCompradorRoutes);
+app.use('/api/mayoristas', mayoristasRoutes);
 
 // Ruta raíz
 app.get('/', (req, res) => {
