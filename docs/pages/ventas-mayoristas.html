@@ -19,7 +19,7 @@
         }
 
         .stock-card {
-            background: linear-gradient(135deg, var(--white) 0%, #fefefe 100%);
+            background: var(--white);
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -510,7 +510,7 @@
                 </div>
             `;
             itemIndex = 0;
-            updateTotal();
+            calcularTotal();
             addCartItem(); // Agrega la primera línea vacía por defecto
 
             document.getElementById('modalNuevaVenta').classList.add('active');
