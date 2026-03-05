@@ -424,7 +424,7 @@ function actualizarPreviewMO() {
     preview.textContent = formatCurrency(mo);
 
     if (cfg && cantidad > 0) {
-        calc.textContent = `${cantidad} ud ÷ ${cfg.base} × S/${cfg.tarifa} = ${formatCurrency(mo)}`;
+        calc.textContent = `${cantidad} ud × S/${cfg.tarifa} = ${formatCurrency(mo)}`;
     } else {
         calc.textContent = cantidad > 0 ? 'Elige tipo y marca' : 'Ingresa la cantidad';
     }
@@ -526,7 +526,7 @@ function renderItems() {
                 <div class="item-nombre">${item.tipo} <strong>${item.marca}</strong></div>
                 <div class="item-detalle">
                     <span class="cantidad-badge">${item.cantidad} und</span>
-                    <span class="tarifa-badge">S/${cfg?.tarifa || 0}/120ud</span>
+                    <span class="tarifa-badge">S/${cfg?.tarifa || 0}/ud</span>
                 </div>
             </div>
             <div class="item-mo">

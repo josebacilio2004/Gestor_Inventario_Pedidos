@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/database');
 
-// ── Tarifas mano de obra (cada 120 und) ───────────────────────────────
+// ── Tarifas mano de obra por unidad ───────────────────────────────
 const TARIFAS_MANO_OBRA = {
-    'Pico-Tramontina': { base: 120, tarifa: 50 },
-    'Pico-Bellota': { base: 120, tarifa: 65 },
-    'Zapapico-Tramontina': { base: 120, tarifa: 50 },
-    'Zapapico-Bellota': { base: 120, tarifa: 65 },
+    'Pico-Tramontina': { base: 1, tarifa: 0.43 },
+    'Pico-Bellota': { base: 1, tarifa: 0.55 },
+    'Zapapico-Tramontina': { base: 1, tarifa: 0.43 },
+    'Zapapico-Bellota': { base: 1, tarifa: 0.55 },
 };
 
 function calcularManoObra(tipo, marca, cantidad) {
