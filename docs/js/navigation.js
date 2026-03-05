@@ -6,31 +6,35 @@ function renderNavigation() {
 
   if (!userRole) return '';
 
+  const isInPages = window.location.pathname.includes('/pages/');
+  const rootPath = isInPages ? '../' : '';
+  const pagesPath = isInPages ? '' : 'pages/';
+
   let dashboardLink = '';
   let navLinks = '';
 
   if (userRole === 'admin') {
-    dashboardLink = 'index.html';
+    dashboardLink = rootPath + 'index.html';
     navLinks = `
-      <li><a href="index.html" class="nav-link">📊 Dashboard</a></li>
-      <li><a href="pages/productos.html" class="nav-link">📦 Productos</a></li>
-      <li><a href="pages/distribuidores.html" class="nav-link">🏭 Distribuidores</a></li>
-      <li><a href="pages/pedidos.html" class="nav-link">📋 Pedidos</a></li>
-      <li><a href="pages/inversionistas.html" class="nav-link">💰 Inversionistas</a></li>
-      <li><a href="pages/compradores.html" class="nav-link">🛒 Compradores</a></li>
+      <li><a href="${rootPath}index.html" class="nav-link">📊 Dashboard</a></li>
+      <li><a href="${pagesPath}productos.html" class="nav-link">📦 Productos</a></li>
+      <li><a href="${pagesPath}distribuidores.html" class="nav-link">🏭 Distribuidores</a></li>
+      <li><a href="${pagesPath}pedidos.html" class="nav-link">📋 Pedidos</a></li>
+      <li><a href="${pagesPath}inversionistas.html" class="nav-link">💰 Inversionistas</a></li>
+      <li><a href="${pagesPath}compradores.html" class="nav-link">🛒 Compradores</a></li>
     `;
   } else if (userRole === 'inversionista') {
-    dashboardLink = 'dashboard-inversionista.html';
+    dashboardLink = rootPath + 'dashboard-inversionista.html';
     navLinks = `
-      <li><a href="dashboard-inversionista.html" class="nav-link">🏠 Mi Dashboard</a></li>
-      <li><a href="pages/pedidos.html" class="nav-link">📋 Mis Pedidos</a></li>
+      <li><a href="${rootPath}dashboard-inversionista.html" class="nav-link">🏠 Mi Dashboard</a></li>
+      <li><a href="${pagesPath}pedidos.html" class="nav-link">📋 Mis Pedidos</a></li>
     `;
   } else if (userRole === 'comprador') {
-    dashboardLink = 'dashboard-comprador.html';
+    dashboardLink = rootPath + 'dashboard-comprador.html';
     navLinks = `
-      <li><a href="dashboard-comprador.html" class="nav-link">🏠 Mi Dashboard</a></li>
-      <li><a href="pages/pedidos.html" class="nav-link">📋 Mis Pedidos</a></li>
-      <li><a href="pages/ventas-mayoristas.html" class="nav-link">📦 Ventas Mayoristas</a></li>
+      <li><a href="${rootPath}dashboard-comprador.html" class="nav-link">🏠 Mi Dashboard</a></li>
+      <li><a href="${pagesPath}pedidos.html" class="nav-link">📋 Mis Pedidos</a></li>
+      <li><a href="${pagesPath}ventas-mayoristas.html" class="nav-link">📦 Ventas Mayoristas</a></li>
     `;
   }
 
@@ -42,7 +46,7 @@ function renderNavigation() {
           ${navLinks}
           <li style="margin-left: auto;">
             <span style="color: #ffffff; font-weight: 600; margin-right: 1rem;">👤 ${userName || userLogin}</span>
-            <a href="login.html" class="nav-link" style="color: var(--danger);" onclick="sessionStorage.clear(); localStorage.clear();">🚪 Salir</a>
+            <a href="${rootPath}login.html" class="nav-link" style="color: var(--danger);" onclick="sessionStorage.clear(); localStorage.clear();">🚪 Salir</a>
           </li>
         </ul>
       </div>
