@@ -60,26 +60,41 @@ router.get('/stock', async (req, res) => {
             GROUP BY d.tipo, d.marca
         `;
 
-        const [producidosRes, vendidosRes] = await Promise.all([
+        // Query de Productos Ingresados Manualmente (Por la Compradora)
+        const ingresadosQuery = `
+            SELECT tipo, marca, SUM(cantidad) as total_ingresado
+            FROM ingresos_stock_comprador
+            GROUP BY tipo, marca
+        `;
+
+        const [producidosRes, vendidosRes, ingresadosRes] = await Promise.all([
             pool.query(producidosQuery),
-            pool.query(vendidosQuery)
+            pool.query(vendidosQuery),
+            pool.query(ingresadosQuery)
         ]);
 
         const producidos = producidosRes.rows;
         const vendidos = vendidosRes.rows;
+        const ingresados = ingresadosRes.rows;
 
         // Estructura base de inventario predefinida
         const inventario = {
-            'Pico-Tramontina': { tipo: 'Pico', marca: 'Tramontina', producido: 0, vendido: 0, disponible: 0 },
-            'Pico-Bellota': { tipo: 'Pico', marca: 'Bellota', producido: 0, vendido: 0, disponible: 0 },
-            'Zapapico-Tramontina': { tipo: 'Zapapico', marca: 'Tramontina', producido: 0, vendido: 0, disponible: 0 },
-            'Zapapico-Bellota': { tipo: 'Zapapico', marca: 'Bellota', producido: 0, vendido: 0, disponible: 0 }
+            'Pico-Tramontina': { tipo: 'Pico', marca: 'Tramontina', producido: 0, ingresado: 0, vendido: 0, disponible: 0 },
+            'Pico-Bellota': { tipo: 'Pico', marca: 'Bellota', producido: 0, ingresado: 0, vendido: 0, disponible: 0 },
+            'Zapapico-Tramontina': { tipo: 'Zapapico', marca: 'Tramontina', producido: 0, ingresado: 0, vendido: 0, disponible: 0 },
+            'Zapapico-Bellota': { tipo: 'Zapapico', marca: 'Bellota', producido: 0, ingresado: 0, vendido: 0, disponible: 0 }
         };
 
         // Llenar producidos
         producidos.forEach(p => {
             const key = `${p.tipo}-${p.marca}`;
             if (inventario[key]) inventario[key].producido = parseInt(p.total_producido) || 0;
+        });
+
+        // Llenar ingresados manualmente
+        ingresados.forEach(i => {
+            const key = `${i.tipo}-${i.marca}`;
+            if (inventario[key]) inventario[key].ingresado = parseInt(i.total_ingresado) || 0;
         });
 
         // Llenar vendidos
@@ -90,7 +105,7 @@ router.get('/stock', async (req, res) => {
 
         // Calcular disponibles
         Object.keys(inventario).forEach(key => {
-            inventario[key].disponible = inventario[key].producido - inventario[key].vendido;
+            inventario[key].disponible = (inventario[key].producido + inventario[key].ingresado) - inventario[key].vendido;
         });
 
         res.json(Object.values(inventario));
@@ -164,10 +179,30 @@ router.post('/ventas', async (req, res) => {
         res.status(201).json({ message: 'Venta registrada con éxito', venta_id: venta.id });
     } catch (err) {
         await client.query('ROLLBACK');
-        console.error('Error al registrar venta mayorista:', err);
         res.status(500).json({ error: 'Error al registrar venta' });
     } finally {
         client.release();
+    }
+});
+
+// POST - Registrar stock manual ingresado por la compradora
+router.post('/stock-manual', async (req, res) => {
+    try {
+        const { comprador_id, tipo, marca, cantidad, notas } = req.body;
+
+        if (!comprador_id || !tipo || !marca || !cantidad || cantidad <= 0) {
+            return res.status(400).json({ error: 'Datos incompletos o inválidos' });
+        }
+
+        const result = await pool.query(`
+            INSERT INTO ingresos_stock_comprador (comprador_id, tipo, marca, cantidad, notas)
+            VALUES ($1, $2, $3, $4, $5) RETURNING *
+        `, [comprador_id, tipo, marca, cantidad, notas || null]);
+
+        res.status(201).json({ message: 'Stock manual registrado con éxito', ingreso: result.rows[0] });
+    } catch (err) {
+        console.error('Error al registrar stock manual:', err);
+        res.status(500).json({ error: 'Error interno al registrar stock manual' });
     }
 });
 

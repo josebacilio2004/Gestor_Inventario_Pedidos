@@ -135,8 +135,8 @@
         .modal-content select {
             background-color: #f1f5f9;
             border: 2px solid #94a3b8;
-            color: #1e293b;
-            font-weight: 600;
+            color: #000 !important;
+            font-weight: 800;
             padding: 12px 16px;
             border-radius: 8px;
             width: 100%;
@@ -294,10 +294,16 @@
         </h1>
 
         <!-- DASHBOARD DE STOCK -->
-        <h3
-            style="color:var(--g600); font-size:1rem; margin-bottom:15px; text-transform:uppercase; font-weight:700; letter-spacing:1px">
-            <i class="fa-solid fa-cubes"></i> Stock Terminado Disponible
-        </h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3
+                style="color:var(--g600); font-size:1rem; margin:0; text-transform:uppercase; font-weight:700; letter-spacing:1px">
+                <i class="fa-solid fa-cubes"></i> Stock Terminado Disponible
+            </h3>
+            <button class="btn btn-secondary btn-sm" onclick="openModalStock()" id="btn-add-stock-manual"
+                style="display: none;">
+                <i class="fa-solid fa-plus"></i> Ingreso Manual
+            </button>
+        </div>
         <div class="stock-dashboard" id="stock-dashboard">
             <!-- Renderizado desde JS -->
             <div style="grid-column: 1/-1; text-align: center; color: var(--g500); padding: 20px;">
@@ -333,6 +339,50 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL AGREGAR STOCK MANUAL -->
+    <div class="modal" id="modalStockManual">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-box-open" style="color:var(--success)"></i> Ingreso Manual de Stock</h2>
+                <button class="modal-close" onclick="closeModalStock()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-stock-manual" onsubmit="guardarStockManual(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tipo de Herramienta</label>
+                        <select id="stock_tipo" class="form-control" required>
+                            <option value="">- Seleccione -</option>
+                            <option value="Pico">Pico</option>
+                            <option value="Zapapico">Zapapico</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Marca</label>
+                        <select id="stock_marca" class="form-control" required>
+                            <option value="">- Seleccione -</option>
+                            <option value="Tramontina">Tramontina</option>
+                            <option value="Bellota">Bellota</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Cantidad (Unidades)</label>
+                    <input type="number" id="stock_cantidad" class="form-control" required min="1" placeholder="Ej: 50">
+                </div>
+                <div class="form-group">
+                    <label>Notas / Motivo (Opcional)</label>
+                    <input type="text" id="stock_notas" class="form-control"
+                        placeholder="Ej: Compra directa a proveedor x...">
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <button type="button" class="btn" onclick="closeModalStock()"
+                        style="background: var(--g200); color: var(--g800); flex: 1;">Cancelar</button>
+                    <button type="submit" class="btn btn-success" style="flex: 2;">Confirmar Ingreso</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -421,6 +471,11 @@
                 cargarClientes(),
                 cargarVentas()
             ]);
+
+            // Solo mostrar botón manual si el usuario es compradora/administrador
+            if (sessionStorage.getItem('userRole') === 'comprador') {
+                document.getElementById('btn-add-stock-manual').style.display = 'inline-flex';
+            }
         });
 
         async function cargarStock() {
@@ -611,6 +666,57 @@
             });
             document.getElementById('cart-total-display').textContent = sum.toFixed(2);
             return sum;
+        }
+
+        /* MANEJO DE STOCK MANUAL */
+        function openModalStock() {
+            document.getElementById('form-stock-manual').reset();
+            document.getElementById('modalStockManual').classList.add('active');
+        }
+
+        function closeModalStock() {
+            document.getElementById('modalStockManual').classList.remove('active');
+        }
+
+        async function guardarStockManual(e) {
+            e.preventDefault();
+
+            const payload = {
+                comprador_id: parseInt(compradorId),
+                tipo: document.getElementById('stock_tipo').value,
+                marca: document.getElementById('stock_marca').value,
+                cantidad: parseInt(document.getElementById('stock_cantidad').value),
+                notas: document.getElementById('stock_notas').value
+            };
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${window.API_URL}/api/mayoristas/stock-manual`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    closeModalStock();
+                    alert("Stock ingresado exitosamente");
+                    // Recargar tarjetas de stock
+                    await cargarStock();
+                } else {
+                    const errorData = await res.json();
+                    alert(errorData.error || "Ocurrió un error al registrar el stock manual");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Error de conexión con el servidor");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         }
 
         // POST VENTA
