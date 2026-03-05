@@ -157,9 +157,30 @@ function renderHistorialTandas(tandas) {
         const fechaCierre = t.fecha_cierre
             ? parseFecha(t.fecha_cierre).toLocaleDateString('es-PE', fmtCorto)
             : '—';
-        const totalMO = t.total_mano_obra != null && Number(t.total_mano_obra) > 0
-            ? `<div style="font-size:.78rem; color:#059669; font-weight:700; margin-top:.25rem;">S/ ${Number(t.total_mano_obra).toFixed(2)}</div><div style="font-size:.68rem;color:#64748b;">total MO</div>`
-            : '';
+        const totalMO = t.total_mano_obra != null && Number(t.total_mano_obra) > 0 ? Number(t.total_mano_obra) : 0;
+        const totalPagado = t.total_pagado != null ? Number(t.total_pagado) : 0;
+        const saldo = Math.max(0, totalMO - totalPagado);
+
+        let metaHtml = '';
+        if (totalMO > 0) {
+            metaHtml = `
+            <div style="display:flex; justify-content:flex-end; gap:0.5rem; text-align:right; margin-bottom:0.4rem;">
+                <div>
+                    <div style="font-size:.78rem; color:#059669; font-weight:700;">S/ ${totalPagado.toFixed(2)}</div>
+                    <div style="font-size:.65rem;color:#64748b;text-transform:uppercase;">Pagado</div>
+                </div>
+                <div>
+                    <div style="font-size:.78rem; color:#e11d48; font-weight:700;">S/ ${saldo.toFixed(2)}</div>
+                    <div style="font-size:.65rem;color:#64748b;text-transform:uppercase;">Deuda</div>
+                </div>
+            </div>
+            <button class="btn btn-sm" onclick="abrirPagosModal(${t.id}, '${t.nombre.replace(/'/g, "\\'")}', ${totalMO}, ${totalPagado})" 
+                style="font-size:0.7rem; padding:0.25rem 0.5rem; width:100%; border:1px solid #cbd5e1; background:white; cursor:pointer; color:#1a365d; font-weight:600;">
+                💰 Gestionar Pagos
+            </button>
+            `;
+        }
+
         return `
         <div class="tanda-item" style="background:${c.bg}; border-color:${c.border};">
             <div class="tanda-item-left">
@@ -171,9 +192,9 @@ function renderHistorialTandas(tandas) {
                     · 📋 ${Number(t.total_pedidos ?? 0)} pedido(s)
                 </div>
             </div>
-            <div class="tanda-item-right">
-                ${t.total_stock != null ? `<div class="tanda-stock-total">${Number(t.total_stock).toLocaleString('es-PE')} und</div><div style="font-size:.68rem;color:#64748b;">stock restante</div>` : ''}
-                ${totalMO}
+            <div class="tanda-item-right" style="min-width:130px;">
+                ${t.total_stock != null ? `<div class="tanda-stock-total">${Number(t.total_stock).toLocaleString('es-PE')} und</div><div style="font-size:.68rem;color:#64748b;margin-bottom:0.5rem;">stock restante</div>` : ''}
+                ${metaHtml}
             </div>
         </div>`;
     }).join('');
@@ -803,4 +824,113 @@ function showToast(message, type = 'info') {
         toast.style.transform = 'translateX(120%)';
         setTimeout(() => toast.remove(), 350);
     }, 3200);
+}
+
+// ============================================================
+// MODAL GESTIÓN DE PAGOS
+// ============================================================
+let tandaPagosActiva = null;
+
+async function abrirPagosModal(tandaId, tandaNombre, totalMO, totalPagado) {
+    tandaPagosActiva = { id: tandaId, mo: totalMO };
+    const modal = document.getElementById('modal-pagos');
+    modal.style.display = 'flex';
+
+    document.getElementById('modal-pagos-titulo').textContent = 'Pagos: ' + tandaNombre;
+    document.getElementById('pagos-total-mo').textContent = formatCurrency(totalMO);
+
+    // Clear form
+    document.getElementById('nuevo-pago-monto').value = '';
+    document.getElementById('nuevo-pago-notas').value = '';
+
+    await recargarListaPagos();
+}
+
+function closePagosModal() {
+    document.getElementById('modal-pagos').style.display = 'none';
+    tandaPagosActiva = null;
+}
+
+async function recargarListaPagos() {
+    if (!tandaPagosActiva) return;
+    const container = document.getElementById('pagos-lista-container');
+    container.innerHTML = '<div style="padding:1rem; text-align:center;"><span class="spinner"></span> Cargando...</div>';
+
+    try {
+        const pagos = await fetchAPI(`/operador-pagos/${tandaPagosActiva.id}`);
+
+        // Recalcular pagado y saldo
+        const pagadoTotal = pagos.reduce((s, p) => s + Number(p.monto), 0);
+        const saldo = Math.max(0, tandaPagosActiva.mo - pagadoTotal);
+
+        document.getElementById('pagos-total-pagado').textContent = formatCurrency(pagadoTotal);
+        document.getElementById('pagos-saldo').textContent = formatCurrency(saldo);
+
+        // Render lista
+        if (pagos.length === 0) {
+            container.innerHTML = '<div class="items-empty" style="padding:2rem 1rem;">No hay pagos registrados aún para esta tanda.</div>';
+        } else {
+            container.innerHTML = pagos.map(p => {
+                const f = new Date(p.fecha).toLocaleString('es-PE', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                return `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem 1rem; border-bottom:1px solid #f1f5f9; background:white;">
+                    <div>
+                        <div style="font-weight:600; color:#1a365d; font-size:0.9rem;">${p.metodo_pago || 'Pago Registrado'}</div>
+                        <div style="font-size:0.75rem; color:#64748b;">${f} · ${p.notas ? p.notas : ''}</div>
+                    </div>
+                    <div style="font-weight:700; color:#059669; font-size:1rem;">
+                        + ${formatCurrency(p.monto)}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+    } catch (err) {
+        container.innerHTML = `<div style="color:#ef4444; padding:1rem; text-align:center;">Error al cargar pagos: ${err.message}</div>`;
+    }
+}
+
+async function registrarPago() {
+    if (!tandaPagosActiva) return;
+
+    const monto = parseFloat(document.getElementById('nuevo-pago-monto').value);
+    const notas = document.getElementById('nuevo-pago-notas').value.trim();
+
+    if (!monto || monto <= 0) {
+        showToast('⚠️ Ingresa un monto principal válido', 'error');
+        return;
+    }
+
+    const btn = document.getElementById('btn-registrar-pago');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Procesando...';
+
+    try {
+        await fetchAPI('/operador-pagos', {
+            method: 'POST',
+            body: JSON.stringify({
+                operador_id: operadorSesion.id,
+                tanda_id: tandaPagosActiva.id,
+                monto: monto,
+                metodo_pago: 'Pago/Adelanto',
+                notas: notas
+            })
+        });
+
+        document.getElementById('nuevo-pago-monto').value = '';
+        document.getElementById('nuevo-pago-notas').value = '';
+        showToast('✅ Pago registrado correctamente', 'success');
+
+        if (navigator.vibrate) navigator.vibrate(30);
+
+        await recargarListaPagos();
+
+        // Disparar update de la tanda principal de fondo para sync
+        cargarTandas();
+
+    } catch (err) {
+        showToast(`❌ Error: ${err.message}`, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '✅ Confirmar Pago';
+    }
 }
