@@ -293,7 +293,7 @@
     <div id="dynamic-nav"></div>
 
     <div class="container" style="padding: 40px 20px;">
-        <h1 style="color: var(--g900); display: flex; align-items: center; gap: 15px; margin-bottom: 30px;">
+        <h1 style="color: white; display: flex; align-items: center; gap: 15px; margin-bottom: 30px;">
             <div
                 style="background: var(--primary); color: white; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);">
                 <i class="fa-solid fa-boxes-packing"></i>
@@ -304,7 +304,7 @@
         <!-- DASHBOARD DE STOCK -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
             <h3
-                style="color:var(--g600); font-size:1rem; margin:0; text-transform:uppercase; font-weight:700; letter-spacing:1px">
+                style="color: var(--text-secondary); font-size:1rem; margin:0; text-transform:uppercase; font-weight:700; letter-spacing:1px">
                 <i class="fa-solid fa-cubes"></i> Stock Terminado Disponible
             </h3>
             <button class="btn btn-primary btn-sm" onclick="openModalStock()" id="btn-add-stock-manual"
@@ -314,7 +314,7 @@
         </div>
         <div class="stock-dashboard" id="stock-dashboard">
             <!-- Renderizado desde JS -->
-            <div style="grid-column: 1/-1; text-align: center; color: var(--g500); padding: 20px;">
+            <div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 20px;">
                 <i class="fa-solid fa-circle-notch fa-spin"></i> Cargando inventario en tiempo real...
             </div>
         </div>
@@ -322,8 +322,8 @@
         <!-- TABLA DE VENTAS -->
         <div class="ventas-container">
             <div class="header-actions">
-                <h2 style="margin:0; font-size:1.4rem; color:var(--g800)"><i
-                        class="fa-solid fa-file-invoice-dollar"></i> Historial de Ventas</h2>
+                <h2 style="margin:0; font-size:1.4rem; color: white;"><i class="fa-solid fa-file-invoice-dollar"></i>
+                    Historial de Ventas</h2>
                 <button class="btn btn-primary" onclick="openNuevaVentaModal()">
                     <i class="fa-solid fa-plus"></i> Nueva Venta
                 </button>
@@ -539,7 +539,7 @@
 
                 const tbody = document.getElementById('ventas-tbody');
                 if (ventas.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="c" style="color:var(--g500); padding:30px">Aún no se han registrado ventas mayoristas.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" class="c" style="color:var(--text-secondary); padding:30px">Aún no se han registrado ventas mayoristas.</td></tr>';
                     return;
                 }
 
@@ -548,11 +548,11 @@
                     const fecha = new Date(v.fecha_venta).toLocaleDateString('es-PE');
                     return `
                         <tr>
-                            <td><b>#${String(v.id).padStart(5, '0')}</b></td>
-                            <td>${v.cliente_nombre}</td>
-                            <td>${fecha}</td>
-                            <td><span style="font-size:0.85rem; color:var(--g600)">${descItems}</span></td>
-                            <td class="r" style="font-weight:700; color:var(--g900)">S/ ${parseFloat(v.total).toFixed(2)}</td>
+                            <td><b style="color: white;">#${String(v.id).padStart(5, '0')}</b></td>
+                            <td style="color: white;">${v.cliente_nombre}</td>
+                            <td style="color: white;">${fecha}</td>
+                            <td><span style="font-size:0.85rem; color:var(--text-secondary)">${descItems}</span></td>
+                            <td class="r" style="font-weight:700; color: white;">S/ ${parseFloat(v.total).toFixed(2)}</td>
                         </tr>
                     `;
                 }).join('');
