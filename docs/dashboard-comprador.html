@@ -153,25 +153,33 @@
         document.getElementById('user-name').textContent = `👤 ${userName}`;
 
         async function loadDashboard() {
+            const tbody = document.getElementById('pedidos-body');
             try {
                 const data = await fetchAPI(`/compradores/${userId}`);
 
-                document.getElementById('capital-gestionado').textContent = formatCurrency(data.resumen.capital_total_gestionado || 0);
-                document.getElementById('capital-devuelto').textContent = formatCurrency(data.resumen.capital_devuelto || 0);
-                document.getElementById('capital-pendiente').textContent = formatCurrency(data.resumen.capital_pendiente_devolver || 0);
-                document.getElementById('total-pedidos').textContent = data.resumen.total_pedidos || 0;
-                document.getElementById('ganancia-generada').textContent = formatCurrency(data.resumen.ganancia_generada || 0);
+                // Resumen de stats
+                if (data.resumen) {
+                    document.getElementById('capital-gestionado').textContent = formatCurrency(data.resumen.capital_total_gestionado || 0);
+                    document.getElementById('capital-devuelto').textContent = formatCurrency(data.resumen.capital_devuelto || 0);
+                    document.getElementById('capital-pendiente').textContent = formatCurrency(data.resumen.capital_pendiente_devolver || 0);
+                    document.getElementById('total-pedidos').textContent = data.resumen.total_pedidos || 0;
+                    document.getElementById('ganancia-generada').textContent = formatCurrency(data.resumen.ganancia_generada || 0);
 
-                const porcentaje = data.resumen.capital_total_gestionado > 0
-                    ? ((data.resumen.capital_devuelto / data.resumen.capital_total_gestionado) * 100).toFixed(1)
-                    : 0;
-                document.getElementById('porcentaje-devuelto').textContent = `${porcentaje}%`;
+                    const porcentaje = data.resumen.capital_total_gestionado > 0
+                        ? ((data.resumen.capital_devuelto / data.resumen.capital_total_gestionado) * 100).toFixed(1)
+                        : 0;
+                    document.getElementById('porcentaje-devuelto').textContent = `${porcentaje}%`;
+                }
 
-                const tbody = document.getElementById('pedidos-body');
                 if (!data.pedidos || data.pedidos.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="9" class="text-center">No tienes pedidos asignados</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="10" class="text-center" style="padding:2rem;">No tienes pedidos asignados aún</td></tr>';
                 } else {
-                    tbody.innerHTML = data.pedidos.map(p => `
+                    tbody.innerHTML = data.pedidos.map(p => {
+                        const capitalPendiente = parseFloat(p.capital_pendiente || 0);
+                        const gananciaDevuelta = parseFloat(p.ganancia_devuelta_monto || 0);
+                        const gananciaEsperada = parseFloat(p.ganancia_esperada || 0);
+                        const gananciaFaltante = Math.max(0, gananciaEsperada - gananciaDevuelta);
+                        return `
             <tr>
               <td>${p.id}</td>
               <td>${formatDate(p.fecha_pedido)}</td>
@@ -179,29 +187,32 @@
               <td>${p.inversionista_nombre || '-'}</td>
               <td>${formatCurrency(p.capital_invertido)}</td>
               <td style="color: var(--success)">${formatCurrency(p.capital_devuelto)}</td>
-              <td style="color: var(--warning)">${formatCurrency(p.capital_pendiente)}</td>
+              <td style="color: var(--warning)">${formatCurrency(capitalPendiente)}</td>
               <td>
                 <div style="display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem;">
-                  <span style="color: var(--success)" title="Ganancia devuelta">✅ ${formatCurrency(p.ganancia_devuelta_monto || 0)}</span>
-                  <span style="color: var(--warning)" title="Ganancia esperada">⏳ ${formatCurrency(p.ganancia_esperada || 0)}</span>
+                  <span style="color: var(--success)" title="Ganancia devuelta">✅ ${formatCurrency(gananciaDevuelta)}</span>
+                  <span style="color: var(--warning)" title="Ganancia esperada">⏳ ${formatCurrency(gananciaEsperada)}</span>
                 </div>
               </td>
               <td><span class="badge ${getBadgeClass(p.estado)}">${p.estado}</span></td>
               <td>
                 <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-                  ${p.capital_pendiente > 0 ? `
-                    <button class="btn btn-sm btn-success" onclick="abrirPago(${p.id}, ${p.capital_pendiente}, 'capital')" title="Pagar Capital" style="font-size: 0.75rem; padding: 4px 8px;">💵 Pagar Capital</button>
-                  ` : `<span style="color: var(--success); font-size: 0.8rem;">✅ Capital Pagado</span>`}
-                  ${parseFloat(p.ganancia_devuelta_monto || 0) < parseFloat(p.ganancia_esperada) ? `
-                    <button class="btn btn-sm btn-primary" onclick="abrirPago(${p.id}, ${p.ganancia_esperada - (p.ganancia_devuelta_monto || 0)}, 'ganancia')" title="Pagar S/ ${formatCurrency(p.ganancia_esperada - (p.ganancia_devuelta_monto || 0))}" style="font-size: 0.75rem; padding: 4px 8px;">💰 Pagar Ganancia</button>
-                  ` : `<span style="color: var(--success); font-size: 0.8rem;">✅ Gan. Pagada</span>`}
+                  ${capitalPendiente > 0 ? `
+                    <button class="btn btn-sm btn-success" onclick="abrirPago(${p.id}, ${capitalPendiente}, 'capital')" style="font-size: 0.75rem; padding: 4px 8px;">💵 Pagar Capital</button>
+                  ` : `<span style="color: var(--success); font-size: 0.8rem;">✅ Capital OK</span>`}
+                  ${gananciaFaltante > 0 ? `
+                    <button class="btn btn-sm btn-primary" onclick="abrirPago(${p.id}, ${gananciaFaltante}, 'ganancia')" style="font-size: 0.75rem; padding: 4px 8px;">💰 Pagar Ganancia</button>
+                  ` : `<span style="color: var(--success); font-size: 0.8rem;">✅ Gan. OK</span>`}
                 </div>
               </td>
-            </tr>
-          `).join('');
+            </tr>`;
+                    }).join('');
                 }
             } catch (error) {
                 console.error('Error al cargar dashboard:', error);
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center" style="padding:2rem; color: var(--danger);">
+                    ❌ Error al cargar datos. Verifica tu conexión e intenta recargar la página.
+                </td></tr>`;
             }
         }
 

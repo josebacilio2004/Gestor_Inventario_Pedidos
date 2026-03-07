@@ -1340,3 +1340,180 @@ form#form-nuevo-pedido {
     font-weight: 800;
     color: var(--op-dark);
 }
+
+/* ─── HAMBURGER BUTTON + MOBILE DRAWER ──── */
+.navbar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    transition: background 0.2s;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.navbar-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: white;
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.navbar-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.navbar-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.navbar-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 999;
+    backdrop-filter: blur(2px);
+}
+
+.mobile-menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-menu-drawer {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 320px;
+    height: 100vh;
+    background: white;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.mobile-menu-drawer.active {
+    right: 0;
+}
+
+.drawer-header {
+    padding: 2rem 1.5rem 1.5rem;
+    border-bottom: 2px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, var(--op-navy) 0%, #1e4a8a 100%);
+    color: white;
+}
+
+.drawer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.drawer-logo img {
+    height: 50px;
+    filter: brightness(0) invert(1);
+}
+
+.drawer-logo-text {
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.drawer-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.drawer-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.drawer-nav {
+    padding: 1rem 0;
+}
+
+.drawer-nav a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    color: #1e293b;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-left: 4px solid transparent;
+}
+
+.drawer-nav a::before {
+    content: attr(data-icon);
+    font-size: 1.5rem;
+    width: 32px;
+    text-align: center;
+}
+
+.drawer-nav a:hover {
+    background-color: #f1f5f9;
+    border-left-color: var(--op-orange);
+    color: var(--op-navy);
+}
+
+.drawer-nav .btn-employee {
+    margin: 1rem 1.5rem 0.5rem;
+    padding: 0.875rem;
+    background: linear-gradient(135deg, var(--op-navy) 0%, #1e4a8a 100%);
+    color: white !important;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    border-left: none !important;
+    display: block;
+}
+
+body.drawer-open {
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .navbar-toggle {
+        display: flex !important;
+    }
+
+    .operador-navbar-nav {
+        display: none !important;
+    }
+}

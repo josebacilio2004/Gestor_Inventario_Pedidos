@@ -66,13 +66,19 @@ router.get('/:id', async (req, res) => {
             return res.status(404).json({ error: 'Comprador no encontrado' });
         }
 
-        // Pedidos gestionados por el comprador
+        // Pedidos gestionados por el comprador (con datos de ganancias)
         const pedidos = await pool.query(
             `SELECT 
         p.*,
         prod.nombre as producto_nombre,
         d.nombre as distribuidor_nombre,
-        i.nombre as inversionista_nombre
+        i.nombre as inversionista_nombre,
+        COALESCE((
+            SELECT SUM(pc.monto) FROM pagos_capital pc WHERE pc.pedido_id = p.id
+        ), 0) AS capital_pagado_real,
+        COALESCE((
+            SELECT SUM(pg.monto) FROM pagos_ganancia pg WHERE pg.pedido_id = p.id
+        ), 0) AS ganancia_devuelta_real
       FROM pedidos p
       LEFT JOIN productos prod ON p.producto_id = prod.id
       LEFT JOIN distribuidores d ON p.distribuidor_id = d.id
@@ -82,15 +88,39 @@ router.get('/:id', async (req, res) => {
             [id]
         );
 
-        const resumen = await pool.query(
-            'SELECT * FROM vista_compradores_resumen WHERE id = $1',
-            [id]
-        );
+        // Resumen con fallback si la vista no existe
+        let resumen = {
+            capital_total_gestionado: 0,
+            capital_devuelto: 0,
+            capital_pendiente_devolver: 0,
+            total_pedidos: pedidos.rows.length,
+            ganancia_generada: 0
+        };
+        try {
+            const resumenResult = await pool.query(
+                'SELECT * FROM vista_compradores_resumen WHERE id = $1',
+                [id]
+            );
+            if (resumenResult.rows.length > 0) {
+                resumen = resumenResult.rows[0];
+            }
+        } catch (viewErr) {
+            console.warn('Vista compradores_resumen no disponible, calculando desde pedidos:', viewErr.message);
+            // Calcular resumen manualmente desde los pedidos
+            const calc = pedidos.rows.reduce((acc, p) => ({
+                capital_total_gestionado: acc.capital_total_gestionado + parseFloat(p.capital_invertido || 0),
+                capital_devuelto: acc.capital_devuelto + parseFloat(p.capital_devuelto || 0),
+                capital_pendiente_devolver: acc.capital_pendiente_devolver + parseFloat(p.capital_pendiente || 0),
+                ganancia_generada: acc.ganancia_generada + parseFloat(p.ganancia_real || 0),
+                total_pedidos: acc.total_pedidos + 1
+            }), resumen);
+            resumen = calc;
+        }
 
         res.json({
             ...comprador.rows[0],
             pedidos: pedidos.rows,
-            resumen: resumen.rows[0]
+            resumen
         });
     } catch (err) {
         console.error('Error al obtener comprador:', err);
