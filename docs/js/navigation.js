@@ -45,6 +45,11 @@ function renderNavigation() {
     <nav class="navbar">
       <div class="navbar-container">
         <a href="${dashboardLink}" class="navbar-brand">🏪 Gestor de Inventario</a>
+        <button class="navbar-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
         <ul class="navbar-nav">
           ${navLinks}
           <li style="margin-left: auto;">
@@ -78,3 +83,42 @@ function checkAuth() {
 
   return true;
 }
+
+// Global scope for responsive toggle function
+window.toggleMobileMenu = function () {
+  const nav = document.querySelector('.navbar-nav');
+  const toggle = document.querySelector('.navbar-toggle');
+  if (nav && toggle) {
+    nav.classList.toggle('active');
+    toggle.classList.toggle('active');
+  }
+};
+
+// Listeners to auto-close the mobile menu
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Close mobile menu when clicking outside
+  document.addEventListener('click', (e) => {
+    const nav = document.querySelector('.navbar-nav');
+    const toggle = document.querySelector('.navbar-toggle');
+    const navbar = document.querySelector('.navbar');
+
+    if (nav && toggle && navbar) {
+      if (!navbar.contains(e.target) && nav.classList.contains('active')) {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    }
+  });
+
+  // 2. Close mobile menu when clicking a link
+  document.body.addEventListener('click', (e) => {
+    if (e.target.closest('.nav-link') && window.innerWidth <= 768) {
+      const nav = document.querySelector('.navbar-nav');
+      const toggle = document.querySelector('.navbar-toggle');
+      if (nav && toggle) {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    }
+  });
+});
