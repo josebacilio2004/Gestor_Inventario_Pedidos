@@ -44,13 +44,14 @@ function renderNavigation() {
 
   return `
     <div id="nav-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1099;" onclick="toggleMobileMenu()"></div>
-    <nav class="navbar">
+    <nav class="navbar" style="background: linear-gradient(135deg, #1a365d 0%, #0f2d52 100%) !important; border-bottom: 1px solid rgba(255,255,255,0.12);">
       <div class="navbar-container">
-        <a href="${dashboardLink}" class="navbar-brand" style="color:#ffffff;">🏪 Gestor de Inventario</a>
-        <button class="navbar-toggle" onclick="toggleMobileMenu(event)" aria-label="Abrir menú">
-            <span></span>
-            <span></span>
-            <span></span>
+        <a href="${dashboardLink}" class="navbar-brand" style="color:#ffffff; -webkit-text-fill-color:#ffffff;">🏪 Gestor de Inventario</a>
+        <button class="navbar-toggle" onclick="toggleMobileMenu(event)" aria-label="Abrir menú"
+          style="background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.4); border-radius:8px; padding:0.5rem;">
+            <span style="display:block; width:24px; height:2px; background:#fff; margin:5px auto; border-radius:2px;"></span>
+            <span style="display:block; width:24px; height:2px; background:#fff; margin:5px auto; border-radius:2px;"></span>
+            <span style="display:block; width:24px; height:2px; background:#fff; margin:5px auto; border-radius:2px;"></span>
         </button>
         <ul class="navbar-nav">
           <li style="order:-1; position:sticky; top:0; background:#1a365d; z-index:2; border-bottom:2px solid rgba(255,255,255,0.15); padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between;">
