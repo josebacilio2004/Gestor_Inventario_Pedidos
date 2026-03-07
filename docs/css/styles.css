@@ -891,3 +891,144 @@ select.form-control {
     position: relative;
   }
 }
+
+/* =================================================
+   MOBILE DRAWER MENU (OPERADOR)
+   ================================================= */
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 999;
+  backdrop-filter: blur(2px);
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-drawer {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 320px;
+  height: 100vh;
+  background: white;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.mobile-menu-drawer.active {
+  right: 0;
+}
+
+.drawer-header {
+  padding: 2rem 1.5rem 1.5rem;
+  border-bottom: 2px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+}
+
+.drawer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.drawer-logo img {
+  height: 50px;
+  filter: brightness(0) invert(1);
+}
+
+.drawer-logo-text {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.drawer-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.drawer-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.drawer-nav {
+  padding: 1rem 0;
+}
+
+.drawer-nav a {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.drawer-nav a:hover {
+  background-color: var(--bg-hover);
+  border-left-color: var(--accent);
+  color: var(--primary);
+}
+
+.drawer-nav a.active {
+  background-color: var(--bg-active);
+  border-left-color: var(--accent);
+  color: var(--primary);
+}
+
+.drawer-nav a::before {
+  content: attr(data-icon);
+  font-size: 1.5rem;
+  width: 32px;
+  text-align: center;
+}
+
+.drawer-nav .btn-employee {
+  margin: 1rem 1.5rem 0.5rem;
+  padding: 0.875rem;
+  background: var(--primary-gradient);
+  color: white;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  border-left: none !important;
+}
+
+body.drawer-open {
+  overflow: hidden;
+}
+
+/* In operator dashboard, hide generic navbar-nav on mobile if drawer is used */
+@media (max-width: 768px) {
+  .operador-navbar-nav {
+    display: none !important;
+  }
+}
