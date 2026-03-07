@@ -150,10 +150,9 @@
             window.location.href = 'login.html';
         }
 
-        document.getElementById('user-name').textContent = `👤 ${userName}`;
-
         async function loadDashboard() {
             const tbody = document.getElementById('pedidos-body');
+
             try {
                 const data = await fetchAPI(`/compradores/${userId}`);
 
@@ -210,8 +209,14 @@
                 }
             } catch (error) {
                 console.error('Error al cargar dashboard:', error);
+                console.error('API URL usado:', window.API_URL);
+                console.error('userId:', userId);
                 tbody.innerHTML = `<tr><td colspan="10" class="text-center" style="padding:2rem; color: var(--danger);">
-                    ❌ Error al cargar datos. Verifica tu conexión e intenta recargar la página.
+                    ❌ No se pudieron cargar los pedidos. <br>
+                    <small style="color: var(--text-secondary);">${error.message || 'Error de conexión'}</small><br><br>
+                    <button class="btn btn-primary" onclick="loadDashboard()" style="margin-top:0.5rem;">
+                        🔄 Reintentar
+                    </button>
                 </td></tr>`;
             }
         }
