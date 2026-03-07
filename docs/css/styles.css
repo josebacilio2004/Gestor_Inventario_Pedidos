@@ -806,6 +806,12 @@ select.form-control {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
+/* Desktop: hide mobile-only elements */
+.nav-mobile-header,
+.nav-mobile-logout {
+  display: none !important;
+}
+
 /* Tablet styles */
 @media (min-width: 769px) and (max-width: 1024px) {
   .navbar-container {
@@ -924,6 +930,58 @@ select.form-control {
 
   .navbar-nav li[style*="margin-left"] a {
     padding: 1rem 1.5rem !important;
+    color: #fca5a5 !important;
+  }
+
+  /* Hide desktop-only user info on mobile */
+  .nav-desktop-user {
+    display: none !important;
+  }
+
+  /* Show mobile-only panel header with × button */
+  .nav-mobile-header {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    background: #0f2d52;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .nav-mobile-header span {
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .nav-mobile-header button {
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  /* Show mobile logout link at the bottom of panel */
+  .nav-mobile-logout {
+    display: block !important;
+    margin-top: auto;
+    border-top: 2px solid rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .nav-mobile-logout a {
     color: #fca5a5 !important;
   }
 }

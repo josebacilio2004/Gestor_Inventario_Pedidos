@@ -53,14 +53,20 @@ function renderNavigation() {
             <span style="display:block; width:24px; height:2px; background:#fff; margin:5px auto; border-radius:2px;"></span>
             <span style="display:block; width:24px; height:2px; background:#fff; margin:5px auto; border-radius:2px;"></span>
         </button>
+        <!-- Desktop: nombre + botón salir (oculto en móvil) -->
         <ul class="navbar-nav">
-          <li style="order:-1; position:sticky; top:0; background:#1a365d; z-index:2; border-bottom:2px solid rgba(255,255,255,0.15); padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between;">
-            <span style="color:white; font-weight:700; font-size:1rem;">👤 ${userName || userLogin}</span>
-            <button onclick="toggleMobileMenu()" style="background:rgba(255,255,255,0.15); border:none; color:white; font-size:1.5rem; cursor:pointer; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center;">×</button>
-          </li>
           ${navLinks}
-          <li style="border-top:2px solid rgba(255,255,255,0.15); margin-top:auto;">
-            <a href="${rootPath}login.html" class="nav-link" style="color:#fca5a5;" onclick="sessionStorage.clear(); localStorage.clear();">🚪 Cerrar Sesión</a>
+          <li class="nav-desktop-user" style="margin-left:auto; display:flex; align-items:center; gap:0.5rem;">
+            <span style="color:#ffffff; font-weight:600; font-size:0.875rem;">👤 ${userName || userLogin}</span>
+            <a href="${rootPath}login.html" class="nav-link" style="color:rgba(255,100,100,0.9);" onclick="sessionStorage.clear(); localStorage.clear();">🚪 Salir</a>
+          </li>
+          <!-- Móvil: encabezado del panel con × (solo visible en panel móvil) -->
+          <li class="nav-mobile-header">
+            <span>👤 ${userName || userLogin}</span>
+            <button onclick="toggleMobileMenu()">×</button>
+          </li>
+          <li class="nav-mobile-logout">
+            <a href="${rootPath}login.html" class="nav-link" onclick="sessionStorage.clear(); localStorage.clear();">🚪 Cerrar Sesión</a>
           </li>
         </ul>
       </div>
