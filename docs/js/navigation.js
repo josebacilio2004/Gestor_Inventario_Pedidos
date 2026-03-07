@@ -86,40 +86,47 @@ function checkAuth() {
 }
 
 // Global scope for responsive toggle function
-window.toggleMobileMenu = function () {
+window.toggleMobileMenu = function (event) {
+  // Stop propagation so the document click listener doesn't
+  // immediately close what we just opened
+  if (event) event.stopPropagation();
+
   const nav = document.querySelector('.navbar-nav');
   const toggle = document.querySelector('.navbar-toggle');
   if (nav && toggle) {
-    nav.classList.toggle('active');
-    toggle.classList.toggle('active');
+    const isOpen = nav.classList.contains('active');
+    if (isOpen) {
+      nav.classList.remove('active');
+      toggle.classList.remove('active');
+    } else {
+      nav.classList.add('active');
+      toggle.classList.add('active');
+    }
   }
 };
 
-// Listeners to auto-close the mobile menu
-document.addEventListener('DOMContentLoaded', () => {
-  // 1. Close mobile menu when clicking outside
-  document.addEventListener('click', (e) => {
+// Close menu when clicking outside the navbar
+document.addEventListener('click', (e) => {
+  const nav = document.querySelector('.navbar-nav');
+  const toggle = document.querySelector('.navbar-toggle');
+  const navbar = document.querySelector('.navbar');
+
+  if (nav && toggle && navbar && nav.classList.contains('active')) {
+    if (!navbar.contains(e.target)) {
+      nav.classList.remove('active');
+      toggle.classList.remove('active');
+    }
+  }
+});
+
+// Close menu when clicking a nav link
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.nav-link') && window.innerWidth <= 768) {
     const nav = document.querySelector('.navbar-nav');
     const toggle = document.querySelector('.navbar-toggle');
-    const navbar = document.querySelector('.navbar');
-
-    if (nav && toggle && navbar) {
-      if (!navbar.contains(e.target) && nav.classList.contains('active')) {
-        nav.classList.remove('active');
-        toggle.classList.remove('active');
-      }
+    if (nav && toggle) {
+      nav.classList.remove('active');
+      toggle.classList.remove('active');
     }
-  });
-
-  // 2. Close mobile menu when clicking a link
-  document.body.addEventListener('click', (e) => {
-    if (e.target.closest('.nav-link') && window.innerWidth <= 768) {
-      const nav = document.querySelector('.navbar-nav');
-      const toggle = document.querySelector('.navbar-toggle');
-      if (nav && toggle) {
-        nav.classList.remove('active');
-        toggle.classList.remove('active');
-      }
-    }
-  });
+  }
 });
