@@ -27,7 +27,10 @@ function renderNavigation() {
     dashboardLink = rootPath + 'dashboard-inversionista.html';
     navLinks = `
       <li><a href="${rootPath}dashboard-inversionista.html" class="nav-link">🏠 Mi Dashboard</a></li>
+      <li><a href="${pagesPath}productos.html" class="nav-link">📦 Productos</a></li>
+      <li><a href="${pagesPath}distribuidores.html" class="nav-link">🏭 Distribuidores</a></li>
       <li><a href="${pagesPath}pedidos.html" class="nav-link">📋 Mis Pedidos</a></li>
+      <li><a href="${pagesPath}compradores.html" class="nav-link">🛒 Compradores</a></li>
     `;
   } else if (userRole === 'comprador') {
     dashboardLink = rootPath + 'dashboard-comprador.html';
