@@ -43,7 +43,6 @@ function renderNavigation() {
   }
 
   return `
-    <div id="nav-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1099;" onclick="toggleMobileMenu()"></div>
     <nav class="navbar">
       <div class="navbar-container">
         <a href="${dashboardLink}" class="navbar-brand">🏪 Gestor de Inventario</a>
@@ -102,19 +101,28 @@ window.toggleMobileMenu = function (event) {
 
   const nav = document.querySelector('.navbar-nav');
   const toggle = document.querySelector('.navbar-toggle');
-  const overlay = document.getElementById('nav-overlay');
+
+  // Ensure we have a body-level backdrop (outside the nav stacking context)
+  let overlay = document.getElementById('nav-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'nav-overlay';
+    overlay.style.cssText = 'display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999;';
+    overlay.onclick = function () { window.toggleMobileMenu(); };
+    document.body.appendChild(overlay); // At body level, outside nav stacking context
+  }
 
   if (nav && toggle) {
     const isOpen = nav.classList.contains('active');
     if (isOpen) {
       nav.classList.remove('active');
       toggle.classList.remove('active');
-      if (overlay) overlay.style.display = 'none';
+      overlay.style.display = 'none';
       document.body.style.overflow = '';
     } else {
       nav.classList.add('active');
       toggle.classList.add('active');
-      if (overlay) overlay.style.display = 'block';
+      overlay.style.display = 'block';
       document.body.style.overflow = 'hidden';
     }
   }
