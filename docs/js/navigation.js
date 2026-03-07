@@ -102,28 +102,14 @@ window.toggleMobileMenu = function (event) {
   const nav = document.querySelector('.navbar-nav');
   const toggle = document.querySelector('.navbar-toggle');
 
-  // Ensure we have a body-level backdrop (outside the nav stacking context)
-  let overlay = document.getElementById('nav-overlay');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.id = 'nav-overlay';
-    overlay.style.cssText = 'display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999;';
-    overlay.onclick = function () { window.toggleMobileMenu(); };
-    document.body.appendChild(overlay); // At body level, outside nav stacking context
-  }
-
   if (nav && toggle) {
     const isOpen = nav.classList.contains('active');
     if (isOpen) {
       nav.classList.remove('active');
       toggle.classList.remove('active');
-      overlay.style.display = 'none';
-      document.body.style.overflow = '';
     } else {
       nav.classList.add('active');
       toggle.classList.add('active');
-      overlay.style.display = 'block';
-      document.body.style.overflow = 'hidden';
     }
   }
 };
