@@ -8,30 +8,12 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/corporate-theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="index.html" class="navbar-brand">
-                <img src="assets/logo.png" alt="Comercializadora ALY"
-                    style="height: 32px; vertical-align: middle; margin-right: 8px;">
-                Comercializadora ALY
-            </a>
-            <ul class="navbar-nav">
-                <li><a href="dashboard-comprador.html" class="nav-link active">Mi Dashboard</a></li>
-                <li><a href="pages/pedidos.html" class="nav-link">Gestionar Pedidos</a></li>
-                <li><a href="pages/estado-cuenta.html" class="nav-link">📄 Facturaciones</a></li>
-                <li><a href="pages/ventas-mayoristas.html" class="nav-link">📦 Ventas Mayoristas</a></li>
-                <li style="margin-left: auto;">
-                    <span style="color: #ffffff; font-weight: 600; margin-right: 15px;" id="user-name"></span>
-                    <a href="login.html" class="nav-link" style="color: var(--danger);"
-                        onclick="sessionStorage.clear(); localStorage.clear();">🚪 Salir</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <!-- Navegación -->
+    <div id="dynamic-nav"></div>
 
     <main class="container">
         <div class="card-header mb-2 d-flex justify-between align-center">
@@ -280,6 +262,7 @@
 
         document.addEventListener('DOMContentLoaded', loadDashboard);
     </script>
+    <script src="js/navigation.js"></script>
 </body>
 
 </html>

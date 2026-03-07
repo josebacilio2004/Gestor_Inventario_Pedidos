@@ -6,7 +6,7 @@ const pool = require('../config/database');
 router.get('/', async (req, res) => {
     try {
         const result = await pool.query(
-            'SELECT * FROM productos ORDER BY created_at DESC'
+            'SELECT p.*, d.nombre AS distribuidor_nombre FROM productos p LEFT JOIN distribuidores d ON p.distribuidor_id = d.id ORDER BY p.created_at DESC'
         );
         res.json(result.rows);
     } catch (err) {
@@ -20,7 +20,7 @@ router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const result = await pool.query(
-            'SELECT * FROM productos WHERE id = $1',
+            'SELECT p.*, d.nombre AS distribuidor_nombre FROM productos p LEFT JOIN distribuidores d ON p.distribuidor_id = d.id WHERE p.id = $1',
             [id]
         );
 
@@ -38,7 +38,7 @@ router.get('/:id', async (req, res) => {
 // POST - Crear nuevo producto
 router.post('/', async (req, res) => {
     try {
-        const { nombre, descripcion, tipo_producto, precio_referencia, imagen_url } = req.body;
+        const { nombre, descripcion, tipo_producto, precio_referencia, imagen_url, distribuidor_id } = req.body;
 
         if (!nombre || !tipo_producto) {
             return res.status(400).json({
@@ -47,10 +47,10 @@ router.post('/', async (req, res) => {
         }
 
         const result = await pool.query(
-            `INSERT INTO productos (nombre, descripcion, tipo_producto, precio_referencia, imagen_url) 
-       VALUES ($1, $2, $3, $4, $5) 
+            `INSERT INTO productos (nombre, descripcion, tipo_producto, precio_referencia, imagen_url, distribuidor_id) 
+       VALUES ($1, $2, $3, $4, $5, $6) 
        RETURNING *`,
-            [nombre, descripcion, tipo_producto, precio_referencia, imagen_url]
+            [nombre, descripcion, tipo_producto, precio_referencia, imagen_url, distribuidor_id || null]
         );
 
         res.status(201).json(result.rows[0]);
@@ -64,14 +64,14 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, descripcion, tipo_producto, precio_referencia, imagen_url } = req.body;
+        const { nombre, descripcion, tipo_producto, precio_referencia, imagen_url, distribuidor_id } = req.body;
 
         const result = await pool.query(
             `UPDATE productos 
-       SET nombre = $1, descripcion = $2, tipo_producto = $3, precio_referencia = $4, imagen_url = $5
-       WHERE id = $6 
+       SET nombre = $1, descripcion = $2, tipo_producto = $3, precio_referencia = $4, imagen_url = $5, distribuidor_id = $6
+       WHERE id = $7 
        RETURNING *`,
-            [nombre, descripcion, tipo_producto, precio_referencia, imagen_url, id]
+            [nombre, descripcion, tipo_producto, precio_referencia, imagen_url, distribuidor_id || null, id]
         );
 
         if (result.rows.length === 0) {

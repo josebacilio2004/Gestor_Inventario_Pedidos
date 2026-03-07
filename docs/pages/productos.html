@@ -7,26 +7,12 @@
     <title>Productos - Sistema de Gestión de Inventario</title>
     <link rel="stylesheet" href="../css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="../assets/favicon.png">
+    <link rel="icon" type="image/png" href="../assets/favicon.png">
 </head>
 
 <body>
     <!-- Navegación -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="../dashboard.html" class="navbar-brand">
-                🏪 Gestor de Inventario
-            </a>
-            <ul class="navbar-nav">
-                <li><a href="../dashboard.html" class="nav-link">Dashboard</a></li>
-                <li><a href="productos.html" class="nav-link active">Productos</a></li>
-                <li><a href="distribuidores.html" class="nav-link">Distribuidores</a></li>
-                <li><a href="inversionistas.html" class="nav-link">Inversionistas</a></li>
-                <li><a href="compradores.html" class="nav-link">Compradores</a></li>
-                <li><a href="pedidos.html" class="nav-link">Pedidos</a></li>
-            </ul>
-        </div>
-    </nav>
+    <div id="dynamic-nav"></div>
 
     <!-- Contenido Principal -->
     <main class="container">
@@ -51,6 +37,7 @@
                             <th>ID</th>
                             <th>Nombre</th>
                             <th>Tipo</th>
+                            <th>Distribuidor</th>
                             <th>Precio Ref.</th>
                             <th>Descripción</th>
                             <th>Acciones</th>
@@ -58,7 +45,7 @@
                     </thead>
                     <tbody id="productos-table-body">
                         <tr>
-                            <td colspan="6" class="text-center loading">Cargando productos...</td>
+                            <td colspan="7" class="text-center loading">Cargando productos...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -85,6 +72,13 @@
                     <label for="tipo_producto" class="form-label">Tipo de Producto *</label>
                     <input type="text" id="tipo_producto" class="form-control" required
                         placeholder="Ej: Material de construcción">
+                </div>
+
+                <div class="form-group">
+                    <label for="distribuidor_id" class="form-label">Distribuidor Asignado</label>
+                    <select id="distribuidor_id" class="form-control">
+                        <option value="">Ninguno</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -120,6 +114,7 @@
     </div>
 
     <script src="../js/config.js"></script>
+    <script src="../js/navigation.js"></script>
     <script src="../js/app.js"></script>
     <script src="../js/productos.js"></script>
 </body>

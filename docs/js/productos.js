@@ -1,14 +1,28 @@
 // Estado
 let productos = [];
+let distribuidores = [];
 let editingId = null;
 
 // Cargar productos al iniciar
 async function loadProductos() {
     try {
-        productos = await getAll('productos');
+        [productos, distribuidores] = await Promise.all([
+            getAll('productos'),
+            getAll('distribuidores')
+        ]);
+        populateDistribuidoresSelect();
         renderProductos();
     } catch (error) {
         console.error('Error al cargar productos:', error);
+    }
+}
+
+// Poblar select de distribuidores
+function populateDistribuidoresSelect() {
+    const select = document.getElementById('distribuidor_id');
+    if (select) {
+        select.innerHTML = '<option value="">Ninguno</option>' +
+            distribuidores.map(d => `<option value="${d.id}">${d.nombre}</option>`).join('');
     }
 }
 
@@ -26,6 +40,7 @@ function renderProductos() {
       <td>${producto.id}</td>
       <td><strong>${producto.nombre}</strong></td>
       <td><span class="badge badge-success">${producto.tipo_producto}</span></td>
+      <td>${producto.distribuidor_nombre || '-'}</td>
       <td>${producto.precio_referencia ? formatCurrency(producto.precio_referencia) : '-'}</td>
       <td>${producto.descripcion || '-'}</td>
       <td>
@@ -59,6 +74,7 @@ async function editProducto(id) {
         document.getElementById('producto-id').value = producto.id;
         document.getElementById('nombre').value = producto.nombre;
         document.getElementById('tipo_producto').value = producto.tipo_producto;
+        document.getElementById('distribuidor_id').value = producto.distribuidor_id || '';
         document.getElementById('precio_referencia').value = producto.precio_referencia || '';
         document.getElementById('descripcion').value = producto.descripcion || '';
         document.getElementById('imagen_url').value = producto.imagen_url || '';
@@ -99,6 +115,7 @@ document.getElementById('producto-form').addEventListener('submit', async (e) =>
     const data = {
         nombre: document.getElementById('nombre').value,
         tipo_producto: document.getElementById('tipo_producto').value,
+        distribuidor_id: document.getElementById('distribuidor_id').value || null,
         precio_referencia: parseFloat(document.getElementById('precio_referencia').value) || null,
         descripcion: document.getElementById('descripcion').value,
         imagen_url: document.getElementById('imagen_url').value || null
