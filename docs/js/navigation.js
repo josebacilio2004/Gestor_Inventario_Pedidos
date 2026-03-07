@@ -43,19 +43,23 @@ function renderNavigation() {
   }
 
   return `
+    <div id="nav-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1099;" onclick="toggleMobileMenu()"></div>
     <nav class="navbar">
       <div class="navbar-container">
-        <a href="${dashboardLink}" class="navbar-brand">🏪 Gestor de Inventario</a>
-        <button class="navbar-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation">
+        <a href="${dashboardLink}" class="navbar-brand" style="color:#ffffff;">🏪 Gestor de Inventario</a>
+        <button class="navbar-toggle" onclick="toggleMobileMenu(event)" aria-label="Abrir menú">
             <span></span>
             <span></span>
             <span></span>
         </button>
         <ul class="navbar-nav">
+          <li style="order:-1; position:sticky; top:0; background:#1a365d; z-index:2; border-bottom:2px solid rgba(255,255,255,0.15); padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between;">
+            <span style="color:white; font-weight:700; font-size:1rem;">👤 ${userName || userLogin}</span>
+            <button onclick="toggleMobileMenu()" style="background:rgba(255,255,255,0.15); border:none; color:white; font-size:1.5rem; cursor:pointer; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center;">×</button>
+          </li>
           ${navLinks}
-          <li style="margin-left: auto;">
-            <span style="color: #ffffff; font-weight: 600; margin-right: 1rem;">👤 ${userName || userLogin}</span>
-            <a href="${rootPath}login.html" class="nav-link" style="color: var(--danger);" onclick="sessionStorage.clear(); localStorage.clear();">🚪 Salir</a>
+          <li style="border-top:2px solid rgba(255,255,255,0.15); margin-top:auto;">
+            <a href="${rootPath}login.html" class="nav-link" style="color:#fca5a5;" onclick="sessionStorage.clear(); localStorage.clear();">🚪 Cerrar Sesión</a>
           </li>
         </ul>
       </div>
@@ -87,20 +91,24 @@ function checkAuth() {
 
 // Global scope for responsive toggle function
 window.toggleMobileMenu = function (event) {
-  // Stop propagation so the document click listener doesn't
-  // immediately close what we just opened
   if (event) event.stopPropagation();
 
   const nav = document.querySelector('.navbar-nav');
   const toggle = document.querySelector('.navbar-toggle');
+  const overlay = document.getElementById('nav-overlay');
+
   if (nav && toggle) {
     const isOpen = nav.classList.contains('active');
     if (isOpen) {
       nav.classList.remove('active');
       toggle.classList.remove('active');
+      if (overlay) overlay.style.display = 'none';
+      document.body.style.overflow = '';
     } else {
       nav.classList.add('active');
       toggle.classList.add('active');
+      if (overlay) overlay.style.display = 'block';
+      document.body.style.overflow = 'hidden';
     }
   }
 };
