@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     verificarSesion();
     // Cargar todo en paralelo (las tandas primero para tener tanda activa)
     await cargarTandas();
-    await Promise.all([cargarCompradores(), cargarStock()]);
+    await Promise.all([cargarCompradores(), cargarStock(), cargarStockPendiente()]);
     await cargarPedidos();
 
     // Auto-calcular MO + mostrar stock disponible al cambiar selects
@@ -53,6 +53,98 @@ function logout() {
     sessionStorage.clear();
     localStorage.clear();
     window.location.href = '../login.html';
+}
+
+// ============================================================
+// STOCK PENDIENTE DE INVERSIONISTAS
+// ============================================================
+async function cargarStockPendiente() {
+    const lista = document.getElementById('stock-pendiente-lista');
+    if (!lista) return;
+
+    try {
+        const pedidos = await fetchAPI('/pedidos/stock-pendiente');
+
+        if (!pedidos || pedidos.length === 0) {
+            lista.innerHTML = '<p class="text-secondary text-center" style="padding:1.5rem;">✅ No hay herramientas pendientes por asignar a la tanda activa.</p>';
+            return;
+        }
+
+        lista.innerHTML = pedidos.map(p => `
+            <div style="border:1px solid #e2e8f0; border-radius:8px; padding:1rem; margin-bottom:1rem; background:#f8fafc;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+                    <div>
+                        <h4 style="margin:0; color:#1e293b; font-size:1rem;">Pedido #${p.pedido_id} — ${p.inversionista_nombre || 'Desconocido'}</h4>
+                        <p style="margin:0; font-size:0.8rem; color:#64748b;">${new Date(p.fecha_pedido).toLocaleDateString('es-PE')} · Pedido total: ${p.cantidad_total} uds (${p.producto_nombre})</p>
+                    </div>
+                </div>
+                
+                <div style="background:white; border:1px solid #cbd5e1; border-radius:6px; padding:0.75rem;">
+                    <p style="margin:0 0 0.5rem 0; font-size:0.85rem; font-weight:600; color:#334155;">Selecciona la marca para asignar a la tanda activa:</p>
+                    
+                    <div id="items-stock-${p.pedido_id}" style="display:grid; gap:0.5rem;">
+                        ${p.herramientas.map(h => `
+                            <div class="stock-item-row" data-tipo="${h.tipo}" style="display:flex; align-items:center; gap:1rem; background:#f1f5f9; padding:0.5rem 0.75rem; border-radius:4px;">
+                                <div style="flex:1;">
+                                    <span style="font-weight:700; color:#0f172a;">${h.tipo}</span> 
+                                    <span style="color:#475569; font-size:0.9rem;">(${h.cantidad} uds)</span>
+                                </div>
+                                <select class="marca-select form-control" style="width:140px; padding:0.25rem 0.5rem; height:auto; margin:0;">
+                                    <option value="Tramontina">Tramontina</option>
+                                    <option value="Bellota">Bellota</option>
+                                </select>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div style="margin-top:1rem; text-align:right;">
+                        <button class="btn btn-primary" onclick="asignarStockAGrupo(${p.pedido_id})" style="padding:0.4rem 1rem; font-size:0.9rem;">
+                            ✅ Asignar a Tanda
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (err) {
+        console.error('Error al cargar stock pendiente:', err);
+        lista.innerHTML = '<p class="text-danger text-center">❌ Error al cargar los pedidos pendientes.</p>';
+    }
+}
+
+async function asignarStockAGrupo(pedidoId) {
+    if (!tandaActiva) {
+        return showToast('No hay ninguna tanda activa seleccionada', 'warning');
+    }
+
+    const container = document.getElementById(`items-stock-${pedidoId}`);
+    const rows = container.querySelectorAll('.stock-item-row');
+    const items = Array.from(rows).map(row => ({
+        tipo: row.dataset.tipo,
+        marca: row.querySelector('.marca-select').value
+    }));
+
+    try {
+        const btn = container.nextElementSibling.querySelector('button');
+        const oldText = btn.innerHTML;
+        btn.innerHTML = 'Asignando...';
+        btn.disabled = true;
+
+        await fetchAPI(`/pedidos/${pedidoId}/asignar-stock`, {
+            method: 'POST',
+            body: JSON.stringify({ items })
+        });
+
+        showToast('Stock asignado correctamente a la tanda activa', 'success');
+
+        // Recargar listas para reflejar el cambio
+        await Promise.all([cargarStockPendiente(), cargarStock()]);
+
+    } catch (err) {
+        showToast(err.message || 'Error al asignar stock', 'error');
+        btn.innerHTML = oldText;
+        btn.disabled = false;
+    }
 }
 
 // ============================================================

@@ -1,0 +1,211 @@
+const express = require('express');
+const router = express.Router();
+const pool = require('../config/database');
+
+// ── GET /pedidos/:id/stock-detalle  Ver desglose de un pedido ─────────────
+router.get('/:id/stock-detalle', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const pedido = await pool.query('SELECT id, cantidad FROM pedidos WHERE id = $1', [id]);
+        if (!pedido.rows.length)
+            return res.status(404).json({ error: 'Pedido no encontrado' });
+
+        const detalle = await pool.query(
+            'SELECT * FROM pedido_stock_detalle WHERE pedido_id = $1 ORDER BY tipo',
+            [id]
+        );
+
+        res.json({
+            pedido_id: parseInt(id),
+            cantidad_total: pedido.rows[0].cantidad,
+            items: detalle.rows
+        });
+    } catch (err) {
+        console.error('Error al obtener stock detalle:', err);
+        res.status(500).json({ error: 'Error al obtener detalle de stock', detail: err.message });
+    }
+});
+
+// ── POST /pedidos/:id/stock-detalle  Guardar desglose (inversionista) ──────
+// Body: { items: [{ tipo: 'Pico'|'Zapapico', cantidad: N }] }
+router.post('/:id/stock-detalle', async (req, res) => {
+    const client = await pool.connect();
+    try {
+        const { id } = req.params;
+        const { items } = req.body;
+
+        if (!Array.isArray(items) || items.length === 0)
+            return res.status(400).json({ error: 'Se requiere al menos un item de herramienta' });
+
+        // Validar tipos
+        const tiposValidos = ['Pico', 'Zapapico'];
+        for (const item of items) {
+            if (!tiposValidos.includes(item.tipo))
+                return res.status(400).json({ error: `Tipo inválido: ${item.tipo}. Válidos: Pico, Zapapico` });
+            if (!item.cantidad || item.cantidad <= 0)
+                return res.status(400).json({ error: `Cantidad debe ser > 0 para ${item.tipo}` });
+        }
+
+        // Verificar que el pedido existe y obtener cantidad total
+        const pedido = await pool.query('SELECT id, cantidad FROM pedidos WHERE id = $1', [id]);
+        if (!pedido.rows.length)
+            return res.status(404).json({ error: 'Pedido no encontrado' });
+
+        const cantidadTotal = parseInt(pedido.rows[0].cantidad);
+        const totalItems = items.reduce((sum, i) => sum + parseInt(i.cantidad), 0);
+        if (totalItems > cantidadTotal)
+            return res.status(400).json({
+                error: `El total de herramientas (${totalItems}) no puede superar la cantidad del pedido (${cantidadTotal})`
+            });
+
+        await client.query('BEGIN');
+
+        // Eliminar detalles previos no asignados si ya existían
+        await client.query(
+            'DELETE FROM pedido_stock_detalle WHERE pedido_id = $1 AND asignado = FALSE',
+            [id]
+        );
+
+        // Insertar nuevos items
+        const inserted = [];
+        for (const item of items) {
+            const r = await client.query(
+                `INSERT INTO pedido_stock_detalle (pedido_id, tipo, cantidad)
+                 VALUES ($1, $2, $3) RETURNING *`,
+                [id, item.tipo, parseInt(item.cantidad)]
+            );
+            inserted.push(r.rows[0]);
+        }
+
+        await client.query('COMMIT');
+        res.status(201).json({ pedido_id: parseInt(id), items: inserted });
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error('Error al guardar stock detalle:', err);
+        res.status(500).json({ error: 'Error al guardar detalle de stock', detail: err.message });
+    } finally {
+        client.release();
+    }
+});
+
+// ── POST /pedidos/:id/asignar-stock  Operador confirma y asigna a tanda ────
+// Body: { items: [{ tipo: 'Pico'|'Zapapico', marca: 'Tramontina'|'Bellota' }] }
+router.post('/:id/asignar-stock', async (req, res) => {
+    const client = await pool.connect();
+    try {
+        const { id } = req.params;
+        const { items } = req.body;
+
+        if (!Array.isArray(items) || items.length === 0)
+            return res.status(400).json({ error: 'Se requiere especificar tipo y marca para cada herramienta' });
+
+        const marcasValidas = ['Tramontina', 'Bellota'];
+        const tiposValidos = ['Pico', 'Zapapico'];
+        for (const item of items) {
+            if (!tiposValidos.includes(item.tipo))
+                return res.status(400).json({ error: `Tipo inválido: ${item.tipo}` });
+            if (!marcasValidas.includes(item.marca))
+                return res.status(400).json({ error: `Marca inválida: ${item.marca}. Válidas: Tramontina, Bellota` });
+        }
+
+        // Obtener tanda activa
+        const tandaRes = await client.query("SELECT id FROM tandas WHERE estado = 'activa' LIMIT 1");
+        if (!tandaRes.rows.length)
+            return res.status(409).json({ error: 'No hay ninguna tanda activa. Crea una tanda primero.' });
+        const tandaId = tandaRes.rows[0].id;
+
+        // Verificar que el pedido tiene detalles sin asignar
+        const detalles = await client.query(
+            'SELECT * FROM pedido_stock_detalle WHERE pedido_id = $1 AND asignado = FALSE',
+            [id]
+        );
+        if (!detalles.rows.length)
+            return res.status(409).json({ error: 'Este pedido no tiene stock pendiente de asignar o ya fue asignado.' });
+
+        await client.query('BEGIN');
+
+        // Por cada tipo de herramienta en el pedido, aplicar la marca elegida y sumar al stock
+        for (const detalle of detalles.rows) {
+            // Buscar la marca elegida para este tipo
+            const marcaConfig = items.find(i => i.tipo === detalle.tipo);
+            if (!marcaConfig)
+                return res.status(400).json({ error: `Falta especificar la marca para el tipo: ${detalle.tipo}` });
+
+            const tipoStock = `${detalle.tipo}-${marcaConfig.marca}`; // e.g. "Pico-Tramontina"
+
+            // Sumar al stock_herramientas de la tanda activa
+            const stockUpd = await client.query(
+                `UPDATE stock_herramientas
+                 SET cantidad = cantidad + $3, updated_at = NOW()
+                 WHERE tanda_id = $1 AND tipo = $2
+                 RETURNING *`,
+                [tandaId, tipoStock, detalle.cantidad]
+            );
+
+            if (!stockUpd.rows.length) {
+                // Si no existe la fila, crearla
+                await client.query(
+                    `INSERT INTO stock_herramientas (tanda_id, tipo, cantidad)
+                     VALUES ($1, $2, $3)`,
+                    [tandaId, tipoStock, detalle.cantidad]
+                );
+            }
+
+            // Marcar detalle como asignado
+            await client.query(
+                `UPDATE pedido_stock_detalle
+                 SET asignado = TRUE, tanda_id = $1, marca_asignada = $2
+                 WHERE id = $3`,
+                [tandaId, marcaConfig.marca, detalle.id]
+            );
+        }
+
+        await client.query('COMMIT');
+        res.json({
+            message: `✅ Stock asignado a tanda activa (ID:${tandaId}) exitosamente`,
+            pedido_id: parseInt(id),
+            tanda_id: tandaId
+        });
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error('Error al asignar stock:', err);
+        res.status(500).json({ error: 'Error al asignar stock', detail: err.message });
+    } finally {
+        client.release();
+    }
+});
+
+// ── GET /pedidos/stock-pendiente  Pedidos con stock sin asignar (para el operador)
+router.get('/stock-pendiente', async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT
+                p.id AS pedido_id,
+                p.fecha_pedido,
+                p.cantidad AS cantidad_total,
+                prod.nombre AS producto_nombre,
+                i.nombre AS inversionista_nombre,
+                json_agg(
+                    json_build_object(
+                        'id', psd.id,
+                        'tipo', psd.tipo,
+                        'cantidad', psd.cantidad
+                    ) ORDER BY psd.tipo
+                ) AS herramientas
+            FROM pedido_stock_detalle psd
+            JOIN pedidos p ON psd.pedido_id = p.id
+            LEFT JOIN productos prod ON p.producto_id = prod.id
+            LEFT JOIN inversionistas i ON p.inversionista_id = i.id
+            WHERE psd.asignado = FALSE
+            GROUP BY p.id, p.fecha_pedido, p.cantidad, prod.nombre, i.nombre
+            ORDER BY p.fecha_pedido DESC
+        `);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error al obtener stock pendiente:', err);
+        res.status(500).json({ error: 'Error al obtener stock pendiente', detail: err.message });
+    }
+});
+
+module.exports = router;

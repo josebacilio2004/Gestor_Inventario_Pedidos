@@ -17,6 +17,7 @@ const tandasRoutes = require('./routes/tandas');
 const facturasCompradorRoutes = require('./routes/facturas-comprador');
 const mayoristasRoutes = require('./routes/mayoristas');
 const operadorPagosRoutes = require('./routes/operador-pagos');
+const pedidoStockDetalleRoutes = require('./routes/pedido-stock-detalle');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -57,6 +58,7 @@ app.use('/api/tandas', tandasRoutes);
 app.use('/api/facturas-comprador', facturasCompradorRoutes);
 app.use('/api/mayoristas', mayoristasRoutes);
 app.use('/api/operador-pagos', operadorPagosRoutes);
+app.use('/api/pedidos', pedidoStockDetalleRoutes);  // stock-detalle routes prefixed to /api/pedidos/:id
 
 // Ruta raíz
 app.get('/', (req, res) => {

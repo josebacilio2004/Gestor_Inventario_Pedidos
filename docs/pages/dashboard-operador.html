@@ -98,7 +98,24 @@
             </div>
         </div>
 
-        <!-- ── 2. GESTIÓN DE TANDAS ──────────────────────────────────── -->
+        <!-- ── 2. STOCK PENDIENTE DE INVERSIONISTAS ─────────────────── -->
+        <section id="stock-pendiente" class="section-card" style="margin-bottom:1.5rem;">
+            <div class="section-card-header">
+                <div>
+                    <h2>📦 Stock por Asignar (de Inversionistas)</h2>
+                    <p>Pedidos con herramientas registradas por los inversionistas, pendientes de asignar a la tanda
+                        activa</p>
+                </div>
+                <button class="btn btn-secondary" onclick="cargarStockPendiente()" style="font-size:0.85rem;">🔄
+                    Actualizar</button>
+            </div>
+            <div id="stock-pendiente-lista" style="padding:1rem;">
+                <p class="text-secondary text-center" style="padding:1rem;">Cargando...</p>
+            </div>
+        </section>
+
+        <!-- ── 3. GESTIÓN DE TANDAS ──────────────────────────────────── -->
+
         <section id="tandas" class="section-card" style="overflow:hidden;">
 
             <!-- Header -->
