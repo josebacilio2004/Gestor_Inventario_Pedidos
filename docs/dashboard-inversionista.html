@@ -83,44 +83,6 @@
                 </table>
             </div>
         </div>
-
-        <!-- Desglose de Herramientas por Pedido -->
-        <div class="card mt-2" id="seccion-desglose">
-            <div class="card-header d-flex justify-between align-center">
-                <div>
-                    <h2 class="card-title">🔨 Registrar Herramientas de un Pedido</h2>
-                    <p class="text-secondary" style="font-size:0.85rem;">Indica cuántos Picos y Zapapicos trae tu pedido
-                        (el operador asignará la marca)</p>
-                </div>
-            </div>
-            <div style="padding:1.5rem;">
-                <div
-                    style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:500px; margin-bottom:1.25rem;">
-                    <div>
-                        <label style="font-weight:600; display:block; margin-bottom:0.4rem;">📋 Seleccionar
-                            Pedido</label>
-                        <select id="pedido-sel" class="form-control" style="width:100%;">
-                            <option value="">-- elige un pedido --</option>
-                        </select>
-                    </div>
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:500px;">
-                    <div>
-                        <label style="font-weight:600; display:block; margin-bottom:0.4rem;">⛏ Picos</label>
-                        <input type="number" id="cant-pico" min="0" value="0" class="form-control"
-                            placeholder="Cantidad de picos">
-                    </div>
-                    <div>
-                        <label style="font-weight:600; display:block; margin-bottom:0.4rem;">⚒️ Zapapicos</label>
-                        <input type="number" id="cant-zapapico" min="0" value="0" class="form-control"
-                            placeholder="Cantidad de zapapicos">
-                    </div>
-                </div>
-                <div style="margin-top:1rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
-                    <button class="btn btn-primary" onclick="guardarDesglose()">💾 Guardar Desglose</button>
-                    <span id="desglose-status" style="font-size:0.85rem; color:var(--success);"></span>
-                </div>
-            </div>
         </div>
     </main>
 
@@ -227,60 +189,9 @@
           `).join('');
                 }
 
-                // Poblar selector de pedidos
-                const sel = document.getElementById('pedido-sel');
-                sel.innerHTML = '<option value="">-- elige un pedido --</option>' +
-                    misPedidos.map(p =>
-                        `<option value="${p.id}">#${p.id} - ${formatDate(p.fecha_pedido)} - ${p.producto_nombre || 'Pedido'} (${p.cantidad || '?'} uds)</option>`
-                    ).join('');
-
-                // Cargar desglose del primer pedido si cambia el selector
-                sel.onchange = async () => {
-                    if (!sel.value) return;
-                    try {
-                        const detalle = await fetchAPI(`/pedidos/${sel.value}/stock-detalle`);
-                        const pico = detalle.items.find(i => i.tipo === 'Pico');
-                        const zapa = detalle.items.find(i => i.tipo === 'Zapapico');
-                        document.getElementById('cant-pico').value = pico ? pico.cantidad : 0;
-                        document.getElementById('cant-zapapico').value = zapa ? zapa.cantidad : 0;
-                        const allAsigned = detalle.items.length > 0 && detalle.items.every(i => i.asignado);
-                        document.getElementById('desglose-status').textContent = allAsigned
-                            ? '✅ Este pedido ya fue asignado al stock del operador'
-                            : (detalle.items.length > 0 ? '📝 Desglose guardado, pendiente de asignar por el operador' : '');
-                    } catch (_) {
-                        document.getElementById('cant-pico').value = 0;
-                        document.getElementById('cant-zapapico').value = 0;
-                        document.getElementById('desglose-status').textContent = '';
-                    }
-                };
-
             } catch (error) {
                 console.error('Error al cargar dashboard:', error);
                 tbody.innerHTML = '<tr><td colspan="9" class="text-center" style="color:var(--danger);">❌ Error al cargar datos. Intente recargar.</td></tr>';
-            }
-        }
-
-        async function guardarDesglose() {
-            const pedidoId = document.getElementById('pedido-sel').value;
-            const cantPico = parseInt(document.getElementById('cant-pico').value) || 0;
-            const cantZapa = parseInt(document.getElementById('cant-zapapico').value) || 0;
-            const statusEl = document.getElementById('desglose-status');
-
-            if (!pedidoId) return showNotification('Selecciona un pedido primero', 'warning');
-            if (cantPico === 0 && cantZapa === 0) return showNotification('Ingresa al menos una cantidad mayor a 0', 'warning');
-
-            const items = [];
-            if (cantPico > 0) items.push({ tipo: 'Pico', cantidad: cantPico });
-            if (cantZapa > 0) items.push({ tipo: 'Zapapico', cantidad: cantZapa });
-
-            try {
-                statusEl.textContent = 'Guardando...';
-                await fetchAPI(`/pedidos/${pedidoId}/stock-detalle`, 'POST', { items });
-                statusEl.textContent = '✅ Desglose guardado. El operador lo asignará al stock.';
-                showNotification('Desglose de herramientas guardado', 'success');
-            } catch (err) {
-                statusEl.textContent = '';
-                showNotification(err.message || 'Error al guardar desglose', 'error');
             }
         }
 

@@ -123,6 +123,7 @@ router.get('/:id', async (req, res) => {
 
 // POST - Crear nuevo pedido
 router.post('/', async (req, res) => {
+    const client = await pool.connect();
     try {
         const {
             fecha_pedido,
@@ -157,7 +158,10 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ error: 'Capital y ganancia no pueden ser negativos' });
         }
 
-        const result = await pool.query(
+        await client.query('BEGIN');
+
+        // 1. Insertar el pedido principal
+        const result = await client.query(
             `INSERT INTO pedidos 
        (fecha_pedido, producto_id, distribuidor_id, inversionista_id, comprador_id,
         cantidad, capital_invertido, ganancia_esperada, ganancia_real, 
@@ -181,8 +185,34 @@ router.post('/', async (req, res) => {
                 notas
             ]
         );
-        res.status(201).json(result.rows[0]);
+        const nuevoPedido = result.rows[0];
+
+        // 2. Extraer automáticamente el detalle para el stock del operador
+        const prodRes = await client.query('SELECT nombre FROM productos WHERE id = $1', [producto_id]);
+        if (prodRes.rows.length > 0) {
+            const nombreProd = prodRes.rows[0].nombre.toLowerCase();
+            let tipoHerramienta = null;
+
+            if (nombreProd.includes('zapapico')) {
+                tipoHerramienta = 'Zapapico';
+            } else if (nombreProd.includes('pico')) {
+                tipoHerramienta = 'Pico';
+            }
+
+            // Si es una herramienta reconocida, guardarla en el detalle de stock pendiente
+            if (tipoHerramienta) {
+                await client.query(
+                    `INSERT INTO pedido_stock_detalle (pedido_id, tipo, cantidad)
+                     VALUES ($1, $2, $3)`,
+                    [nuevoPedido.id, tipoHerramienta, cantidad]
+                );
+            }
+        }
+
+        await client.query('COMMIT');
+        res.status(201).json(nuevoPedido);
     } catch (err) {
+        await client.query('ROLLBACK');
         console.error('Error al crear pedido:', err);
         if (err.code === '23503') {
             return res.status(400).json({
@@ -190,6 +220,8 @@ router.post('/', async (req, res) => {
             });
         }
         res.status(500).json({ error: 'Error al crear pedido' });
+    } finally {
+        client.release();
     }
 });
 
