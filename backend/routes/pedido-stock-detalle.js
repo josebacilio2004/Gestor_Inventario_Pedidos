@@ -123,28 +123,27 @@ router.post('/:id/asignar-stock', async (req, res) => {
         if (!detalles.rows.length)
             return res.status(409).json({ error: 'Este pedido no tiene stock pendiente de asignar o ya fue asignado.' });
 
-        // Validar que todas las piezas en el pedido tengan una marca configurada en el body
+        // Validar que todas las piezas en el pedido tengan una entrada en el body (por tipo)
         for (const detalle of detalles.rows) {
-            const marcaConfig = items.find(i => i.tipo.toLowerCase() === detalle.tipo.toLowerCase());
-            if (!marcaConfig) {
-                console.warn(`VALIDACIÓN FALLIDA: No hay marca para tipo ${detalle.tipo} en pedido ${id}`);
+            const config = items.find(i => i.tipo.toLowerCase() === detalle.tipo.toLowerCase());
+            if (!config) {
+                console.warn(`VALIDACIÓN FALLIDA: No hay configuración para tipo ${detalle.tipo} en pedido ${id}`);
                 return res.status(400).json({
-                    error: `Configuración incompleta: Falta marca para ${detalle.tipo}`
+                    error: `Configuración incompleta: Falta el tipo ${detalle.tipo} en la petición`
                 });
             }
         }
 
         await client.query('BEGIN');
-        console.log(`INICIANDO TRANSACCIÓN: Asignando stock para pedido ${id} a tanda ${tandaId}`);
+        console.log(`INICIANDO TRANSACCIÓN: Asignando stock GENÉRICO para pedido ${id} a tanda ${tandaId}`);
 
-        // Por cada tipo de herramienta en el pedido, aplicar la marca elegida y sumar al stock
+        // Por cada tipo de herramienta en el pedido, sumar al stock genérico
         for (const detalle of detalles.rows) {
-            const marcaConfig = items.find(i => i.tipo.toLowerCase() === detalle.tipo.toLowerCase());
-            const tipoStock = `${detalle.tipo}-${marcaConfig.marca}`;
+            const tipoStock = detalle.tipo; // e.g. "Pico"
 
-            console.log(`PROCESANDO: ${detalle.cantidad} unidades de ${tipoStock}`);
+            console.log(`PROCESANDO: ${detalle.cantidad} unidades de ${tipoStock} (Generico)`);
 
-            // Sumar al stock_herramientas de la tanda activa
+            // Sumar al stock_herramientas de la tanda activa (donde el tipo es genérico)
             const stockUpd = await client.query(
                 `UPDATE stock_herramientas
                  SET cantidad = cantidad + $3, updated_at = NOW()
@@ -154,7 +153,7 @@ router.post('/:id/asignar-stock', async (req, res) => {
             );
 
             if (!stockUpd.rows.length) {
-                // Si no existe la fila, crearla
+                // Si no existe la fila genérica, crearla
                 await client.query(
                     `INSERT INTO stock_herramientas (tanda_id, tipo, cantidad)
                      VALUES ($1, $2, $3)`,
@@ -165,9 +164,9 @@ router.post('/:id/asignar-stock', async (req, res) => {
             // Marcar detalle como asignado
             await client.query(
                 `UPDATE pedido_stock_detalle
-                 SET asignado = TRUE, tanda_id = $1, marca_asignada = $2
-                 WHERE id = $3`,
-                [tandaId, marcaConfig.marca, detalle.id]
+                 SET asignado = TRUE, tanda_id = $1, marca_asignada = NULL
+                 WHERE id = $2`,
+                [tandaId, detalle.id]
             );
         }
 
