@@ -167,7 +167,11 @@ function renderPedidos() {
       <tr>
         <td>${pedido.id}</td>
         <td>${formatDate(pedido.fecha_pedido)}</td>
-        <td>${pedido.producto_nombre || '-'}</td>
+        <td>
+          ${pedido.items && pedido.items.length > 0
+                ? `<div style="font-size:0.8rem;">${pedido.items.map(it => `• ${it.cantidad}x ${it.nombre}`).join('<br>')}</div>`
+                : pedido.producto_nombre || '-'}
+        </td>
         <td>${pedido.distribuidor_nombre || '-'}</td>
         <td>${pedido.cantidad}</td>
         <td>${formatCurrency(pedido.capital_invertido)}</td>
@@ -322,7 +326,13 @@ document.getElementById('pedido-form').addEventListener('submit', async (e) => {
         items: itemsPedido // Array de items { producto_id, cantidad }
     };
 
+    const btnSubmit = e.target.querySelector('button[type="submit"]');
+    const oldBtnText = btnSubmit.innerHTML;
+
     try {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<span class="spinner"></span> Guardando...';
+
         if (editingId) {
             await update('pedidos', editingId, data);
             showNotification('Pedido actualizado exitosamente', 'success');
@@ -335,6 +345,10 @@ document.getElementById('pedido-form').addEventListener('submit', async (e) => {
         loadPedidos();
     } catch (error) {
         console.error('Error al guardar pedido:', error);
+        showNotification('Error al guardar pedido: ' + error.message, 'error');
+    } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = oldBtnText;
     }
 });
 

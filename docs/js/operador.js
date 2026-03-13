@@ -88,7 +88,7 @@ async function cargarStockPendiente() {
                         ${p.herramientas.map(h => `
                             <div class="stock-item-row" data-tipo="${h.tipo}" style="display:flex; align-items:center; gap:1rem; background:#f1f5f9; padding:0.5rem 0.75rem; border-radius:4px;">
                                 <div style="flex:1;">
-                                    <span style="font-weight:700; color:#0f172a;">${h.tipo}</span> 
+                                    <span style="font-weight:700; color:#0f172a;">${h.producto_nombre_especifico || h.tipo}</span> 
                                     <span style="color:#475569; font-size:0.9rem;">(${h.cantidad} uds)</span>
                                 </div>
                                 <select class="marca-select form-control" style="width:140px; padding:0.25rem 0.5rem; height:auto; margin:0;">
@@ -99,7 +99,12 @@ async function cargarStockPendiente() {
                         `).join('')}
                     </div>
                     
-                    <div style="margin-top:1rem; text-align:right;">
+                    <div style="margin-top:0.75rem; display:flex; justify-content:space-between; align-items:center;">
+                        <div style="font-size:0.75rem; color:#64748b;">
+                            Marcar todos: 
+                            <button class="btn-link" onclick="document.querySelectorAll('#items-stock-${p.pedido_id} .marca-select').forEach(s=>s.value='Tramontina')" style="color:#2563eb; padding:0 5px; font-weight:600;">T</button>
+                            <button class="btn-link" onclick="document.querySelectorAll('#items-stock-${p.pedido_id} .marca-select').forEach(s=>s.value='Bellota')" style="color:#2563eb; padding:0 5px; font-weight:600;">B</button>
+                        </div>
                         <button class="btn btn-primary" onclick="asignarStockAGrupo(${p.pedido_id})" style="padding:0.4rem 1rem; font-size:0.9rem;">
                             ✅ Asignar a Tanda
                         </button>
@@ -126,9 +131,10 @@ async function asignarStockAGrupo(pedidoId) {
         marca: row.querySelector('.marca-select').value
     }));
 
+    let btn, oldText;
     try {
-        const btn = container.nextElementSibling.querySelector('button');
-        const oldText = btn.innerHTML;
+        btn = container.nextElementSibling.querySelector('button');
+        oldText = btn.innerHTML;
         btn.innerHTML = 'Asignando...';
         btn.disabled = true;
 
@@ -144,8 +150,10 @@ async function asignarStockAGrupo(pedidoId) {
 
     } catch (err) {
         showToast(err.message || 'Error al asignar stock', 'error');
-        btn.innerHTML = oldText;
-        btn.disabled = false;
+        if (btn) {
+            btn.innerHTML = oldText;
+            btn.disabled = false;
+        }
     }
 }
 

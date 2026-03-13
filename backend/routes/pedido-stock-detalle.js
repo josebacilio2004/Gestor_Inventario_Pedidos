@@ -123,15 +123,21 @@ router.post('/:id/asignar-stock', async (req, res) => {
         if (!detalles.rows.length)
             return res.status(409).json({ error: 'Este pedido no tiene stock pendiente de asignar o ya fue asignado.' });
 
+        // Validar que todas las piezas en el pedido tengan una marca configurada en el body
+        for (const detalle of detalles.rows) {
+            const marcaConfig = items.find(i => i.tipo === detalle.tipo);
+            if (!marcaConfig) {
+                return res.status(400).json({
+                    error: `Configuración incompleta: Falta marca para ${detalle.tipo}`
+                });
+            }
+        }
+
         await client.query('BEGIN');
 
         // Por cada tipo de herramienta en el pedido, aplicar la marca elegida y sumar al stock
         for (const detalle of detalles.rows) {
-            // Buscar la marca elegida para este tipo
             const marcaConfig = items.find(i => i.tipo === detalle.tipo);
-            if (!marcaConfig)
-                return res.status(400).json({ error: `Falta especificar la marca para el tipo: ${detalle.tipo}` });
-
             const tipoStock = `${detalle.tipo}-${marcaConfig.marca}`; // e.g. "Pico-Tramontina"
 
             // Sumar al stock_herramientas de la tanda activa
@@ -168,11 +174,15 @@ router.post('/:id/asignar-stock', async (req, res) => {
             tanda_id: tandaId
         });
     } catch (err) {
-        await client.query('ROLLBACK');
-        console.error('Error al asignar stock:', err);
-        res.status(500).json({ error: 'Error al asignar stock', detail: err.message });
+        if (client) await client.query('ROLLBACK');
+        console.error('CRITICAL: Error al asignar stock:', err);
+        res.status(500).json({
+            error: 'Error interno al asignar stock',
+            detail: err.message,
+            stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+        });
     } finally {
-        client.release();
+        if (client) client.release();
     }
 });
 
@@ -184,22 +194,31 @@ router.get('/stock-pendiente', async (req, res) => {
                 p.id AS pedido_id,
                 p.fecha_pedido,
                 p.cantidad AS cantidad_total,
-                prod.nombre AS producto_nombre,
+                prod_main.nombre AS producto_nombre_principal,
                 i.nombre AS inversionista_nombre,
                 json_agg(
                     json_build_object(
                         'id', psd.id,
                         'tipo', psd.tipo,
-                        'cantidad', psd.cantidad
+                        'cantidad', psd.cantidad,
+                        'producto_id', pp.producto_id,
+                        'producto_nombre_especifico', pr.nombre
                     ) ORDER BY psd.tipo
                 ) AS herramientas
             FROM pedido_stock_detalle psd
             JOIN pedidos p ON psd.pedido_id = p.id
-            LEFT JOIN productos prod ON p.producto_id = prod.id
+            LEFT JOIN productos prod_main ON p.producto_id = prod_main.id
             LEFT JOIN inversionistas i ON p.inversionista_id = i.id
+            -- Relacionar con pedidos_productos para obtener el nombre exacto si es posible
+            LEFT JOIN pedidos_productos pp ON pp.pedido_id = p.id AND (
+                (psd.tipo = 'Pico' AND EXISTS (SELECT 1 FROM productos pr2 WHERE pr2.id = pp.producto_id AND pr2.nombre ILIKE '%pico%'))
+                OR 
+                (psd.tipo = 'Zapapico' AND EXISTS (SELECT 1 FROM productos pr2 WHERE pr2.id = pp.producto_id AND pr2.nombre ILIKE '%zapapico%'))
+            )
+            LEFT JOIN productos pr ON pp.producto_id = pr.id
             WHERE psd.asignado = FALSE
-            GROUP BY p.id, p.fecha_pedido, p.cantidad, prod.nombre, i.nombre
-            ORDER BY p.fecha_pedido DESC
+            GROUP BY p.id, p.fecha_pedido, p.cantidad, prod_main.nombre, i.nombre
+            ORDER BY p.id DESC
         `);
         res.json(result.rows);
     } catch (err) {
