@@ -224,8 +224,8 @@ router.post('/', async (req, res) => {
 
                 if (tipoHerramienta) {
                     await client.query(
-                        `INSERT INTO pedido_stock_detalle (pedido_id, tipo, cantidad) VALUES ($1, $2, $3)`,
-                        [nuevoPedido.id, tipoHerramienta, item.cantidad]
+                        `INSERT INTO pedido_stock_detalle (pedido_id, tipo, cantidad, producto_id) VALUES ($1, $2, $3, $4)`,
+                        [nuevoPedido.id, tipoHerramienta, item.cantidad, item.producto_id]
                     );
                 }
             }

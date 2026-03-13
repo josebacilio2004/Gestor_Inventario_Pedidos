@@ -16,9 +16,15 @@ async function fetchAPI(endpoint, options = {}) {
         });
 
         if (!response.ok) {
-            const error = await response.json();
-            const msg = error.detail ? `${error.error}: ${error.detail}` : (error.error || 'Error al realizar la petición');
-            throw new Error(msg);
+            let errorMsg = 'Error al realizar la petición';
+            try {
+                const errorData = await response.json();
+                errorMsg = errorData.detail ? `${errorData.error}: ${errorData.detail}` : (errorData.error || errorMsg);
+            } catch (e) {
+                // Si no es JSON (ej: un error 500 HTML), obtener el texto
+                errorMsg = await response.text() || response.statusText;
+            }
+            throw new Error(errorMsg);
         }
 
         return await response.json();

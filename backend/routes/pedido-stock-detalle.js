@@ -125,8 +125,9 @@ router.post('/:id/asignar-stock', async (req, res) => {
 
         // Validar que todas las piezas en el pedido tengan una marca configurada en el body
         for (const detalle of detalles.rows) {
-            const marcaConfig = items.find(i => i.tipo === detalle.tipo);
+            const marcaConfig = items.find(i => i.tipo.toLowerCase() === detalle.tipo.toLowerCase());
             if (!marcaConfig) {
+                console.warn(`VALIDACIÓN FALLIDA: No hay marca para tipo ${detalle.tipo} en pedido ${id}`);
                 return res.status(400).json({
                     error: `Configuración incompleta: Falta marca para ${detalle.tipo}`
                 });
@@ -134,11 +135,14 @@ router.post('/:id/asignar-stock', async (req, res) => {
         }
 
         await client.query('BEGIN');
+        console.log(`INICIANDO TRANSACCIÓN: Asignando stock para pedido ${id} a tanda ${tandaId}`);
 
         // Por cada tipo de herramienta en el pedido, aplicar la marca elegida y sumar al stock
         for (const detalle of detalles.rows) {
-            const marcaConfig = items.find(i => i.tipo === detalle.tipo);
-            const tipoStock = `${detalle.tipo}-${marcaConfig.marca}`; // e.g. "Pico-Tramontina"
+            const marcaConfig = items.find(i => i.tipo.toLowerCase() === detalle.tipo.toLowerCase());
+            const tipoStock = `${detalle.tipo}-${marcaConfig.marca}`;
+
+            console.log(`PROCESANDO: ${detalle.cantidad} unidades de ${tipoStock}`);
 
             // Sumar al stock_herramientas de la tanda activa
             const stockUpd = await client.query(
@@ -194,28 +198,22 @@ router.get('/stock-pendiente', async (req, res) => {
                 p.id AS pedido_id,
                 p.fecha_pedido,
                 p.cantidad AS cantidad_total,
-                prod_main.nombre AS producto_nombre_principal,
+                prod_main.nombre AS producto_nombre, -- Usar el alias que el frontend espera
                 i.nombre AS inversionista_nombre,
                 json_agg(
                     json_build_object(
                         'id', psd.id,
                         'tipo', psd.tipo,
                         'cantidad', psd.cantidad,
-                        'producto_id', pp.producto_id,
+                        'producto_id', psd.producto_id,
                         'producto_nombre_especifico', pr.nombre
-                    ) ORDER BY psd.tipo
+                    ) ORDER BY psd.id
                 ) AS herramientas
             FROM pedido_stock_detalle psd
             JOIN pedidos p ON psd.pedido_id = p.id
             LEFT JOIN productos prod_main ON p.producto_id = prod_main.id
             LEFT JOIN inversionistas i ON p.inversionista_id = i.id
-            -- Relacionar con pedidos_productos para obtener el nombre exacto si es posible
-            LEFT JOIN pedidos_productos pp ON pp.pedido_id = p.id AND (
-                (psd.tipo = 'Pico' AND EXISTS (SELECT 1 FROM productos pr2 WHERE pr2.id = pp.producto_id AND pr2.nombre ILIKE '%pico%'))
-                OR 
-                (psd.tipo = 'Zapapico' AND EXISTS (SELECT 1 FROM productos pr2 WHERE pr2.id = pp.producto_id AND pr2.nombre ILIKE '%zapapico%'))
-            )
-            LEFT JOIN productos pr ON pp.producto_id = pr.id
+            LEFT JOIN productos pr ON psd.producto_id = pr.id
             WHERE psd.asignado = FALSE
             GROUP BY p.id, p.fecha_pedido, p.cantidad, prod_main.nombre, i.nombre
             ORDER BY p.id DESC
