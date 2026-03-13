@@ -132,6 +132,8 @@ router.post('/', async (req, res) => {
             inversionista_id,
             comprador_id,
             cantidad,
+            cant_pico,
+            cant_zapapico,
             capital_invertido,
             ganancia_esperada,
             ganancia_real,
@@ -156,6 +158,14 @@ router.post('/', async (req, res) => {
 
         if (capital_invertido < 0 || ganancia_esperada < 0) {
             return res.status(400).json({ error: 'Capital y ganancia no pueden ser negativos' });
+        }
+
+        // Validar que el desglose no supere el total
+        const sumaDesglose = (parseInt(cant_pico) || 0) + (parseInt(cant_zapapico) || 0);
+        if (sumaDesglose > cantidad) {
+            return res.status(400).json({
+                error: `La suma de Picos (${cant_pico}) y Zapapicos (${cant_zapapico}) no puede ser mayor al total (${cantidad})`
+            });
         }
 
         client = await pool.connect();
@@ -188,25 +198,40 @@ router.post('/', async (req, res) => {
         );
         const nuevoPedido = result.rows[0];
 
-        // 2. Extraer automáticamente el detalle para el stock del operador
-        const prodRes = await client.query('SELECT nombre FROM productos WHERE id = $1', [producto_id]);
-        if (prodRes.rows.length > 0) {
-            const nombreProd = prodRes.rows[0].nombre.toLowerCase();
-            let tipoHerramienta = null;
-
-            if (nombreProd.includes('zapapico')) {
-                tipoHerramienta = 'Zapapico';
-            } else if (nombreProd.includes('pico')) {
-                tipoHerramienta = 'Pico';
-            }
-
-            // Si es una herramienta reconocida, guardarla en el detalle de stock pendiente
-            if (tipoHerramienta) {
+        // 2. Extraer automáticamente el detalle para el stock del operador o usar el manual si viene
+        if (sumaDesglose > 0) {
+            // Caso 1: El usuario especificó el desglose manualmente en el modal de pedido
+            if (parseInt(cant_pico) > 0) {
                 await client.query(
-                    `INSERT INTO pedido_stock_detalle (pedido_id, tipo, cantidad)
-                     VALUES ($1, $2, $3)`,
-                    [nuevoPedido.id, tipoHerramienta, cantidad]
+                    `INSERT INTO pedido_stock_detalle (pedido_id, tipo, cantidad) VALUES ($1, $2, $3)`,
+                    [nuevoPedido.id, 'Pico', parseInt(cant_pico)]
                 );
+            }
+            if (parseInt(cant_zapapico) > 0) {
+                await client.query(
+                    `INSERT INTO pedido_stock_detalle (pedido_id, tipo, cantidad) VALUES ($1, $2, $3)`,
+                    [nuevoPedido.id, 'Zapapico', parseInt(cant_zapapico)]
+                );
+            }
+        } else {
+            // Caso 2: No hubo desglose manual, intentar detección automática por nombre del producto
+            const prodRes = await client.query('SELECT nombre FROM productos WHERE id = $1', [producto_id]);
+            if (prodRes.rows.length > 0) {
+                const nombreProd = prodRes.rows[0].nombre.toLowerCase();
+                let tipoHerramienta = null;
+
+                if (nombreProd.includes('zapapico')) {
+                    tipoHerramienta = 'Zapapico';
+                } else if (nombreProd.includes('pico')) {
+                    tipoHerramienta = 'Pico';
+                }
+
+                if (tipoHerramienta) {
+                    await client.query(
+                        `INSERT INTO pedido_stock_detalle (pedido_id, tipo, cantidad) VALUES ($1, $2, $3)`,
+                        [nuevoPedido.id, tipoHerramienta, cantidad]
+                    );
+                }
             }
         }
 

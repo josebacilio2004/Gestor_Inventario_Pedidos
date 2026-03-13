@@ -243,6 +243,8 @@ document.getElementById('pedido-form').addEventListener('submit', async (e) => {
         inversionista_id: document.getElementById('inversionista_id').value ? parseInt(document.getElementById('inversionista_id').value) : null,
         comprador_id: document.getElementById('comprador_id').value ? parseInt(document.getElementById('comprador_id').value) : null,
         cantidad: parseInt(document.getElementById('cantidad').value),
+        cant_pico: parseInt(document.getElementById('cant_pico').value) || 0,
+        cant_zapapico: parseInt(document.getElementById('cant_zapapico').value) || 0,
         capital_invertido: parseFloat(document.getElementById('capital_invertido').value),
         ganancia_esperada: parseFloat(document.getElementById('ganancia_esperada').value),
         estado: document.getElementById('estado').value,
