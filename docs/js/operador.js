@@ -8,6 +8,8 @@ let itemsPedido = [];
 let compradores = [];
 let stockActual = {};   // { 'Pico': 240, 'Zapapico': 180 }
 let tandaActiva = null; // objeto tanda activa actual
+let tandaVisualizadaId = null;
+let tandaVisualizadaNombre = 'Tanda Activa';
 
 // ============================================================
 // INIT
@@ -155,6 +157,13 @@ async function cargarTandas() {
         const data = await fetchAPI('/tandas');
         // Buscar tanda activa
         tandaActiva = data.find(t => t.estado === 'activa') || null;
+
+        // Inicializar vista con la tanda activa por defecto
+        if (tandaActiva && !tandaVisualizadaId) {
+            tandaVisualizadaId = tandaActiva.id;
+            tandaVisualizadaNombre = tandaActiva.nombre;
+        }
+
         renderBannerTandaActiva();
         renderHistorialTandas(data);
     } catch (err) {
@@ -267,8 +276,12 @@ function renderHistorialTandas(tandas) {
                 </div>
             </div>
             <button class="btn btn-sm" onclick="abrirPagosModal(${t.id}, '${t.nombre.replace(/'/g, "\\'")}', ${totalMO}, ${totalPagado})" 
-                style="font-size:0.7rem; padding:0.25rem 0.5rem; width:100%; border:1px solid #cbd5e1; background:white; cursor:pointer; color:#1a365d; font-weight:600;">
+                style="font-size:0.7rem; padding:0.25rem 0.5rem; width:100%; border:1px solid #cbd5e1; background:white; cursor:pointer; color:#1a365d; font-weight:600; margin-bottom: 4px;">
                 💰 Gestionar Pagos
+            </button>
+            <button class="btn btn-sm btn-secondary" onclick="cargarPedidos(${t.id}, '${t.nombre.replace(/'/g, "\\'")}')" 
+                style="font-size:0.7rem; padding:0.25rem 0.5rem; width:100%; font-weight:600;">
+                📂 Ver Pedidos
             </button>
             `;
         }
@@ -344,6 +357,7 @@ async function crearTanda() {
         document.getElementById('btn-toggle-nueva-tanda').textContent = '＋ Nueva Tanda';
 
         // Recargar tandas y stock
+        tandaVisualizadaId = null; // Forzar que cargue la nueva tanda activa
         await cargarTandas();
         await cargarStock();
         await cargarPedidos();
@@ -366,8 +380,10 @@ async function cerrarTandaActiva() {
         await fetchAPI(`/tandas/${tandaActiva.id}/cerrar`, { method: 'PATCH' });
         showToast(`🔒 Tanda "${tandaActiva.nombre}" cerrada`, 'info');
         tandaActiva = null;
+        tandaVisualizadaId = null;
         await cargarTandas();
         await cargarStock();
+        await cargarPedidos(); // Recargar para limpiar lista si no hay activa
     } catch (err) {
         showToast(`❌ Error: ${err.message}`, 'error');
         if (btn) { btn.disabled = false; btn.textContent = '🔒 Cerrar Tanda'; }
@@ -739,9 +755,26 @@ function limpiarFormulario() {
 // ============================================================
 // CARGAR PEDIDOS
 // ============================================================
-async function cargarPedidos() {
+async function cargarPedidos(tandaId = null, nombre = null) {
     const container = document.getElementById('pedidos-container');
     const estado = document.getElementById('filtro-estado').value;
+    const tituloEl = document.getElementById('titulo-pedidos');
+
+    // Si viene de un clic en el historial, actualizar estado local
+    if (tandaId) {
+        tandaVisualizadaId = tandaId;
+        tandaVisualizadaNombre = nombre;
+    } else if (!tandaVisualizadaId && tandaActiva) {
+        // Por defecto, ver tanda activa
+        tandaVisualizadaId = tandaActiva.id;
+        tandaVisualizadaNombre = tandaActiva.nombre;
+    }
+
+    // Actualizar título de la sección
+    if (tituloEl) {
+        tituloEl.textContent = `📋 Pedidos de: ${tandaVisualizadaNombre || 'la Tanda'}`;
+    }
+
     container.innerHTML = `
         <div class="skeleton-row"></div>
         <div class="skeleton-row"></div>
@@ -751,6 +784,12 @@ async function cargarPedidos() {
         const params = [];
         if (operadorSesion?.id) params.push(`operador_id=${operadorSesion.id}`);
         if (estado) params.push(`estado=${estado}`);
+
+        // Filtrar por la tanda visualizada
+        if (tandaVisualizadaId) {
+            params.push(`tanda_id=${tandaVisualizadaId}`);
+        }
+
         if (params.length) url += '?' + params.join('&');
         const pedidos = await fetchAPI(url);
         actualizarStats(pedidos);
