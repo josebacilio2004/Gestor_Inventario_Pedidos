@@ -17,7 +17,8 @@ async function fetchAPI(endpoint, options = {}) {
 
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.error || 'Error al realizar la petición');
+            const msg = error.detail ? `${error.error}: ${error.detail}` : (error.error || 'Error al realizar la petición');
+            throw new Error(msg);
         }
 
         return await response.json();

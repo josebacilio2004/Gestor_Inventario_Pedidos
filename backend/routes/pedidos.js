@@ -123,7 +123,7 @@ router.get('/:id', async (req, res) => {
 
 // POST - Crear nuevo pedido
 router.post('/', async (req, res) => {
-    const client = await pool.connect();
+    let client;
     try {
         const {
             fecha_pedido,
@@ -158,6 +158,7 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ error: 'Capital y ganancia no pueden ser negativos' });
         }
 
+        client = await pool.connect();
         await client.query('BEGIN');
 
         // 1. Insertar el pedido principal
@@ -212,7 +213,7 @@ router.post('/', async (req, res) => {
         await client.query('COMMIT');
         res.status(201).json(nuevoPedido);
     } catch (err) {
-        await client.query('ROLLBACK');
+        if (client) await client.query('ROLLBACK');
         console.error('Error al crear pedido:', err);
         if (err.code === '23503') {
             return res.status(400).json({
@@ -225,7 +226,7 @@ router.post('/', async (req, res) => {
             code: err.code
         });
     } finally {
-        client.release();
+        if (client) client.release();
     }
 });
 
