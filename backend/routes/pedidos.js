@@ -219,7 +219,11 @@ router.post('/', async (req, res) => {
                 error: 'Producto o distribuidor no válido'
             });
         }
-        res.status(500).json({ error: 'Error al crear pedido' });
+        res.status(500).json({
+            error: 'Error al crear pedido',
+            detail: err.message,
+            code: err.code
+        });
     } finally {
         client.release();
     }
