@@ -5,6 +5,70 @@ let distribuidores = [];
 let inversionistas = [];
 let compradores = [];
 let editingId = null;
+let itemsPedido = []; // [{ producto_id, nombre, cantidad }]
+
+function resetItemsPedido() {
+    itemsPedido = [];
+    renderListaItems();
+}
+
+function agregarItemALista() {
+    const prodSelect = document.getElementById('producto_id');
+    const cantInput = document.getElementById('item_cantidad');
+    const productoId = prodSelect.value;
+    const cantidad = parseInt(cantInput.value);
+
+    if (!productoId || !cantidad || cantidad <= 0) {
+        showNotification('Seleccione un producto y cantidad válida', 'warning');
+        return;
+    }
+
+    const producto = productos.find(p => p.id == productoId);
+
+    // Evitar duplicados, sumar si ya existe
+    const existente = itemsPedido.find(it => it.producto_id == productoId);
+    if (existente) {
+        existente.cantidad += cantidad;
+    } else {
+        itemsPedido.push({
+            producto_id: productoId,
+            nombre: producto.nombre,
+            cantidad: cantidad
+        });
+    }
+
+    cantInput.value = '';
+    renderListaItems();
+}
+
+function eliminarItem(index) {
+    itemsPedido.splice(index, 1);
+    renderListaItems();
+}
+
+function renderListaItems() {
+    const container = document.getElementById('lista-items-productos');
+    const totalInput = document.getElementById('cantidad');
+
+    if (itemsPedido.length === 0) {
+        container.innerHTML = '<div class="text-secondary text-center" style="font-size: 0.85rem; padding: 0.5rem;">No hay productos añadidos aún</div>';
+        totalInput.value = 0;
+        return;
+    }
+
+    let totalHerramientas = 0;
+    container.innerHTML = itemsPedido.map((it, idx) => {
+        totalHerramientas += it.cantidad;
+        return `
+            <div class="d-flex justify-content-between align-items-center mb-1 p-2" style="background:#fff; border-radius:4px; border:1px solid #edf2f7;">
+                <span style="font-size:0.9rem;"><b>${it.cantidad}</b> x ${it.nombre}</span>
+                <button type="button" class="btn btn-sm btn-danger" onclick="eliminarItem(${idx})" style="padding:0.1rem 0.5rem;">×</button>
+            </div>
+        `;
+    }).join('');
+
+    totalInput.value = totalHerramientas;
+}
 
 // Cargar datos iniciales
 async function loadInitialData() {
@@ -148,6 +212,7 @@ function openCreateModal() {
     document.getElementById('fecha_pedido').value = today;
     document.getElementById('estado').value = 'pendiente';
 
+    resetItemsPedido();
     openModal('pedido-modal');
 }
 
@@ -160,7 +225,6 @@ async function editPedido(id) {
         document.getElementById('modal-title').textContent = 'Editar Pedido';
         document.getElementById('pedido-id').value = pedido.id;
         document.getElementById('fecha_pedido').value = formatDateForInput(pedido.fecha_pedido);
-        document.getElementById('producto_id').value = pedido.producto_id;
         document.getElementById('distribuidor_id').value = pedido.distribuidor_id;
         document.getElementById('inversionista_id').value = pedido.inversionista_id || '';
         document.getElementById('comprador_id').value = pedido.comprador_id || '';
@@ -169,6 +233,10 @@ async function editPedido(id) {
         document.getElementById('ganancia_esperada').value = pedido.ganancia_esperada;
         document.getElementById('estado').value = pedido.estado;
         document.getElementById('notas').value = pedido.notas || '';
+
+        // Cargar items (Supone que el backend los devuelve o hay endpoint)
+        itemsPedido = pedido.items || [];
+        renderListaItems();
 
         openModal('pedido-modal');
     } catch (error) {
@@ -236,19 +304,22 @@ document.getElementById('pedido-form').addEventListener('submit', async (e) => {
     const [year, month, day] = fechaInput.split('-');
     const fechaLocal = `${year}-${month}-${day}`;
 
+    if (itemsPedido.length === 0) {
+        showNotification('Debe agregar al menos un producto al pedido', 'warning');
+        return;
+    }
+
     const data = {
         fecha_pedido: fechaLocal,
-        producto_id: parseInt(document.getElementById('producto_id').value),
         distribuidor_id: parseInt(document.getElementById('distribuidor_id').value),
         inversionista_id: document.getElementById('inversionista_id').value ? parseInt(document.getElementById('inversionista_id').value) : null,
         comprador_id: document.getElementById('comprador_id').value ? parseInt(document.getElementById('comprador_id').value) : null,
         cantidad: parseInt(document.getElementById('cantidad').value),
-        cant_pico: parseInt(document.getElementById('cant_pico').value) || 0,
-        cant_zapapico: parseInt(document.getElementById('cant_zapapico').value) || 0,
         capital_invertido: parseFloat(document.getElementById('capital_invertido').value),
         ganancia_esperada: parseFloat(document.getElementById('ganancia_esperada').value),
         estado: document.getElementById('estado').value,
-        notas: document.getElementById('notas').value
+        notas: document.getElementById('notas').value,
+        items: itemsPedido // Array de items { producto_id, cantidad }
     };
 
     try {

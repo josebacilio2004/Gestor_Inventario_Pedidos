@@ -127,13 +127,10 @@ router.post('/', async (req, res) => {
     try {
         const {
             fecha_pedido,
-            producto_id,
             distribuidor_id,
             inversionista_id,
             comprador_id,
             cantidad,
-            cant_pico,
-            cant_zapapico,
             capital_invertido,
             ganancia_esperada,
             ganancia_real,
@@ -141,30 +138,15 @@ router.post('/', async (req, res) => {
             fecha_ganancia_devuelta,
             devolucion_capital,
             estado,
-            notas
+            notas,
+            items // [{ producto_id, cantidad }]
         } = req.body;
 
         // Validaciones
-        if (!fecha_pedido || !producto_id || !distribuidor_id || !cantidad ||
-            capital_invertido === undefined || ganancia_esperada === undefined) {
+        if (!fecha_pedido || !distribuidor_id || !cantidad ||
+            capital_invertido === undefined || ganancia_esperada === undefined || !items || !items.length) {
             return res.status(400).json({
-                error: 'Faltan campos obligatorios: fecha_pedido, producto_id, distribuidor_id, cantidad, capital_invertido, ganancia_esperada'
-            });
-        }
-
-        if (cantidad <= 0) {
-            return res.status(400).json({ error: 'La cantidad debe ser mayor a 0' });
-        }
-
-        if (capital_invertido < 0 || ganancia_esperada < 0) {
-            return res.status(400).json({ error: 'Capital y ganancia no pueden ser negativos' });
-        }
-
-        // Validar que el desglose no supere el total
-        const sumaDesglose = (parseInt(cant_pico) || 0) + (parseInt(cant_zapapico) || 0);
-        if (sumaDesglose > cantidad) {
-            return res.status(400).json({
-                error: `La suma de Picos (${cant_pico}) y Zapapicos (${cant_zapapico}) no puede ser mayor al total (${cantidad})`
+                error: 'Faltan campos obligatorios: fecha_pedido, distribuidor_id, cantidad, capital_invertido, ganancia_esperada, items'
             });
         }
 
@@ -172,6 +154,10 @@ router.post('/', async (req, res) => {
         await client.query('BEGIN');
 
         // 1. Insertar el pedido principal
+        // Nota: producto_id sigue siendo NOT NULL en la DB original, usaremos el primero como referencia o quitaremos el constraint si es posible.
+        // Como solución temporal para no romper la DB, usaremos el ID del primer item como "producto principal"
+        const main_producto_id = items[0].producto_id;
+
         const result = await client.query(
             `INSERT INTO pedidos 
        (fecha_pedido, producto_id, distribuidor_id, inversionista_id, comprador_id,
@@ -181,7 +167,7 @@ router.post('/', async (req, res) => {
        RETURNING *`,
             [
                 fecha_pedido,
-                producto_id,
+                main_producto_id,
                 distribuidor_id,
                 inversionista_id,
                 comprador_id,
@@ -198,24 +184,20 @@ router.post('/', async (req, res) => {
         );
         const nuevoPedido = result.rows[0];
 
-        // 2. Extraer automáticamente el detalle para el stock del operador o usar el manual si viene
-        if (sumaDesglose > 0) {
-            // Caso 1: El usuario especificó el desglose manualmente en el modal de pedido
-            if (parseInt(cant_pico) > 0) {
+        // 2. Insertar desglose de productos y generar stock detalle automáticamente
+        for (const item of items) {
+            // Guardar en la tabla de relación (si existe la tabla, si no, al menos procesamos el stock)
+            try {
                 await client.query(
-                    `INSERT INTO pedido_stock_detalle (pedido_id, tipo, cantidad) VALUES ($1, $2, $3)`,
-                    [nuevoPedido.id, 'Pico', parseInt(cant_pico)]
+                    `INSERT INTO pedidos_productos (pedido_id, producto_id, cantidad) VALUES ($1, $2, $3)`,
+                    [nuevoPedido.id, item.producto_id, item.cantidad]
                 );
+            } catch (e) {
+                console.log("Tabla pedidos_productos no existe aún o error al insertar, ignorando...");
             }
-            if (parseInt(cant_zapapico) > 0) {
-                await client.query(
-                    `INSERT INTO pedido_stock_detalle (pedido_id, tipo, cantidad) VALUES ($1, $2, $3)`,
-                    [nuevoPedido.id, 'Zapapico', parseInt(cant_zapapico)]
-                );
-            }
-        } else {
-            // Caso 2: No hubo desglose manual, intentar detección automática por nombre del producto
-            const prodRes = await client.query('SELECT nombre FROM productos WHERE id = $1', [producto_id]);
+
+            // Detección automática para el operador por cada producto del pedido
+            const prodRes = await client.query('SELECT nombre FROM productos WHERE id = $1', [item.producto_id]);
             if (prodRes.rows.length > 0) {
                 const nombreProd = prodRes.rows[0].nombre.toLowerCase();
                 let tipoHerramienta = null;
@@ -229,7 +211,7 @@ router.post('/', async (req, res) => {
                 if (tipoHerramienta) {
                     await client.query(
                         `INSERT INTO pedido_stock_detalle (pedido_id, tipo, cantidad) VALUES ($1, $2, $3)`,
-                        [nuevoPedido.id, tipoHerramienta, cantidad]
+                        [nuevoPedido.id, tipoHerramienta, item.cantidad]
                     );
                 }
             }

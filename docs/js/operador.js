@@ -775,6 +775,21 @@ async function cargarPedidos(tandaId = null, nombre = null) {
         tituloEl.textContent = `📋 Pedidos de: ${tandaVisualizadaNombre || 'la Tanda'}`;
     }
 
+    // Gestionar botón de "Volver a Tanda Actual"
+    const containerVolver = document.getElementById('container-boton-volver');
+    if (containerVolver) {
+        if (tandaActiva && tandaVisualizadaId !== tandaActiva.id) {
+            containerVolver.innerHTML = `
+                <button onclick="irATandaActual()" class="btn btn-sm btn-primary" 
+                    style="background:#1e365d; margin-right:8px; font-size:0.75rem; padding: 0.4rem 0.8rem;">
+                    🏠 Volver a Tanda Actual
+                </button>
+            `;
+        } else {
+            containerVolver.innerHTML = '';
+        }
+    }
+
     container.innerHTML = `
         <div class="skeleton-row"></div>
         <div class="skeleton-row"></div>
@@ -1063,5 +1078,10 @@ async function registrarPago() {
     } finally {
         btn.disabled = false;
         btn.innerHTML = '✅ Confirmar Pago';
+    }
+}
+function irATandaActual() {
+    if (tandaActiva) {
+        cargarPedidos(tandaActiva.id, tandaActiva.nombre);
     }
 }
