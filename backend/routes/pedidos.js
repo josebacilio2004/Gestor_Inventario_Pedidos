@@ -49,7 +49,14 @@ router.get('/', async (req, res) => {
         prod.tipo_producto,
         d.nombre as distribuidor_nombre,
         i.nombre as inversionista_nombre,
-        c.nombre as comprador_nombre
+        c.nombre as comprador_nombre,
+        (SELECT json_agg(json_build_object(
+            'producto_id', pp.producto_id,
+            'cantidad', pp.cantidad,
+            'nombre', pr.nombre
+        )) FROM pedidos_productos pp 
+           JOIN productos pr ON pp.producto_id = pr.id 
+           WHERE pp.pedido_id = p.id) as items
       FROM pedidos p
       LEFT JOIN productos prod ON p.producto_id = prod.id
       LEFT JOIN distribuidores d ON p.distribuidor_id = d.id
@@ -100,7 +107,14 @@ router.get('/:id', async (req, res) => {
         prod.tipo_producto,
         prod.precio_referencia,
         d.nombre as distribuidor_nombre,
-        d.contacto as distribuidor_contacto
+        d.contacto as distribuidor_contacto,
+        (SELECT json_agg(json_build_object(
+            'producto_id', pp.producto_id,
+            'cantidad', pp.cantidad,
+            'nombre', pr.nombre
+        )) FROM pedidos_productos pp 
+           JOIN productos pr ON pp.producto_id = pr.id 
+           WHERE pp.pedido_id = p.id) as items
       FROM pedidos p
       LEFT JOIN productos prod ON p.producto_id = prod.id
       LEFT JOIN distribuidores d ON p.distribuidor_id = d.id
