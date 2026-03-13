@@ -91,9 +91,24 @@
 
                 <div class="form-group">
                     <label for="producto_id" class="form-label">Producto *</label>
-                    <select id="producto_id" class="form-control" required>
-                        <option value="">Seleccione un producto</option>
-                    </select>
+                    <select id="producto_id" class="form-control"></select>
+                </div>
+
+                <div class="d-flex gap-1 align-items-end mb-3">
+                    <div class="form-group mb-0 flex-1">
+                        <label class="form-label">Cantidad a añadir</label>
+                        <input type="number" id="item_cantidad" class="form-control" min="1" placeholder="0">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="agregarItemALista()" style="height: 38px;">
+                        ➕ Añadir Producto
+                    </button>
+                </div>
+
+                <!-- Lista de productos añadidos (compacta) -->
+                <div id="lista-items-productos"
+                    style="margin-bottom: 1rem; background: #f8fafc; border-radius: 6px; padding: 0.5rem; border: 1px dashed #cbd5e1;">
+                    <div class="text-secondary text-center" style="font-size: 0.8rem;">No hay productos añadidos
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -115,35 +130,6 @@
                     <select id="comprador_id" class="form-control" required>
                         <option value="">Seleccione un comprador</option>
                     </select>
-                </div>
-
-                <!-- Builder de Productos -->
-                <div
-                    style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1rem;">
-                    <h3 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: #1a365d;">🛠️ Agregar Productos al
-                        Pedido</h3>
-                    <div class="d-flex gap-1 align-items-end">
-                        <div class="form-group flex-1">
-                            <label class="form-label">Producto</label>
-                            <select id="producto_id" class="form-control"></select>
-                        </div>
-                        <div class="form-group" style="width: 100px;">
-                            <label class="form-label">Cantidad</label>
-                            <input type="number" id="item_cantidad" class="form-control" min="1" placeholder="0">
-                        </div>
-                        <button type="button" class="btn btn-primary" onclick="agregarItemALista()"
-                            style="height: 38px; margin-bottom: 15px;">
-                            ➕ Añadir
-                        </button>
-                    </div>
-
-                    <!-- Lista de productos añadidos -->
-                    <div id="lista-items-productos"
-                        style="margin-top: 1rem; border-top: 1px solid #e2e8f0; padding-top: 0.75rem;">
-                        <div class="text-secondary text-center" style="font-size: 0.85rem; padding: 0.5rem;">
-                            No hay productos añadidos aún
-                        </div>
-                    </div>
                 </div>
 
                 <div class="form-group">
