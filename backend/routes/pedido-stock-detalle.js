@@ -98,15 +98,12 @@ router.post('/:id/asignar-stock', async (req, res) => {
         const { items } = req.body;
 
         if (!Array.isArray(items) || items.length === 0)
-            return res.status(400).json({ error: 'Se requiere especificar tipo y marca para cada herramienta' });
+            return res.status(400).json({ error: 'Se requiere especificar el tipo para cada herramienta' });
 
-        const marcasValidas = ['Tramontina', 'Bellota'];
         const tiposValidos = ['Pico', 'Zapapico'];
         for (const item of items) {
             if (!tiposValidos.includes(item.tipo))
                 return res.status(400).json({ error: `Tipo inválido: ${item.tipo}` });
-            if (!marcasValidas.includes(item.marca))
-                return res.status(400).json({ error: `Marca inválida: ${item.marca}. Válidas: Tramontina, Bellota` });
         }
 
         // Obtener tanda activa
