@@ -45,6 +45,7 @@ app.use((req, res, next) => {
 // Rutas
 app.use('/api/productos', productosRoutes);
 app.use('/api/distribuidores', distribuidoresRoutes);
+app.use('/api/pedidos', pedidoStockDetalleRoutes); // Prioridad para evitar conflicto con /:id
 app.use('/api/pedidos', pedidosRoutes);
 app.use('/api/inversionistas', inversionistasRoutes);
 app.use('/api/compradores', compradoresRoutes);
@@ -58,7 +59,6 @@ app.use('/api/tandas', tandasRoutes);
 app.use('/api/facturas-comprador', facturasCompradorRoutes);
 app.use('/api/mayoristas', mayoristasRoutes);
 app.use('/api/operador-pagos', operadorPagosRoutes);
-app.use('/api/pedidos', pedidoStockDetalleRoutes);  // stock-detalle routes prefixed to /api/pedidos/:id
 
 // Ruta raíz
 app.get('/', (req, res) => {
