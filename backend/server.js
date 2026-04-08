@@ -2,10 +2,25 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+// ── MANEJO DE ERRORES CRÍTICOS (AL INICIO) ──────────────────────
+process.on('uncaughtException', (err) => {
+    console.error('🔥 CRITICAL: Uncaught Exception:', err);
+    // No cerramos el proceso para darle oportunidad a Render de reconectar
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('🔥 CRITICAL: Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 console.log('🚀 Iniciando servidor backend...');
+console.log('📅 Fecha/Hora:', new Date().toISOString());
+console.log('📦 Memoria inicial:', (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2), 'MB');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// ── RUTA DE SALUD (Mínima, antes de middlewares pesados) ────────
+app.get('/ping', (req, res) => res.status(200).send('pong'));
 
 // 1. Configuración de CORS - AL PRINCIPIO ABSOLUTO
 app.use(cors({
@@ -20,10 +35,10 @@ app.use(cors({
     exposedHeaders: ['Content-Range', 'X-Content-Range']
 }));
 
-// Pre-flight OPTIONS handling
+// Pre-flight OPTIONS handling explicito
 app.options('*', cors());
 
-// Middleware
+// Middleware base
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -33,7 +48,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Importación diferida de rutas para evitar colapsar si hay errores circulares
+// Importación de rutas
 const productosRoutes = require('./routes/productos');
 const distribuidoresRoutes = require('./routes/distribuidores');
 const pedidosRoutes = require('./routes/pedidos');
@@ -51,7 +66,7 @@ const mayoristasRoutes = require('./routes/mayoristas');
 const operadorPagosRoutes = require('./routes/operador-pagos');
 const pedidoStockDetalleRoutes = require('./routes/pedido-stock-detalle');
 
-// Rutas
+// Mapeo de Rutas
 app.use('/api/productos', productosRoutes);
 app.use('/api/distribuidores', distribuidoresRoutes);
 app.use('/api/pedidos', pedidoStockDetalleRoutes);
@@ -69,12 +84,13 @@ app.use('/api/facturas-comprador', facturasCompradorRoutes);
 app.use('/api/mayoristas', mayoristasRoutes);
 app.use('/api/operador-pagos', operadorPagosRoutes);
 
-// Ruta raíz (Salud)
+// Ruta raíz (Salud detallada)
 app.get('/', (req, res) => {
     res.json({
         status: 'online',
-        message: 'API de Gestión de Inventario, Pagos e Inversión',
-        timestamp: new Date().toISOString()
+        message: 'API de Gestión de Inventario, Pagos e Inversión (v2.1)',
+        timestamp: new Date().toISOString(),
+        env: process.env.NODE_ENV || 'production'
     });
 });
 
@@ -88,26 +104,18 @@ app.use((err, req, res, next) => {
     console.error('❌ ERROR GLOBAL:', err);
     
     // Asegurar que las respuestas de error también tengan CORS (redundancia)
-    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-    
-    res.status(err.status || 500).json({
-        error: 'Error interno del servidor',
-        message: err.message,
-        path: req.path
-    });
+    if (!res.headersSent) {
+        res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+        res.status(err.status || 500).json({
+            error: 'Error interno del servidor',
+            message: err.message,
+            path: req.path
+        });
+    }
 });
 
-// Captura de errores que matan el proceso
-process.on('uncaughtException', (err) => {
-  console.error('🔥 CRASH: Uncaught Exception:', err);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('🔥 CRASH: Unhandled Rejection at:', promise, 'reason:', reason);
-});
-
-// Iniciar servidor
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
-    console.log(`🌍 URL permitida por CORS: https://josebacilio2004.github.io`);
+// Iniciar servidor explicitamente en 0.0.0.0 para entornos como Render
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Servidor escuchando en: 0.0.0.0:${PORT}`);
+    console.log(`✨ Listo para recibir peticiones de: https://josebacilio2004.github.io`);
 });
