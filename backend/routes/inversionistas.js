@@ -67,10 +67,11 @@ router.get('/:id', async (req, res) => {
             return res.status(404).json({ error: 'Inversionista no encontrado' });
         }
 
-        // Pedidos del inversionista
         const pedidos = await pool.query(
             `SELECT 
         p.*,
+        p.devolucion_capital as capital_devuelto,
+        (p.capital_invertido - p.devolucion_capital) as capital_pendiente,
         prod.nombre as producto_nombre,
         d.nombre as distribuidor_nombre,
         c.nombre as comprador_nombre
@@ -83,14 +84,14 @@ router.get('/:id', async (req, res) => {
             [id]
         );
 
-        // Calcular resumen directamente con lógica corregida
+        // Calcular resumen directamente con lógica corregida (usando devolucion_capital)
         const statsResult = await pool.query(
             `SELECT 
                 COALESCE(SUM(capital_invertido), 0) as capital_total,
                 COALESCE(SUM(devolucion_capital), 0) as capital_devuelto_total,
                 COUNT(*) as total_pedidos,
-                COALESCE(SUM(ganancia_real), 0) as ganancia_total,
-                COALESCE(SUM(CASE WHEN ganancia_devuelta = true THEN ganancia_real ELSE 0 END), 0) as ganancia_devuelta_total
+                COALESCE(SUM(CASE WHEN ganancia_real > 0 THEN ganancia_real ELSE (CASE WHEN estado = 'completado' THEN ganancia_esperada ELSE 0 END) END), 0) as ganancia_total,
+                COALESCE(SUM(CASE WHEN ganancia_devuelta = true THEN (CASE WHEN ganancia_real > 0 THEN ganancia_real ELSE ganancia_esperada END) ELSE 0 END), 0) as ganancia_devuelta_total
             FROM pedidos 
             WHERE inversionista_id = $1`,
             [id]
