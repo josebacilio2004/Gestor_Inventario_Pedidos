@@ -88,34 +88,33 @@ router.get('/:id', async (req, res) => {
             [id]
         );
 
-        // Resumen con fallback si la vista no existe
-        let resumen = {
-            capital_total_gestionado: 0,
-            capital_devuelto: 0,
-            capital_pendiente_devolver: 0,
-            total_pedidos: pedidos.rows.length,
-            ganancia_generada: 0
+        // Calcular resumen robusto desde la base de datos
+        const statsResult = await pool.query(
+            `SELECT 
+                COALESCE(SUM(capital_invertido), 0) as capital_total,
+                COALESCE(SUM(devolucion_capital), 0) as capital_devuelto_total,
+                COUNT(*) as total_pedidos,
+                COALESCE(SUM(ganancia_real), 0) as ganancia_total
+            FROM pedidos 
+            WHERE comprador_id = $1`,
+            [id]
+        );
+
+        const stats = statsResult.rows[0];
+        const capitalTotal = parseFloat(stats.capital_total || 0);
+        const capitalDevuelto = parseFloat(stats.capital_devuelto_total || 0);
+        const gananciaTotal = parseFloat(stats.ganancia_total || 0);
+
+        const resumen = {
+            capital_total_gestionado: capitalTotal,
+            capital_devuelto: capitalDevuelto,
+            capital_pendiente_devolver: capitalTotal - capitalDevuelto,
+            total_pedidos: parseInt(stats.total_pedidos || 0),
+            ganancia_generada: gananciaTotal,
+            porcentaje_devuelto: capitalTotal > 0
+                ? parseFloat(((capitalDevuelto / capitalTotal) * 100).toFixed(1))
+                : 0
         };
-        try {
-            const resumenResult = await pool.query(
-                'SELECT * FROM vista_compradores_resumen WHERE id = $1',
-                [id]
-            );
-            if (resumenResult.rows.length > 0) {
-                resumen = resumenResult.rows[0];
-            }
-        } catch (viewErr) {
-            console.warn('Vista compradores_resumen no disponible, calculando desde pedidos:', viewErr.message);
-            // Calcular resumen manualmente desde los pedidos
-            const calc = pedidos.rows.reduce((acc, p) => ({
-                capital_total_gestionado: acc.capital_total_gestionado + parseFloat(p.capital_invertido || 0),
-                capital_devuelto: acc.capital_devuelto + parseFloat(p.capital_devuelto || 0),
-                capital_pendiente_devolver: acc.capital_pendiente_devolver + parseFloat(p.capital_pendiente || 0),
-                ganancia_generada: acc.ganancia_generada + parseFloat(p.ganancia_real || 0),
-                total_pedidos: acc.total_pedidos + 1
-            }), resumen);
-            resumen = calc;
-        }
 
         res.json({
             ...comprador.rows[0],

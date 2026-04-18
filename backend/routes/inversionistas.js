@@ -83,31 +83,35 @@ router.get('/:id', async (req, res) => {
             [id]
         );
 
-        // Calcular resumen directamente
+        // Calcular resumen directamente con lógica corregida
         const statsResult = await pool.query(
             `SELECT 
                 COALESCE(SUM(capital_invertido), 0) as capital_total,
-                COALESCE(SUM(capital_devuelto), 0) as capital_devuelto,
-                COALESCE(SUM(capital_pendiente), 0) as capital_pendiente,
+                COALESCE(SUM(devolucion_capital), 0) as capital_devuelto_total,
                 COUNT(*) as total_pedidos,
                 COALESCE(SUM(ganancia_real), 0) as ganancia_total,
-                COALESCE(SUM(ganancia_devuelta_monto), 0) as ganancia_devuelta_total
+                COALESCE(SUM(CASE WHEN ganancia_devuelta = true THEN ganancia_real ELSE 0 END), 0) as ganancia_devuelta_total
             FROM pedidos 
             WHERE inversionista_id = $1`,
             [id]
         );
 
         const stats = statsResult.rows[0];
+        const capitalTotal = parseFloat(stats.capital_total || 0);
+        const capitalDevuelto = parseFloat(stats.capital_devuelto_total || 0);
+        const gananciaTotal = parseFloat(stats.ganancia_total || 0);
+        const gananciaDevuelta = parseFloat(stats.ganancia_devuelta_total || 0);
+
         const resumen = {
-            capital_total_invertido: parseFloat(stats.capital_total || 0),
-            capital_devuelto: parseFloat(stats.capital_devuelto || 0),
-            capital_pendiente_devolver: parseFloat(stats.capital_pendiente || 0),
+            capital_total_invertido: capitalTotal,
+            capital_total_devuelto: capitalDevuelto,
+            capital_total_pendiente: capitalTotal - capitalDevuelto,
             total_pedidos: parseInt(stats.total_pedidos || 0),
-            ganancia_total_real: parseFloat(stats.ganancia_total || 0),
-            ganancia_devuelta: parseFloat(stats.ganancia_devuelta_total || 0),
-            ganancia_pendiente: parseFloat(stats.ganancia_total || 0) - parseFloat(stats.ganancia_devuelta_total || 0),
-            porcentaje_devolucion: parseFloat(stats.capital_total || 0) > 0
-                ? parseFloat(((parseFloat(stats.capital_devuelto || 0) / parseFloat(stats.capital_total || 0)) * 100).toFixed(1))
+            ganancia_total_real: gananciaTotal,
+            ganancia_devuelta: gananciaDevuelta,
+            ganancia_pendiente: gananciaTotal - gananciaDevuelta,
+            porcentaje_devolucion: capitalTotal > 0
+                ? parseFloat(((capitalDevuelto / capitalTotal) * 100).toFixed(1))
                 : 0
         };
 

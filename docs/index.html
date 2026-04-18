@@ -7,7 +7,9 @@
     <title>Comercializadora Aly | Excelencia Industrial</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -72,33 +74,33 @@
 </head>
 
 <body class="text-on-surface antialiased">
-    <!-- TopNavBar -->
-    <nav class="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width sticky top-0 z-50 shadow-[0_20px_40px_rgba(15,33,55,0.08)]">
-        <div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
-            <div class="flex items-center gap-3">
+    <!-- TopNavBar Unified -->
+    <nav class="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl sticky top-0 z-50 shadow-[0_20px_40px_rgba(15,33,55,0.08)]">
+        <div class="flex flex-wrap md:flex-nowrap justify-between items-center w-full px-6 py-3 max-w-screen-2xl mx-auto gap-4">
+            <!-- Left: Logo -->
+            <div class="flex items-center gap-3 shrink-0">
                 <img src="assets/favicon.png" alt="Logo Aly" class="h-8 w-auto object-contain" onerror="this.style.display='none'">
-                <span class="text-2xl font-black tracking-tighter text-slate-950 dark:text-white uppercase italic leading-none">
+                <span class="text-xl font-black tracking-tighter text-slate-950 dark:text-white uppercase italic leading-none">
                     Comercializadora <span class="text-secondary-container">Aly</span>
                 </span>
             </div>
-                <div class="hidden md:flex gap-6 items-center border-l border-slate-200 pl-8">
-                    <a class="text-orange-600 dark:text-orange-400 font-black text-xs uppercase tracking-widest border-b-2 border-orange-500 py-1" href="#inicio">Inicio</a>
-                    <a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 border-b-2 border-transparent transition-all font-black text-xs uppercase tracking-widest py-1" href="catalogo.html">Productos</a>
-                    <a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 border-b-2 border-transparent transition-all font-black text-xs uppercase tracking-widest py-1" href="#nosotros">Nosotros</a>
-                    <a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 border-b-2 border-transparent transition-all font-black text-xs uppercase tracking-widest py-1" href="#contacto">Contacto</a>
-                </div>
+
+            <!-- Middle: Search Center -->
+            <div class="flex-1 max-w-xl hidden md:block relative">
+                <input class="w-full bg-slate-200/50 dark:bg-slate-800/50 border-none focus:ring-2 focus:ring-secondary-container rounded-full px-12 py-2 text-xs font-black uppercase tracking-widest outline-none"
+                    placeholder="Buscar Herramientas..." type="text" />
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
             </div>
-            <div class="flex items-center gap-6">
-                <div class="hidden lg:flex items-center bg-slate-100 px-4 py-2 rounded-lg border-b border-outline-variant/20">
-                    <span class="material-symbols-outlined text-outline mr-2 text-sm">search</span>
-                    <input class="bg-transparent border-none focus:ring-0 text-xs w-48 font-bold" placeholder="Buscar Herramientas..." type="text" />
+
+            <!-- Right: Actions -->
+            <div class="flex items-center gap-4 shrink-0">
+                <div class="hidden lg:flex gap-6 items-center border-r border-slate-200 dark:border-slate-800 pr-6 mr-2">
+                    <a class="text-orange-600 dark:text-orange-400 font-bold text-[10px] uppercase tracking-widest border-b-2 border-orange-500 pb-0.5" href="#inicio">Inicio</a>
+                    <a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all font-bold text-[10px] uppercase tracking-widest pb-0.5" href="catalogo.html">Catálogo</a>
                 </div>
-                <div class="flex items-center gap-4">
-                    <a href="catalogo.html" class="bg-primary text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-secondary-container transition-colors">
-                        Catálogo
-                    </a>
-                    <a href="login.html" class="hover:bg-slate-100/50 p-2 rounded-full transition-all">
-                        <span class="material-symbols-outlined text-slate-950">lock</span>
+                <div class="flex items-center gap-2">
+                    <a href="login.html" class="p-2.5 bg-slate-950 text-white rounded-full hover:bg-secondary-container transition-all shadow-lg flex items-center justify-center" title="Ingreso Personal">
+                        <span class="material-symbols-outlined text-[18px]">lock</span>
                     </a>
                 </div>
             </div>

@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="css/corporate-theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="assets/favicon.png">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        .bi-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+        .chart-container { height: 350px; background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #edf2f7; }
+        @media (max-width: 768px) { .bi-grid { grid-template-cols: 1fr; } }
+    </style>
 </head>
 
 <body>
@@ -54,6 +60,18 @@
             <div class="stat-card">
                 <div class="stat-label">% Devolución</div>
                 <div class="stat-value" id="porcentaje-devolucion">0%</div>
+            </div>
+        </div>
+
+        <!-- BI Section: Gráficas de Inteligencia -->
+        <div class="bi-grid">
+            <div class="chart-container">
+                <h3 style="font-size: 0.9rem; font-weight: 800; text-transform: uppercase; margin-bottom: 1rem; color: #4a5568;">Distribución de Capital</h3>
+                <div id="capital-chart" style="width: 100%; height: 280px;"></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="font-size: 0.9rem; font-weight: 800; text-transform: uppercase; margin-bottom: 1rem; color: #4a5568;">Rendimiento de Ganancias</h3>
+                <div id="ganancia-chart" style="width: 100%; height: 280px;"></div>
             </div>
         </div>
 
@@ -157,17 +175,18 @@
                 const data = await fetchAPI(`/inversionistas/${userId}`);
 
                 if (data.resumen) {
-                    document.getElementById('capital-invertido').textContent = formatCurrency(data.resumen.capital_total_invertido || 0);
-                    document.getElementById('capital-devuelto').textContent = formatCurrency(data.resumen.capital_total_devuelto || 0);
-                    document.getElementById('capital-pendiente').textContent = formatCurrency(data.resumen.capital_total_pendiente || 0);
-                    document.getElementById('total-pedidos').textContent = data.resumen.total_pedidos || 0;
-                    document.getElementById('ganancia-real').textContent = formatCurrency(data.resumen.ganancia_total_real || 0);
-                    document.getElementById('ganancia-devuelta').textContent = formatCurrency(data.resumen.ganancia_devuelta || 0);
-                    document.getElementById('ganancia-pendiente').textContent = formatCurrency(data.resumen.ganancia_pendiente || 0);
-                    const porcentaje = data.resumen.capital_total_invertido > 0
-                        ? ((data.resumen.capital_total_devuelto / data.resumen.capital_total_invertido) * 100).toFixed(1)
-                        : 0;
-                    document.getElementById('porcentaje-devolucion').textContent = `${porcentaje}%`;
+                    const res = data.resumen;
+                    document.getElementById('capital-invertido').textContent = formatCurrency(res.capital_total_invertido || 0);
+                    document.getElementById('capital-devuelto').textContent = formatCurrency(res.capital_total_devuelto || 0);
+                    document.getElementById('capital-pendiente').textContent = formatCurrency(res.capital_total_pendiente || 0);
+                    document.getElementById('total-pedidos').textContent = res.total_pedidos || 0;
+                    document.getElementById('ganancia-real').textContent = formatCurrency(res.ganancia_total_real || 0);
+                    document.getElementById('ganancia-devuelta').textContent = formatCurrency(res.ganancia_devuelta || 0);
+                    document.getElementById('ganancia-pendiente').textContent = formatCurrency(res.ganancia_pendiente || 0);
+                    document.getElementById('porcentaje-devolucion').textContent = `${res.porcentaje_devolucion || 0}%`;
+
+                    // Render BI Charts con ECharts
+                    renderCharts(res);
                 }
 
                 misPedidos = data.pedidos || [];
@@ -193,6 +212,49 @@
                 console.error('Error al cargar dashboard:', error);
                 tbody.innerHTML = '<tr><td colspan="9" class="text-center" style="color:var(--danger);">❌ Error al cargar datos. Intente recargar.</td></tr>';
             }
+        }
+
+        function renderCharts(res) {
+            // Chart 1: Capital Distribution
+            const capitalChart = echarts.init(document.getElementById('capital-chart'));
+            capitalChart.setOption({
+                tooltip: { trigger: 'item', formatter: '{b}: S/ {c} ({d}%)' },
+                legend: { bottom: '0', left: 'center', itemStyle: { borderRadius: 5 } },
+                series: [{
+                    name: 'Capital', type: 'pie', radius: ['40%', '70%'], avoidLabelOverlap: false,
+                    itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
+                    label: { show: false },
+                    emphasis: { label: { show: true, fontSize: 12, fontWeight: 'bold' } },
+                    data: [
+                        { value: res.capital_total_devuelto, name: 'Devuelto', itemStyle: { color: '#10b981' } },
+                        { value: res.capital_total_pendiente, name: 'Pendiente', itemStyle: { color: '#fbbf24' } }
+                    ]
+                }]
+            });
+
+            // Chart 2: Profit Summary
+            const gananciaChart = echarts.init(document.getElementById('ganancia-chart'));
+            gananciaChart.setOption({
+                tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+                xAxis: { type: 'category', data: ['Real Total', 'Devuelta', 'Pendiente'], axisLabel: { fontSize: 9, fontWeight: 'bold' } },
+                yAxis: { type: 'value' },
+                series: [{
+                    data: [
+                        { value: res.ganancia_total_real, itemStyle: { color: '#3b82f6' } },
+                        { value: res.ganancia_devuelta, itemStyle: { color: '#10b981' } },
+                        { value: res.ganancia_pendiente, itemStyle: { color: '#f43f5e' } }
+                    ],
+                    type: 'bar',
+                    barWidth: '50%',
+                    itemStyle: { borderRadius: [5, 5, 0, 0] }
+                }]
+            });
+
+            window.addEventListener('resize', () => {
+                capitalChart.resize();
+                gananciaChart.resize();
+            });
         }
 
         document.addEventListener('DOMContentLoaded', loadDashboard);

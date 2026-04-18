@@ -13,6 +13,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/favicon.png">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <style>
+    .bi-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+    .chart-container { height: 350px; background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #edf2f7; }
+    @media (max-width: 768px) { .bi-grid { grid-template-cols: 1fr; } }
+  </style>
 </head>
 
 <body>
@@ -77,6 +83,18 @@
       </div>
     </div>
 
+    <!-- BI Section: Gráficas de Inteligencia -->
+    <div class="bi-grid">
+      <div class="chart-container">
+        <h3 style="font-size: 0.9rem; font-weight: 800; text-transform: uppercase; margin-bottom: 1rem; color: #4a5568;">Distribución de Capital</h3>
+        <div id="admin-capital-chart" style="width: 100%; height: 280px;"></div>
+      </div>
+      <div class="chart-container">
+        <h3 style="font-size: 0.9rem; font-weight: 800; text-transform: uppercase; margin-bottom: 1rem; color: #4a5568;">Estado de la Operación</h3>
+        <div id="admin-status-chart" style="width: 100%; height: 280px;"></div>
+      </div>
+    </div>
+
     <!-- Acciones Rápidas -->
     <div class="card mt-2">
       <div class="card-header">
@@ -113,7 +131,53 @@
   <script src="js/navigation.js"></script>
   <script>
     // Cargar estadísticas al cargar la página
-    document.addEventListener('DOMContentLoaded', loadDashboardStats);
+    async function loadStatsAndCharts() {
+      try {
+        await loadDashboardStats();
+        // Obtener stats de nuevo para las gráficas directamente si es posible
+        const stats = await fetchAPI('/pedidos/stats');
+        renderAdminCharts(stats);
+      } catch (e) { console.error('Error loading charts:', e); }
+    }
+
+    function renderAdminCharts(stats) {
+      // Capital Chart
+      const capChart = echarts.init(document.getElementById('admin-capital-chart'));
+      capChart.setOption({
+        tooltip: { trigger: 'item' },
+        legend: { bottom: '0', left: 'center' },
+        series: [{
+          name: 'Capital', type: 'pie', radius: ['40%', '70%'],
+          itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
+          data: [
+            { value: stats.devolucion_total, name: 'Retornado', itemStyle: { color: '#10b981' } },
+            { value: stats.capital_total - stats.devolucion_total, name: 'En Circulación', itemStyle: { color: '#3b82f6' } }
+          ]
+        }]
+      });
+
+      // Status Chart
+      const statusChart = echarts.init(document.getElementById('admin-status-chart'));
+      statusChart.setOption({
+        tooltip: { trigger: 'axis' },
+        xAxis: { type: 'category', data: ['Completados', 'Pendientes'] },
+        yAxis: { type: 'value' },
+        series: [{
+          data: [
+            { value: stats.pedidos_completados, itemStyle: { color: '#10b981' } },
+            { value: stats.pedidos_pendientes, itemStyle: { color: '#fbbf24' } }
+          ],
+          type: 'bar', barWidth: '40%', itemStyle: { borderRadius: [5, 5, 0, 0] }
+        }]
+      });
+
+      window.addEventListener('resize', () => {
+        capChart.resize();
+        statusChart.resize();
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadStatsAndCharts);
   </script>
 </body>
 

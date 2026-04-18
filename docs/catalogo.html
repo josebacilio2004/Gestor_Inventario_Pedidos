@@ -61,37 +61,35 @@
 <body class="bg-background text-on-surface font-body selection:bg-secondary-container selection:text-white">
 
     <!-- TopNavBar Industrial -->
-    <header
-        class="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width fixed top-0 w-full z-50 shadow-[0_20px_40px_rgba(15,33,55,0.08)]">
-        <div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
-            <div class="flex items-center gap-4">
+    <header class="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl sticky top-0 w-full z-50 shadow-[0_20px_40px_rgba(15,33,55,0.08)]">
+        <div class="flex flex-wrap md:flex-nowrap justify-between items-center w-full px-6 py-3 max-w-screen-2xl mx-auto gap-4">
+            <!-- Left: Logo -->
+            <div class="flex items-center gap-3 shrink-0">
                 <a href="index.html" class="flex items-center gap-3">
                     <img src="assets/favicon.png" alt="Logo Aly" class="h-8 w-auto object-contain" onerror="this.style.display='none'">
-                    <span class="text-2xl font-black tracking-tighter text-slate-950 dark:text-white uppercase italic leading-none">
+                    <span class="text-xl font-black tracking-tighter text-slate-950 dark:text-white uppercase italic leading-none">
                         Comercializadora <span class="text-secondary-container">Aly</span>
                     </span>
                 </a>
             </div>
-                <nav class="hidden md:flex items-center gap-6">
-                    <a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors py-1 font-bold text-xs uppercase tracking-widest"
-                        href="index.html#inicio">Inicio</a>
-                    <a class="text-orange-600 dark:text-orange-400 font-black border-b-2 border-orange-500 py-1 text-xs uppercase tracking-widest"
-                        href="catalogo.html">Catálogo</a>
-                    <a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors py-1 font-bold text-xs uppercase tracking-widest"
-                        href="index.html#contacto">Soporte</a>
-                </nav>
+
+            <!-- Middle: Search Center -->
+            <div class="flex-1 max-w-xl hidden md:block relative">
+                <input id="search-input"
+                    class="w-full bg-slate-200/50 dark:bg-slate-800/50 border-none focus:ring-2 focus:ring-secondary-container rounded-full px-12 py-2 text-xs font-bold uppercase tracking-widest outline-none"
+                    placeholder="BUSCAR HERRAMIENTAS..." type="text" />
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="relative group hidden lg:block">
-                    <input id="search-input"
-                        class="bg-surface-variant/20 border-none focus:ring-2 focus:ring-secondary rounded-lg px-4 py-2 w-64 text-xs font-bold transition-all outline-none"
-                        placeholder="BUSCAR HERRAMIENTAS..." type="text" />
-                    <span class="material-symbols-outlined absolute right-3 top-2 text-outline text-sm">search</span>
+
+            <!-- Right: Actions -->
+            <div class="flex items-center gap-4 shrink-0">
+                <div class="hidden lg:flex gap-6 items-center border-r border-slate-200 dark:border-slate-800 pr-6 mr-2">
+                    <a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all font-bold text-[10px] uppercase tracking-widest" href="index.html#inicio">Inicio</a>
+                    <a class="text-orange-600 dark:text-orange-400 font-bold text-[10px] uppercase tracking-widest border-b-2 border-orange-500 pb-0.5" href="catalogo.html">Catálogo</a>
                 </div>
                 <div class="flex items-center gap-2">
-                    <a href="login.html"
-                        class="p-2 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-full transition-all relative">
-                        <span class="material-symbols-outlined text-slate-950">lock</span>
+                    <a href="login.html" class="p-2.5 bg-slate-950 text-white rounded-full hover:bg-secondary-container transition-all shadow-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[18px]">lock</span>
                     </a>
                 </div>
             </div>
