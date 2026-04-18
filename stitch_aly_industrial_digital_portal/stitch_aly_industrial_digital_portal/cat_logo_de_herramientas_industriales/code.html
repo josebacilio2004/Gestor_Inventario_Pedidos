@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Catálogo Dinámico | Comercializadora ALY</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#102134",
+                        "tertiary-fixed": "#d3e4fe",
+                        "on-secondary-container": "#5c2400",
+                        "secondary-fixed-dim": "#ffb690",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-surface-variant": "#44474d",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#9d4300",
+                        "surface-container": "#eceef0",
+                        "background": "#f7f9fb",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#b6c8e4",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f7f9fb",
+                        "surface": "#f7f9fb",
+                        "secondary-fixed": "#ffdbca",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-container": "#7889a4",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#341100",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#091c32",
+                        "primary": "#000919",
+                        "primary-fixed-dim": "#b6c8e4",
+                        "on-primary-fixed-variant": "#374860",
+                        "on-tertiary-container": "#7989a1",
+                        "tertiary": "#000918",
+                        "secondary-container": "#fd761a",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "primary-fixed": "#d4e3ff",
+                        "primary-container": "#0f2137",
+                        "outline-variant": "#c4c6cd",
+                        "surface-container-highest": "#e0e3e5",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-tint": "#4f5f78",
+                        "on-secondary-fixed-variant": "#783200",
+                        "outline": "#74777d",
+                        "surface-dim": "#d8dadc",
+                        "on-surface": "#191c1e",
+                        "on-background": "#191c1e",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-secondary-container selection:text-white">
+<!-- TopNavBar -->
+<header class="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width sticky top-0 z-50 shadow-[0_20px_40px_rgba(15,33,55,0.08)]">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black tracking-tighter text-slate-950 dark:text-white">Comercializadora ALY</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-orange-600 dark:text-orange-400 font-bold border-b-2 border-orange-500 py-1" href="#">Inventory</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors py-1" href="#">Quotes</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors py-1" href="#">Suppliers</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors py-1" href="#">Technical Support</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group hidden lg:block">
+<input class="bg-surface-container-low border-none focus:ring-2 focus:ring-secondary rounded-lg px-4 py-2 w-64 text-sm transition-all outline-none" placeholder="Buscar herramientas de precisión..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2 text-outline" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-full transition-all">
+<span class="material-symbols-outlined text-slate-950" data-icon="shopping_cart">shopping_cart</span>
+</button>
+<button class="p-2 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-full transition-all relative">
+<span class="material-symbols-outlined text-slate-950" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden ml-2 border border-outline-variant/20">
+<img alt="Manager Avatar" data-alt="professional male manager portrait in a modern industrial setting with soft cinematic lighting and neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATmVGE4tUzRn_ITeaoQbFFtRV78Rj8eNabskXAmV_LHlIBunlKB3yTAQpg3khhIzqwhcP-3Qd1xUFNWV1Uul3fA2LqbAhWcR1YCgrnI50xg3tF-Ag5MWK1gbCfk2iqWZ473ie86nVGzF4zAzDhfu02pNeVoDfeovhChx4YeFK7kkkmiHiaIR5EJDlXSkrFTIWPr51M6WAUx0oVnVuCwS0jowkoMIDedMrOlkkqt3BzPGIFoOPHx764GC0A-kbLjxkKdilD9I3TF6M"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<div class="flex min-h-screen pt-4">
+<!-- SideNavBar -->
+<aside class="h-[calc(100vh-80px)] w-64 sticky left-0 top-20 border-r border-slate-200/20 dark:border-slate-800/20 px-4 py-8 flex flex-col gap-2">
+<div class="mb-8 px-3">
+<h2 class="font-black text-xl uppercase tracking-widest text-slate-900 dark:text-slate-50">Industrial Portal</h2>
+<p class="text-xs font-medium tracking-tight text-slate-500">V2.4 Precision Control</p>
+</div>
+<nav class="space-y-1">
+<a class="bg-slate-200 dark:bg-slate-800 text-orange-600 dark:text-orange-400 rounded-sm font-bold p-3 flex items-center gap-3 transition-transform active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="build">build</span>
+<span class="font-medium text-sm tracking-tight uppercase">Workshop</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 p-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
+<span class="font-medium text-sm tracking-tight uppercase">Machinery</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 p-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<span class="font-medium text-sm tracking-tight uppercase">Safety</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 p-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+<span class="font-medium text-sm tracking-tight uppercase">Precision</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 p-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-medium text-sm tracking-tight uppercase">Logistics</span>
+</a>
+</nav>
+<div class="mt-auto px-3">
+<button class="w-full py-4 bg-primary text-white font-black text-xs uppercase tracking-[0.2em] rounded-sm hover:bg-primary-container transition-colors">
+                    Open Forge
+                </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-12 py-8">
+<!-- Hero Title Area -->
+<div class="mb-12 relative">
+<h1 class="font-black text-7xl uppercase tracking-tighter text-slate-900/5 absolute -top-12 left-0 pointer-events-none">CATÁLOGO INDUSTRIAL</h1>
+<div class="relative z-10 flex justify-between items-end">
+<div>
+<h2 class="font-black text-4xl text-primary tracking-tight">Equipamiento de Alto Desempeño</h2>
+<p class="text-on-surface-variant max-w-md mt-2">Suministros industriales certificados para ingeniería de precisión y mantenimiento pesado.</p>
+</div>
+<div class="flex gap-4">
+<span class="px-4 py-2 bg-surface-container-high text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+<span class="w-2 h-2 bg-secondary rounded-full"></span> En Stock
+                        </span>
+<span class="px-4 py-2 bg-surface-container-high text-xs font-bold uppercase tracking-widest">
+                            842 Productos
+                        </span>
+</div>
+</div>
+</div>
+<!-- Products Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+<!-- Product Card 1 -->
+<div class="group relative overflow-hidden glass-effect border-outline-variant/10 shadow-[0_20px_40px_rgba(15,33,55,0.08)] rounded-lg flex flex-col">
+<div class="aspect-square w-full overflow-hidden bg-slate-100/50">
+<img alt="Industrial Wrench Set" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500" data-alt="set of professional chrome-vanadium wrenches on a dark metallic surface with technical atmospheric blue lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXUmt3QNF3jR-942OwgFFYaBjRKZtOnH3uIF038skrZxEo-RCyszB1yY5o52N59g6oPyydeJBDwTAI1MxFpITkUpswnmzjyHVSayQfzYxwFYGZ4UEct74Bf-ztEVHI2zbyE6vD99a-wpzANMF6Vzs6ndy9ae6vWs4KIA8yNgsAR8ifJPzVfdSCPTrkvvHJJavsS72Xo6uRvFdQCI6taOMm-B3OwKlbI2-RznLQduje_SyKBDf_YDEy-ZBFHhl1rDe5B6fF2LveC_4"/>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-black uppercase tracking-widest text-secondary">TRAMONTINA PRO</span>
+<span class="material-symbols-outlined text-outline text-sm" data-icon="star">star</span>
+</div>
+<h3 class="font-bold text-lg text-primary leading-tight mb-2">Juego de Llaves Combinadas 12-32mm</h3>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+<div>
+<span class="block text-[10px] text-on-surface-variant font-bold uppercase">Precio Unitario</span>
+<span class="text-xl font-black text-primary">$1,249.00 <span class="text-xs text-on-surface-variant">MXN</span></span>
+</div>
+<button class="bg-gradient-to-tr from-secondary to-secondary-container text-white p-3 rounded-lg shadow-lg shadow-secondary/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group relative overflow-hidden glass-effect border-outline-variant/10 shadow-[0_20px_40px_rgba(15,33,55,0.08)] rounded-lg flex flex-col">
+<div class="aspect-square w-full overflow-hidden bg-slate-100/50">
+<img alt="Heavy Duty Hammer" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500" data-alt="professional grade industrial hammer with specialized grip standing on a workshop bench with soft focus machinery in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAB8YQ-Ji7lu0dU6IKrXNfmhcrJH3IlJmk346XqmTuab187SFTb30qCVbZ8503xxEtaT5HbTkk2EfwifLXk6Tkir9Curg_J1Cn_mv863adkrPG07s2ac1k-6q4nc4upB2hC6psOe4SxTwnx904afAl9jk_a7QqQsSQJgkFYCOF7bdZGbh7jcTEktAKs9RnNVnEoZUDw2QS9NJ1eZ37WDKqoZiD5B-37jO-kBKRc_5-l7jbapI2wMGy49zpvaih7basnSaahNMQd8k"/>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-black uppercase tracking-widest text-secondary">BELLOTA</span>
+<span class="material-symbols-outlined text-outline text-sm" data-icon="verified">verified</span>
+</div>
+<h3 class="font-bold text-lg text-primary leading-tight mb-2">Martillo de Bola 24oz Mango Ergonómico</h3>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+<div>
+<span class="block text-[10px] text-on-surface-variant font-bold uppercase">Precio Unitario</span>
+<span class="text-xl font-black text-primary">$450.00 <span class="text-xs text-on-surface-variant">MXN</span></span>
+</div>
+<button class="bg-gradient-to-tr from-secondary to-secondary-container text-white p-3 rounded-lg shadow-lg shadow-secondary/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group relative overflow-hidden glass-effect border-outline-variant/10 shadow-[0_20px_40px_rgba(15,33,55,0.08)] rounded-lg flex flex-col">
+<div class="aspect-square w-full overflow-hidden bg-slate-100/50">
+<img alt="Precision Caliper" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500" data-alt="digital precision micrometer measurement tool on blueprint paper with sharp details and technical drafting pencils" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKLh4vWdjeP0DaWxBBj3CwZmdcZJsaSkn9QN8E3B-JHYWXVSvQt1ZinUhhY07VvwAhq8MYlcb-TqfGuApHPCHkepefqUKjbxU0YQmYKE6zTYkYls_kp_mK8niaVnwkQeZDs9FR5sTMHoH1XnRKTWHH_rp8b2TL4xzjWKBpGiMb7UMbgvX7QMi-Lb9pGM86POa2o8r-3cncP4yshSnJVBZIA4IuLMvhhIXKk1JTMIbM1TUMwW1hCgN1yvCn_IVLMPMOvkCmQbq7_BM"/>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-black uppercase tracking-widest text-secondary">PRECISION X</span>
+<span class="material-symbols-outlined text-outline text-sm" data-icon="biotech">biotech</span>
+</div>
+<h3 class="font-bold text-lg text-primary leading-tight mb-2">Calibrador Digital 150mm Carbono</h3>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+<div>
+<span class="block text-[10px] text-on-surface-variant font-bold uppercase">Precio Unitario</span>
+<span class="text-xl font-black text-primary">$2,890.00 <span class="text-xs text-on-surface-variant">MXN</span></span>
+</div>
+<button class="bg-gradient-to-tr from-secondary to-secondary-container text-white p-3 rounded-lg shadow-lg shadow-secondary/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group relative overflow-hidden glass-effect border-outline-variant/10 shadow-[0_20px_40px_rgba(15,33,55,0.08)] rounded-lg flex flex-col">
+<div class="aspect-square w-full overflow-hidden bg-slate-100/50">
+<img alt="Electric Drill" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500" data-alt="industrial heavy duty impact drill on concrete floor with sparks in the far background and dramatic low-key lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASmncn6Od4UUob5vvfXVjmxKhMRAAcLuB5IEurGiLrZnqbb234mD4ukeqVwStPRi8YrIvM1ckLqv_HjrCxCnW-B_bpUETwCObyJdSvfTyTYca7GZb8OAyjEpaH2Xmk8OFK34zccPDnIEZd2a7LnNT3cmyIp-tsI05J3yFyJ4TYAmhXS6A2e4ecqrbHJIaoabAx6S7bRLNxR9fxjbJHJkrh3MS28QhVr5GroW3kUpCaDkBTVIMW9WIPVteqwjOjK0jhKoB0Z-zsuY4"/>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-black uppercase tracking-widest text-secondary">TRAMONTINA MASTER</span>
+<span class="material-symbols-outlined text-outline text-sm" data-icon="electric_bolt">electric_bolt</span>
+</div>
+<h3 class="font-bold text-lg text-primary leading-tight mb-2">Taladro Percutor 700W Profesional</h3>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+<div>
+<span class="block text-[10px] text-on-surface-variant font-bold uppercase">Precio Unitario</span>
+<span class="text-xl font-black text-primary">$3,420.00 <span class="text-xs text-on-surface-variant">MXN</span></span>
+</div>
+<button class="bg-gradient-to-tr from-secondary to-secondary-container text-white p-3 rounded-lg shadow-lg shadow-secondary/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 5 (Large Promotional) -->
+<div class="md:col-span-2 group relative overflow-hidden glass-effect border-outline-variant/10 shadow-[0_20px_40px_rgba(15,33,55,0.08)] rounded-lg flex">
+<div class="w-1/2 overflow-hidden bg-primary">
+<img alt="Safety Kit" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" data-alt="professional industrial safety equipment set including helmet, gloves, and protective goggles on a high-contrast dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6ssTHq-rVEiF4hKQ5bAt5WEdCPR1V52CMwnXDD21-OlJKknbIiNlKVNEuU26pFDH3ygmG3iYWYXOtKDm6bt139740FqpLbuJVZvVNG3xvFmlslfLukmJJy4JyPzckKIagS5K53Eha8p-KS7xTMhX4m4E_BaDXDHYiZ88FZjDj4W6ypFxcf3wCK_zltL8H0Ns1w22ni3OJ2Z09x-nMrahj-m4vbmfeQGoq8IxLlJxqjzpBdrsmfmZFiW1BPq06nAAWsCWJi4qmbAU"/>
+</div>
+<div class="w-1/2 p-8 flex flex-col">
+<span class="text-[10px] font-black uppercase tracking-widest text-secondary-container mb-4">OFERTA DE TEMPORADA</span>
+<h3 class="font-black text-3xl text-primary leading-tight mb-4">Kit de Seguridad Industrial Nivel 3</h3>
+<p class="text-sm text-on-surface-variant mb-6">Incluye casco de alta resistencia, guantes de nitrilo y protección auditiva certificada.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-3xl font-black text-primary">$1,850.00</span>
+<button class="px-6 py-3 bg-primary text-white text-xs font-black uppercase tracking-widest hover:bg-primary-container transition-all">
+                                Ver Detalles
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 6 -->
+<div class="group relative overflow-hidden glass-effect border-outline-variant/10 shadow-[0_20px_40px_rgba(15,33,55,0.08)] rounded-lg flex flex-col">
+<div class="aspect-square w-full overflow-hidden bg-slate-100/50">
+<img alt="Tool Chest" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500" data-alt="massive metal industrial tool chest with organized drawers in a bright clean engineering facility" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjkHYchB_u3j48ToNTIv1QRdQI3X2CPNs5RmMdUYTLgpieynlaiETntNFYWuR_VHZMDHN3fb40ak4OCG5ze_dc7lShoNBkRjgYcqVwuTl9unWHDsvhrf6AOO-gx4OL__r8XccLQ5SeQqGg3ZYkDx485cuBYkRyqvIP9GcQVD-yoR_6ZvQfiDRqtjwNE0TmLuni0l3CMV8pvQCr7h-B9a9IptIepF25QPOTmO8G7fH4k6ulot3tl9YPDfo43934ESG_pSdqti4Odp4"/>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-black uppercase tracking-widest text-secondary">STORAGE PRO</span>
+<span class="material-symbols-outlined text-outline text-sm" data-icon="inventory_2">inventory_2</span>
+</div>
+<h3 class="font-bold text-lg text-primary leading-tight mb-2">Gabinete Portaherramientas 7 Gavetas</h3>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+<div>
+<span class="block text-[10px] text-on-surface-variant font-bold uppercase">Precio Unitario</span>
+<span class="text-xl font-black text-primary">$12,999.00 <span class="text-xs text-on-surface-variant">MXN</span></span>
+</div>
+<button class="bg-gradient-to-tr from-secondary to-secondary-container text-white p-3 rounded-lg shadow-lg shadow-secondary/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 7 -->
+<div class="group relative overflow-hidden glass-effect border-outline-variant/10 shadow-[0_20px_40px_rgba(15,33,55,0.08)] rounded-lg flex flex-col">
+<div class="aspect-square w-full overflow-hidden bg-slate-100/50">
+<img alt="Level Tool" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500" data-alt="heavy-duty magnetic spirit level tool on a brick wall with precise level bubble showing perfect alignment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcPXp41K9gE5DdqRPV3reMs4gNX7nXzmxEAu1wa_K6xXMHa99QtKcjq2l9lpP8BIYH2rbz8RPWtSP57c5_RiilORkZDapfNBkFqwCu8htcIXiTKXRYfNgHxCoIrEFzzF210N7CBCE4fI6ihIfwP_CFO4P5COOsfDb7n0uGrfSpDVY74U_ERoZeaRklj-6v7RM7KkK5uV4D9mZd-juEHOzL-iy3ywmkMnW3pjoTRMCNy3ld3bq4JVA13WwheOYQDrjfZE9rgDPtEhY"/>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-black uppercase tracking-widest text-secondary">BELLOTA</span>
+<span class="material-symbols-outlined text-outline text-sm" data-icon="architecture">architecture</span>
+</div>
+<h3 class="font-bold text-lg text-primary leading-tight mb-2">Nivel Magnético de Aluminio 24"</h3>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+<div>
+<span class="block text-[10px] text-on-surface-variant font-bold uppercase">Precio Unitario</span>
+<span class="text-xl font-black text-primary">$720.00 <span class="text-xs text-on-surface-variant">MXN</span></span>
+</div>
+<button class="bg-gradient-to-tr from-secondary to-secondary-container text-white p-3 rounded-lg shadow-lg shadow-secondary/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-slate-950 dark:bg-black w-full py-12 mt-24 border-t border-slate-800">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 max-w-screen-2xl mx-auto">
+<div class="mb-8 md:mb-0">
+<span class="font-black text-white text-xl uppercase tracking-tighter">Comercializadora ALY</span>
+<p class="text-slate-400 text-xs font-medium uppercase tracking-widest mt-2">© 2024 Comercializadora ALY. Industrial Excellence Built Through Precision.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-slate-500 hover:text-orange-500 text-xs font-medium uppercase tracking-widest transition-colors" href="#">Terms of Service</a>
+<a class="text-slate-500 hover:text-orange-500 text-xs font-medium uppercase tracking-widest transition-colors" href="#">Privacy Policy</a>
+<a class="text-slate-500 hover:text-orange-500 text-xs font-medium uppercase tracking-widest transition-colors" href="#">Compliance</a>
+<a class="text-slate-500 hover:text-orange-500 text-xs font-medium uppercase tracking-widest transition-colors" href="#">Wholesale Login</a>
+</div>
+</div>
+</footer>
+</body></html>

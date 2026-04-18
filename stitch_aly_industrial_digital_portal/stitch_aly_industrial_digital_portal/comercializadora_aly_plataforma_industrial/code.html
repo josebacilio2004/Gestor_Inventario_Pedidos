@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Comercializadora ALY | Excelencia Industrial</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#102134",
+                    "tertiary-fixed": "#d3e4fe",
+                    "on-secondary-container": "#5c2400",
+                    "secondary-fixed-dim": "#ffb690",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "on-surface-variant": "#44474d",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#9d4300",
+                    "surface-container": "#eceef0",
+                    "background": "#f7f9fb",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "inverse-surface": "#2d3133",
+                    "surface-container-high": "#e6e8ea",
+                    "on-secondary": "#ffffff",
+                    "inverse-primary": "#b6c8e4",
+                    "error-container": "#ffdad6",
+                    "surface-bright": "#f7f9fb",
+                    "surface": "#f7f9fb",
+                    "secondary-fixed": "#ffdbca",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#e0e3e5",
+                    "on-primary-container": "#7889a4",
+                    "surface-container-low": "#f2f4f6",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed": "#341100",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed": "#091c32",
+                    "primary": "#000919",
+                    "primary-fixed-dim": "#b6c8e4",
+                    "on-primary-fixed-variant": "#374860",
+                    "on-tertiary-container": "#7989a1",
+                    "tertiary": "#000918",
+                    "secondary-container": "#fd761a",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "primary-fixed": "#d4e3ff",
+                    "primary-container": "#0f2137",
+                    "outline-variant": "#c4c6cd",
+                    "surface-container-highest": "#e0e3e5",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-tint": "#4f5f78",
+                    "on-secondary-fixed-variant": "#783200",
+                    "outline": "#74777d",
+                    "surface-dim": "#d8dadc",
+                    "on-surface": "#191c1e",
+                    "on-background": "#191c1e",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); }
+        .hero-gradient { background: linear-gradient(135deg, #000919 0%, #0f2137 100%); }
+    </style>
+</head>
+<body class="text-on-surface antialiased">
+<!-- TopNavBar -->
+<nav class="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width sticky top-0 z-50 shadow-[0_20px_40px_rgba(15,33,55,0.08)]">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black tracking-tighter text-slate-950 dark:text-white">Comercializadora ALY</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-orange-600 dark:text-orange-400 font-bold border-b-2 border-orange-500 py-1" href="#">Inventory</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors py-1" href="#">Quotes</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors py-1" href="#">Suppliers</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors py-1" href="#">Technical Support</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container-low px-4 py-2 rounded-lg border-b border-outline-variant/20">
+<span class="material-symbols-outlined text-outline mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-64" placeholder="Buscar herramientas..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-slate-100/50 dark:hover:bg-slate-800/50 p-2 rounded-full transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-950 dark:text-slate-50" data-icon="shopping_cart">shopping_cart</span>
+</button>
+<button class="hover:bg-slate-100/50 dark:hover:bg-slate-800/50 p-2 rounded-full transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-950 dark:text-slate-50" data-icon="notifications">notifications</span>
+</button>
+<img alt="Manager Avatar" class="w-8 h-8 rounded-full object-cover border border-outline-variant/20" data-alt="Professional headshot of a middle-aged male manager in a modern industrial office setting with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLPVekl7dKbECxQQ8MI08mIIvqGH9_l0gchDVC87ob1ZDS-OC2mJJk0UePWwKiy0XwREv_q4yElq85gSqS3tSrtO_HbyFV0gUGxkMjZa-cBu-DX5RPCqHrMWRyGRe2lQf2L0II8kTnaY02eokntxkOgBbbkBT7iGtHZPSWRQzi8wKC1_jhAi6z94CDuIb9cz9FmjZy00JT2gfzjI0mF0NYhStOt8InlwXyIvN-1gXVdmNr-OIqWrpC54uOjd9Gm5IOq_AbOqX9bpI"/>
+</div>
+</div>
+</div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-[921px] flex items-center overflow-hidden bg-primary px-8 lg:px-24">
+<div class="absolute inset-0 z-0 opacity-40">
+<img alt="Industrial Background" class="w-full h-full object-cover" data-alt="Cinematic 3D render of heavy industrial forged steel picks and mattocks arranged artistically with moody lighting and floating metal particles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGfIk9iAxz8SY4DlQVqv5563lQbTc5nBILljU1tgdVac8ieunAe0l2suA8vFDcLnd6nw9HWkX3KUs9nZf0MF_Eq56v8g6bIxISi_WDz6xcKMN27C4moVc_krrUT1XPfx3XzopHrwuqz54EM9SCq0cLX1l8UvNSwKfKRQaHmMpB_yXkTBa9FRxZ7tl036mnoV4N-JOadsWRZ0aJLzlmu9KJyA4je-E3NmzFAwXkYmkiQ4G2O9uIhsRlbcTCSeEI5g8qR3LTVWgPjvM"/>
+<div class="absolute inset-0 hero-gradient opacity-80"></div>
+</div>
+<div class="relative z-10 max-w-screen-xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center">
+<div class="space-y-8">
+<h1 class="text-6xl md:text-8xl lg:text-9xl font-black text-white leading-[0.85] tracking-tighter uppercase">
+                        FORJA <br/> <span class="text-secondary-container">INDUSTRIAL</span>
+</h1>
+<p class="text-surface-variant text-xl md:text-2xl max-w-xl font-medium tracking-tight">
+                        Distribución premium de herramientas de alta resistencia. Precisión técnica para proyectos de gran escala.
+                    </p>
+<div class="flex flex-wrap gap-4 pt-4">
+<button class="bg-gradient-to-br from-secondary-container to-secondary text-white px-10 py-5 font-black uppercase tracking-widest text-sm hover:scale-105 transition-transform">
+                            Explorar Catálogo
+                        </button>
+<button class="border border-white/20 backdrop-blur-md text-white px-10 py-5 font-black uppercase tracking-widest text-sm hover:bg-white hover:text-primary transition-all">
+                            Contactar Asesor
+                        </button>
+</div>
+</div>
+<div class="hidden lg:block relative">
+<!-- Overlapping Glass Element -->
+<div class="absolute -right-12 -top-12 glass-card p-8 rounded-lg shadow-2xl border border-white/10 z-20 max-w-xs">
+<span class="text-secondary font-black text-xs uppercase tracking-widest block mb-2">Technical Spec</span>
+<h3 class="text-primary text-2xl font-black mb-4">ACERO FORJADO</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">Tratamiento térmico de inducción para máxima durabilidad en condiciones extremas.</p>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="text-xs font-bold text-primary uppercase">Certificación ISO 9001</span>
+</div>
+</div>
+<img alt="Premium Tools" class="rounded-lg shadow-2xl relative z-10 transform -rotate-3 scale-110 border border-white/10" data-alt="High-fidelity macro shot of a polished steel mattock head with cinematic dramatic side lighting showing metallic texture and precision edges" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHLybKiTvxeIhsxc38ZktZ3MGa6BMAQH2f-4N0y2qLgPc7B2jTFOMcD_9IdZd2XNzHaHF0ZMG-RH7Ng8XAstaY6rumRJqVtoIlZRJDepqR_fTMSQoAok1B2ut_dsmotmVDD4wYdNJbCQeLyO51gSkHj9nu8xtQeGaJaGKVh_n_6jR7qVxMQ4rKqgcR5nbVRC0ykj6XEXmVpyd1WFolrQKLYfCP_Mhl0YvIwcMWya2WEu9gUc3oiph5ePtOzqSVQdpzUMHRouVpuyE"/>
+</div>
+</div>
+</section>
+<!-- Category Quick Access (Line Art Icons) -->
+<section class="py-12 bg-surface-container-low">
+<div class="max-w-screen-2xl mx-auto px-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<div class="bg-surface-container-lowest p-6 flex flex-col items-center text-center group hover:bg-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:text-secondary-container transition-colors" data-icon="construction">construction</span>
+<span class="font-black uppercase text-xs tracking-widest group-hover:text-white">Herramientas</span>
+</div>
+<div class="bg-surface-container-lowest p-6 flex flex-col items-center text-center group hover:bg-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:text-secondary-container transition-colors" data-icon="electric_bolt">electric_bolt</span>
+<span class="font-black uppercase text-xs tracking-widest group-hover:text-white">Eléctricas</span>
+</div>
+<div class="bg-surface-container-lowest p-6 flex flex-col items-center text-center group hover:bg-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:text-secondary-container transition-colors" data-icon="hard_hat">chef_hat</span>
+<span class="font-black uppercase text-xs tracking-widest group-hover:text-white">Seguridad</span>
+</div>
+<div class="bg-surface-container-lowest p-6 flex flex-col items-center text-center group hover:bg-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:text-secondary-container transition-colors" data-icon="precision_manufacturing">precision_manufacturing</span>
+<span class="font-black uppercase text-xs tracking-widest group-hover:text-white">Maquinaria</span>
+</div>
+<div class="bg-surface-container-lowest p-6 flex flex-col items-center text-center group hover:bg-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:text-secondary-container transition-colors" data-icon="plumbing">plumbing</span>
+<span class="font-black uppercase text-xs tracking-widest group-hover:text-white">Plomería</span>
+</div>
+<div class="bg-surface-container-lowest p-6 flex flex-col items-center text-center group hover:bg-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-4xl mb-4 group-hover:text-secondary-container transition-colors" data-icon="inventory">inventory</span>
+<span class="font-black uppercase text-xs tracking-widest group-hover:text-white">Logística</span>
+</div>
+</div>
+</section>
+<!-- Product Catalog Section -->
+<section class="py-24 px-8 max-w-screen-2xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+<div>
+<span class="text-secondary font-black uppercase tracking-[0.3em] text-sm block mb-4">Excelencia Tramontina &amp; Bellota</span>
+<h2 class="text-5xl md:text-7xl font-black text-primary tracking-tighter uppercase leading-none">Catálogo <br/> Maquinado</h2>
+</div>
+<div class="flex gap-4">
+<button class="p-4 border border-outline-variant hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<div class="flex bg-surface-container-high p-1">
+<button class="px-6 py-2 bg-surface-container-lowest font-bold text-xs uppercase tracking-widest shadow-sm">Todos</button>
+<button class="px-6 py-2 font-bold text-xs uppercase tracking-widest text-outline">Picos</button>
+<button class="px-6 py-2 font-bold text-xs uppercase tracking-widest text-outline">Zapapicos</button>
+</div>
+</div>
+</div>
+<!-- Bento Grid Catalog -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1">
+<!-- Product Card 1 -->
+<div class="group relative aspect-[4/5] bg-surface-container-low overflow-hidden">
+<img alt="Product 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90" data-alt="Top view of a heavy-duty industrial pickaxe with a bright orange handle resting on a gray concrete surface, high contrast lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCy5xD4_YXG_xSOH-LrURihp8syRfky-h_8BJl4so2Jlj7HoNi1S67PTSw0upzmLxcqwUg_C6YUU_uc8UYqiXp6ZO_jhoVUjLx9X933ZHtay7IDAeKurae-K730huoEM55tb_OTYr9OjQw4uRf50DtHyeG6_TbSXNtZ9dOg1-Kr8mGDY8i-FSFTt437CaXnn7dlGNu0n_IEH3RzxecwPCvMbWkrmCUnoLl78oJHeyZU2aHQV6J9UAxl5-QeyWVM6YWl2O3ksmvu0mg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<!-- Glass Info Overlay -->
+<div class="absolute bottom-6 left-6 right-6 glass-card p-6 border border-white/20 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-black px-2 py-1 uppercase">Tramontina</span>
+<span class="text-primary font-black text-lg">$850.00</span>
+</div>
+<h4 class="text-primary font-bold text-xl mb-4 tracking-tight">Pico de Punta y Paleta 5lb</h4>
+<button class="w-full bg-primary text-white py-3 font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-secondary-container transition-colors">
+                            Añadir a Cotización <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+</button>
+</div>
+</div>
+<!-- Product Card 2 (Large) -->
+<div class="group relative md:col-span-2 aspect-[16/10] bg-surface-container-high overflow-hidden">
+<img alt="Product 2" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Close up of a forged steel mattock head with brand engravings, resting on industrial blueprints with a shallow depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZKSVzTVlYpjhXgQjzne-fEDeGcC4XUMgH9RLDgR9-pCeEa6zuutNlwLlnYMrFEyGWWsuu1Wmj5UGqRUvFVumNfgE_OcAxJkLdN8P07z8Po50m8lQ9SF5Y_za9_AgSLrWU1apBF_4VP7zDbzsuMWOHP9xVZ8uI3y2-FaMLat7Ir-6QazJjhvtL-1_x4SvWHDjGQXXd-9bhGLtVwlnxqG_dHlSllYVq6iiTh7a1XX3l5Z8iTTKXMiK0SudqrpXxkPxVDGKbSq4v3b0"/>
+<div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent"></div>
+<div class="absolute inset-y-0 left-0 p-12 flex flex-col justify-center max-w-md">
+<span class="text-secondary-container font-black uppercase tracking-widest text-xs mb-2">Línea Premium</span>
+<h3 class="text-white text-4xl font-black mb-4 uppercase tracking-tighter">Zapapico Forjado <br/> Bellota 2.5kg</h3>
+<p class="text-surface-variant text-sm mb-8">Diseñado para excavaciones en terrenos compactos. Cabo de fibra de vidrio de alta resistencia con grip ergonómico.</p>
+<button class="w-fit bg-white text-primary px-8 py-4 font-black text-xs uppercase tracking-widest hover:bg-secondary-container hover:text-white transition-all">
+                            Ver Especificaciones
+                        </button>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group relative aspect-[4/5] bg-surface-container-low overflow-hidden">
+<img alt="Product 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90" data-alt="Collection of heavy construction tools including sledgehammers and axes leaning against a rugged wooden wall in an industrial workshop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIBEu3uzRVNusD2AGcjJUXBKF44nsnoR8af4iBwWr543Gf6hJT6lZ2M1KSISdHWRJPpk3mJ07_RC6tTQFHR0yb1LS-QPzV1SMB11z5Fin26I2JGPTuEs_sTOd9Sp2MFUGao2wc4XAVR7BOFtbAKbitcJLoXiTWovNusAT0rijk2gjaBW3BcK_-kiaaEZQrGMSzT6MB7ta1PX5KCvwaFy4RRT8arnsaTEmx2Jbz49gh6ab-I7zlXj2SygIPQEiANr4EX43A4wcon6Y"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="absolute bottom-6 left-6 right-6 glass-card p-6 border border-white/20 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-black px-2 py-1 uppercase">Bellota</span>
+<span class="text-primary font-black text-lg">$1,240.00</span>
+</div>
+<h4 class="text-primary font-bold text-xl mb-4 tracking-tight">Barra de Alineación 60"</h4>
+<button class="w-full bg-primary text-white py-3 font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-secondary-container transition-colors">
+                            Añadir <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+</button>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group relative aspect-[4/5] bg-surface-container-low overflow-hidden">
+<img alt="Product 4" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90" data-alt="Industrial hand tool kit in a professional metal case with foam inserts, organized and precisely placed for display" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2_tf50t54maHH1otwoiiv4z00dSkYpHwOsU2drokI7How_o1CX49WFN7cZLn0KmXuuQn2XxfwMgSpWw-PzYl56p2XlwacmEDpg2D1zQh0J-_juOhRiL5BCwTC-w5x98quxywyzBPBOltofDQiz8CEVzdHg9WCdOAhigfQI3uQL1LrVnGy3UZ5vszLt4Cr2nw5iznbllZg-NdiJ1UZSVks_VAtIB1ifxVMd0Z5MTSRmz_oj3cFWPNKamSDMQlkwuXInPaXeLemFoY"/>
+<div class="absolute bottom-6 left-6 right-6 glass-card p-6 border border-white/20">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-slate-200 text-slate-800 text-[10px] font-black px-2 py-1 uppercase">Kit Profesional</span>
+<span class="text-primary font-black text-lg">$3,500.00</span>
+</div>
+<h4 class="text-primary font-bold text-xl mb-4 tracking-tight">Set Excavación Master</h4>
+<button class="w-full bg-gradient-to-r from-secondary-container to-secondary text-white py-3 font-black text-xs uppercase tracking-widest transition-all">
+                            Comprar Ahora
+                        </button>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="group relative aspect-[4/5] bg-surface-container-low overflow-hidden">
+<img alt="Product 5" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90" data-alt="Artistic arrangement of metal gears and industrial components with blue atmospheric lighting and high contrast shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK1qj9p93GfKE3O6peGQm27WnBDJwmoK_uArEHPwlkAq3k58D3zCNz6Vyp6yHvfGByElPitm9tL7QQKnGYLhcAevjumS6fiXKVp5kv-O5I7OwIUIOSA8AZpMlObTjXMky8OKk5APE4gjPrlidFZ6it1UjTIjypWkdBGDdvuQ8fydezRkZDAEztK3-N2r8reg-ZwjIi7arhR3kYys7IHZsCghdRmL5Lgr_8YKptK3a-H3jYSxTveIRbbMj6CzfFmB8MajV0WF_V_S8"/>
+<div class="absolute bottom-6 left-6 right-6 glass-card p-6 border border-white/20">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-black px-2 py-1 uppercase">Refacciones</span>
+<span class="text-primary font-black text-lg">$120.00</span>
+</div>
+<h4 class="text-primary font-bold text-xl mb-4 tracking-tight">Cabo de Madera Encino</h4>
+<button class="w-full bg-primary text-white py-3 font-black text-xs uppercase tracking-widest transition-all">
+                            Ver Opciones
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Dynamic Tech Specs Grid -->
+<section class="py-24 bg-primary text-white overflow-hidden">
+<div class="max-w-screen-2xl mx-auto px-8">
+<div class="grid lg:grid-cols-2 gap-24 items-center">
+<div>
+<span class="text-secondary-container font-black uppercase tracking-[0.3em] text-sm block mb-8">Control de Precisión</span>
+<h2 class="text-6xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85] mb-12">Ingeniería <br/> que no falla.</h2>
+<div class="grid grid-cols-2 gap-px bg-white/10">
+<div class="p-8 bg-primary">
+<span class="text-5xl font-black text-secondary-container block mb-2">450<span class="text-lg font-normal ml-1">Nm</span></span>
+<p class="text-surface-variant text-xs uppercase tracking-widest font-bold">Resistencia de Torque</p>
+</div>
+<div class="p-8 bg-primary">
+<span class="text-5xl font-black text-secondary-container block mb-2">100%</span>
+<p class="text-surface-variant text-xs uppercase tracking-widest font-bold">Acero de Aleación</p>
+</div>
+<div class="p-8 bg-primary">
+<span class="text-5xl font-black text-secondary-container block mb-2">-20<span class="text-lg font-normal ml-1">°C</span></span>
+<p class="text-surface-variant text-xs uppercase tracking-widest font-bold">Rango Operativo</p>
+</div>
+<div class="p-8 bg-primary">
+<span class="text-5xl font-black text-secondary-container block mb-2">V2.4</span>
+<p class="text-surface-variant text-xs uppercase tracking-widest font-bold">Control de Precisión</p>
+</div>
+</div>
+</div>
+<div class="relative">
+<div class="absolute -inset-4 border border-secondary-container/30 transform rotate-3"></div>
+<img alt="Engineering Dashboard" class="relative z-10 w-full h-[600px] object-cover grayscale brightness-75 hover:grayscale-0 transition-all duration-1000" data-alt="Digital technical drawing and CAD schematic of an industrial tool head overlayed on a dark textured metal surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZkR5WGP_2vJ1CRyegopylNnf7pIv5x7yhNPYJK6GIGd7N6rg14XKHFmW4j3yGr9_aRXPCLnhqIiDobrAs8H1BYubx9gsbuB97jNroh2bBGad6T4DsfptpM5-avZS77sgBTblzKoTmf2AtLBV-pkJxYQoBFwb4lT42Nzky2EU39UpgMzwASifz7ghCwvdnggdkTLUqu6zGRhVkiPaxb9MDdFRFC48Sw7g909VSE64IKcyPK8YY2pZs7Fyt1rEluQ2KJR7a8lXVE0o"/>
+<div class="absolute inset-0 bg-secondary-container/10 mix-blend-overlay"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-950 dark:bg-black w-full py-12 mt-24 border-t border-slate-800">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 max-w-screen-2xl mx-auto">
+<div class="mb-8 md:mb-0">
+<span class="font-black text-white text-xl tracking-tighter uppercase">Comercializadora ALY</span>
+<p class="text-slate-500 text-[10px] mt-2 tracking-widest uppercase font-medium">© 2024 Comercializadora ALY. Industrial Excellence Built Through Precision.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-orange-500 transition-colors" href="#">Terms of Service</a>
+<a class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-orange-500 transition-colors" href="#">Privacy Policy</a>
+<a class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-orange-500 transition-colors" href="#">Compliance</a>
+<a class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-orange-500 transition-colors" href="#">Wholesale Login</a>
+</div>
+<div class="mt-8 md:mt-0 flex gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-white hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-sm">language</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-white hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-sm">mail</span>
+</button>
+</div>
+</div>
+</footer>
+</body></html>

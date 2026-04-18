@@ -1,36 +1,34 @@
-// Responsive navbar functionality
-function toggleMobileMenu() {
-    const nav = document.querySelector('.navbar-nav');
-    const toggle = document.querySelector('.navbar-toggle');
-
-    nav.classList.toggle('active');
-    toggle.classList.toggle('active');
+// Responsive navbar functionality - Updated for Industrial Forge Design
+function toggleMobileNav() {
+    const overlay = document.getElementById('mobileNavOverlay');
+    if (overlay) {
+        overlay.classList.toggle('hidden');
+        document.body.classList.toggle('overflow-hidden');
+    }
 }
 
-// Close mobile menu when clicking outside
-document.addEventListener('click', (e) => {
-    const nav = document.querySelector('.navbar-nav');
-    const toggle = document.querySelector('.navbar-toggle');
-    const navbar = document.querySelector('.navbar');
-
-    if (nav && toggle && navbar) {
-        if (!navbar.contains(e.target) && nav.classList.contains('active')) {
-            nav.classList.remove('active');
-            toggle.classList.remove('active');
+// Navbar Scrolled State detection for transparent to solid transition
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('mainNav') || document.querySelector('header');
+    if (nav) {
+        const isScrolled = window.scrollY > 20;
+        nav.classList.toggle('scrolled-nav', isScrolled);
+        // If it's the index landing, we might want more specific classes
+        if (document.getElementById('inicio')) {
+            nav.classList.toggle('bg-slate-50/95', isScrolled);
+            nav.classList.toggle('dark:bg-slate-900/95', isScrolled);
         }
     }
 });
 
 // Close mobile menu when clicking a link
 document.addEventListener('DOMContentLoaded', () => {
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
+    const mobileLinks = document.querySelectorAll('#mobileNavOverlay a');
+    mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
-            const nav = document.querySelector('.navbar-nav');
-            const toggle = document.querySelector('.navbar-toggle');
-            if (nav && toggle && window.innerWidth <= 768) {
-                nav.classList.remove('active');
-                toggle.classList.remove('active');
+            const overlay = document.getElementById('mobileNavOverlay');
+            if (overlay && !overlay.classList.contains('hidden')) {
+                toggleMobileNav();
             }
         });
     });

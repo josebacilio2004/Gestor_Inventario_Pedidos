@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#102134",
+                    "tertiary-fixed": "#d3e4fe",
+                    "on-secondary-container": "#5c2400",
+                    "secondary-fixed-dim": "#ffb690",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "on-surface-variant": "#44474d",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#9d4300",
+                    "surface-container": "#eceef0",
+                    "background": "#f7f9fb",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "inverse-surface": "#2d3133",
+                    "surface-container-high": "#e6e8ea",
+                    "on-secondary": "#ffffff",
+                    "inverse-primary": "#b6c8e4",
+                    "error-container": "#ffdad6",
+                    "surface-bright": "#f7f9fb",
+                    "surface": "#f7f9fb",
+                    "secondary-fixed": "#ffdbca",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#e0e3e5",
+                    "on-primary-container": "#7889a4",
+                    "surface-container-low": "#f2f4f6",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed": "#341100",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed": "#091c32",
+                    "primary": "#000919",
+                    "primary-fixed-dim": "#b6c8e4",
+                    "on-primary-fixed-variant": "#374860",
+                    "on-tertiary-container": "#7989a1",
+                    "tertiary": "#000918",
+                    "secondary-container": "#fd761a",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "primary-fixed": "#d4e3ff",
+                    "primary-container": "#0f2137",
+                    "outline-variant": "#c4c6cd",
+                    "surface-container-highest": "#e0e3e5",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-tint": "#4f5f78",
+                    "on-secondary-fixed-variant": "#783200",
+                    "outline": "#74777d",
+                    "surface-dim": "#d8dadc",
+                    "on-surface": "#191c1e",
+                    "on-background": "#191c1e",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopNavBar -->
+<nav class="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width sticky top-0 z-50 shadow-[0_20px_40px_rgba(15,33,55,0.08)]">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black tracking-tighter text-slate-950 dark:text-white uppercase">
+                Comercializadora ALY
+            </div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors font-medium text-sm tracking-tight uppercase" href="#">Inventory</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors font-medium text-sm tracking-tight uppercase" href="#">Quotes</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors font-medium text-sm tracking-tight uppercase" href="#">Suppliers</a>
+<a class="text-orange-600 dark:text-orange-400 font-bold border-b-2 border-orange-500 font-medium text-sm tracking-tight uppercase" href="#">Technical Support</a>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-slate-950 dark:text-slate-50">
+<span class="material-symbols-outlined cursor-pointer hover:bg-slate-100/50 dark:hover:bg-slate-800/50 p-2 rounded-sm transition-all" data-icon="shopping_cart">shopping_cart</span>
+<span class="material-symbols-outlined cursor-pointer hover:bg-slate-100/50 dark:hover:bg-slate-800/50 p-2 rounded-sm transition-all" data-icon="notifications">notifications</span>
+</div>
+<div class="w-10 h-10 bg-slate-200 rounded-full overflow-hidden border-2 border-white">
+<img alt="Manager Avatar" data-alt="Close-up portrait of a professional operations manager in a clean industrial environment with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzV5QF9R6mNM1oE_PfoKDZHPYGH78B-3D2yt0fYdASv7hGeRQJE1wOsg19GxUVJ9FkOpWP7HQDpFTf4iNHsMwRs-4opvCqFeDg7_KFlAZcdQ3_FwhjFYyyMaTpUNQs9VYYoF695zJdzAnNhw-2B2-2Red6RaayZBhi44GXKDMHLETUTCUiqRb5Re3G0mR8s29e59xFiJb0le479sg99L9Wqex1cV_pZqxhDM_W_LDqWJjV5lWekVC8XXBnkm9gtouo8tPRbtNb9Tw"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main>
+<!-- Hero Section -->
+<section class="relative h-[870px] flex items-center overflow-hidden bg-primary overflow-hidden">
+<div class="absolute inset-0 opacity-40">
+<img alt="Industrial Warehouse" class="w-full h-full object-cover" data-alt="Wide shot of a massive modern industrial warehouse with high-tech automated sorting systems and cool blue atmospheric lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTl0o6k2xc6tkhq438Wi4oiPduu-bjahLEx_iiyCZjz5Fm8fZFsMB35_R7x5MIuA9eJQfMwUFw_7Q0oUvZrUqTlgIu_wVEduyRtbZc5HDD4L7uZl4Lb8ONja45rUbNsl-8hwJLraKJncucxQ5tggdui49o1ZqKzb7-kAmq1D3eAnevqXKuA5pP91DfQ3vE8RfqPGSF79NFRljZ239dRkRcAxTGOFPagIC9bwdR5IX9ZWOvZsOOfhZ0aqxFv8vDOxVtjCPBBxnXl2I"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-transparent"></div>
+<div class="relative z-10 max-w-screen-2xl mx-auto px-8 w-full">
+<div class="max-w-3xl">
+<h1 class="text-7xl md:text-9xl font-black text-white leading-none tracking-tighter uppercase mb-6">
+                        PODER <br/><span class="text-secondary-container">INDUSTRIAL</span>
+</h1>
+<p class="text-xl text-on-primary-container font-medium max-w-xl mb-10 leading-relaxed">
+                        Soluciones integrales de abastecimiento para sectores críticos. Distribución mayorista, logística de precisión y soporte técnico avanzado.
+                    </p>
+<div class="flex gap-4">
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-10 py-5 font-black uppercase tracking-widest text-sm hover:scale-95 transition-transform">
+                            Solicitar Cotización
+                        </button>
+<button class="bg-secondary-container text-on-secondary-container px-10 py-5 font-black uppercase tracking-widest text-sm hover:scale-95 transition-transform">
+                            Ver Inventario
+                        </button>
+</div>
+</div>
+</div>
+<!-- Floating Technical Specs -->
+<div class="absolute bottom-20 right-8 hidden lg:block">
+<div class="glass-panel p-8 shadow-2xl space-y-6">
+<div class="flex items-end gap-2">
+<span class="text-5xl font-black text-primary leading-none">12.5k</span>
+<span class="text-sm font-bold text-secondary uppercase pb-1">SKUs Activos</span>
+</div>
+<div class="w-full h-px bg-outline-variant/20"></div>
+<div class="flex items-end gap-2">
+<span class="text-5xl font-black text-primary leading-none">99.8%</span>
+<span class="text-sm font-bold text-secondary uppercase pb-1">Eficiencia</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Services Bento Grid -->
+<section class="max-w-screen-2xl mx-auto px-8 -mt-32 relative z-20">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Wholesale Distribution -->
+<div class="md:col-span-8 bg-surface-container-lowest p-12 shadow-2xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-64 h-64 opacity-5 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-[15rem]" data-icon="inventory_2">inventory_2</span>
+</div>
+<h2 class="text-4xl font-black text-primary uppercase tracking-tighter mb-4">Wholesale Distribution</h2>
+<p class="text-on-surface-variant max-w-md mb-8 text-lg">Distribución a gran escala de componentes mecánicos, eléctricos y consumibles industriales con certificación global.</p>
+<div class="grid grid-cols-2 gap-8 mb-8">
+<div class="space-y-2">
+<span class="text-xs font-bold text-secondary uppercase tracking-widest">Capacidad</span>
+<p class="text-2xl font-black text-primary">Global Reach</p>
+</div>
+<div class="space-y-2">
+<span class="text-xs font-bold text-secondary uppercase tracking-widest">Catálogo</span>
+<p class="text-2xl font-black text-primary">Industrial Grade</p>
+</div>
+</div>
+<a class="inline-flex items-center gap-2 text-primary font-black uppercase tracking-widest text-sm group-hover:gap-4 transition-all" href="#">
+                        Explorar Catálogo <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<!-- Logistics Focus -->
+<div class="md:col-span-4 bg-primary text-white p-12 flex flex-col justify-between overflow-hidden relative">
+<div class="absolute inset-0 opacity-20 grayscale">
+<img alt="Logistics" class="w-full h-full object-cover" data-alt="High-angle shot of industrial trucks parked in neat rows at a shipping terminal during twilight with cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsYvckY663jDAkl_JebIyv7PhR-zTbY9cv9iTncUBoFnVpoDSMEVIRj_i79i7869EoRQiH-fPrgyrr6kOrV8fnYvJ5lFhH8KdhEN3oj-1XGHgRlK1IwH-Wqp2HSt3sJ3yqyjGQftMV4zdhlJAvGpY-FTdqqwG9mOMPsMBCGOtl7o5_u5fcvlhv071QZJ1NLgZbG3qg7qgDSfs1Eesry8Jxbs-VdCSyKB-VdzNM6cWPYpIXR13BAnylhtU6uwz36EJca8S8mYXaXYY"/>
+</div>
+<div class="relative z-10">
+<h2 class="text-4xl font-black uppercase tracking-tighter mb-4">Logistics</h2>
+<p class="text-on-primary-container text-sm font-medium leading-relaxed">Infraestructura optimizada para entregas JIT (Just-In-Time) en zonas francas y parques industriales.</p>
+</div>
+<div class="relative z-10 pt-12">
+<button class="w-full py-4 border border-white/20 hover:bg-white hover:text-primary font-bold uppercase transition-colors text-xs tracking-widest">
+                            Rastrear Pedido
+                        </button>
+</div>
+</div>
+<!-- Technical Support -->
+<div class="md:col-span-4 bg-surface-container-high p-12 group">
+<div class="w-12 h-12 bg-secondary-container flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-on-secondary-container" data-icon="build">build</span>
+</div>
+<h2 class="text-3xl font-black text-primary uppercase tracking-tighter mb-4">Technical Support</h2>
+<p class="text-on-surface-variant text-sm mb-6">Ingeniería aplicada para el mantenimiento predictivo y correctivo de maquinaria de alta precisión.</p>
+<ul class="space-y-3">
+<li class="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-tighter">
+<span class="w-1.5 h-1.5 bg-secondary rounded-full"></span> Calibración V2.4
+                        </li>
+<li class="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-tighter">
+<span class="w-1.5 h-1.5 bg-secondary rounded-full"></span> Diagnóstico Remoto
+                        </li>
+</ul>
+</div>
+<!-- Custom Projects -->
+<div class="md:col-span-8 bg-surface-container-low p-12 flex flex-col md:flex-row gap-12 items-center">
+<div class="flex-1">
+<h2 class="text-3xl font-black text-primary uppercase tracking-tighter mb-4">Proyectos a Medida</h2>
+<p class="text-on-surface-variant text-sm mb-6">Desarrollamos soluciones personalizadas para plantas de manufactura, optimizando procesos y reduciendo tiempos de inactividad.</p>
+<button class="bg-primary text-white px-8 py-3 font-bold text-xs uppercase tracking-widest">Contactar Especialista</button>
+</div>
+<div class="flex-1 w-full h-48 bg-slate-300 overflow-hidden">
+<img alt="Engineering" class="w-full h-full object-cover" data-alt="Engineer in hard hat pointing at a complex industrial control panel with neon indicator lights in a dark futuristic factory setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-kaWmtRF4j5m8Pp1zZNbfmcRnR2TChC4QsveWMJuHVDn3QN1ZWhmvTs4Wpbhu9mzsIItf0pg3CwYWyF1vv4RHAGqKd-RDOkFR4I8fwcuT8z7hWd1mljyxRs1v8bOpP4B-zOkA6hlUCvW2GbUpanWhAvXIdlNweAZv8HDvV8bTVxNQXrCKBAVCWK7qgnd27LKc4w6wCWRmvEIg2C2iE5FoLRn94GBbMvIZRnwjGiF2jTe60MD8Pg1pkTBwqMABheBJum2ZDeHkwIo"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Technical Excellence Section -->
+<section class="py-24 max-w-screen-2xl mx-auto px-8 overflow-hidden">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div class="relative">
+<div class="absolute -top-20 -left-20 text-[20rem] font-black text-surface-container opacity-50 -z-10 select-none">
+                        ALY
+                    </div>
+<h2 class="text-6xl font-black text-primary uppercase tracking-tighter leading-none mb-12">
+                        EXCELENCIA <br/> SIN COMPROMISO
+                    </h2>
+<div class="space-y-12">
+<div class="flex gap-6">
+<div class="text-secondary">
+<span class="material-symbols-outlined text-4xl" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<h3 class="text-xl font-black text-primary uppercase mb-2">Normativas ISO 9001</h3>
+<p class="text-on-surface-variant text-sm max-w-sm">Cumplimiento estricto de estándares internacionales de calidad y seguridad industrial.</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="text-secondary">
+<span class="material-symbols-outlined text-4xl" data-icon="biotech">biotech</span>
+</div>
+<div>
+<h3 class="text-xl font-black text-primary uppercase mb-2">Precisión de Laboratorio</h3>
+<p class="text-on-surface-variant text-sm max-w-sm">Instalaciones equipadas con la última tecnología de medición para componentes críticos.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-4">
+<img alt="Construction Site" class="w-full aspect-square object-cover" data-alt="Close-up of industrial machinery components being assembled on a sunlit construction site with warm golden hour tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC916fkZke3ngDTTbUZPYITpOJqYsA8Nm0d40lNADzDzv684ASBi9v668rGlBfp4jyH_8OY1ZsIM2sxzMYRuktJdl1RFjvAODaMdLvBccDY1f1L1a5CX_I8mLvUvLUORxt9eppUeComabvdsqKk1s_kzswu1yOOyAvzCWoPvRPjeCi3T53sUc60myfwASFMDyWF7P3AbN38h2YJvRTyWCkzzhggXVwitmf8-tPfHj1HpHgDOVSRaEskVeAGvS7am1OYzF51AT4hGeI"/>
+<div class="bg-secondary-container p-6 aspect-square flex flex-col justify-end">
+<span class="text-4xl font-black text-on-secondary-container">15+</span>
+<span class="text-xs font-bold text-on-secondary-container uppercase tracking-widest">Años de Experiencia</span>
+</div>
+</div>
+<div class="space-y-4 pt-12">
+<div class="bg-primary p-6 aspect-square flex flex-col justify-end">
+<span class="text-4xl font-black text-white">24/7</span>
+<span class="text-xs font-bold text-on-primary-container uppercase tracking-widest">Soporte Crítico</span>
+</div>
+<img alt="Technical Detail" class="w-full aspect-square object-cover" data-alt="Detailed macro shot of high-precision metallic gears and ball bearings with professional studio lighting and sharp focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC16bmr3pCXPFlSmwFMu-tdcCxIR2PL5Vd4dk_dFDiZLul0t65dOj1-xcI9HW3zMqaePQkQDBrUW4LPDSXyWeMw5tvY0hPm7i6LgFtOsjHeZ94tX-IN20ny1HXLk_kC0QIr-iYlGt83bwFej6FHmO-s1Otk4QYqoohGFMKaKEniogqhYKpIUQTFag0u-1bJpt_JyZEwhAbczRVdaF0UvQKK9DG6q5nyGDg-QUFpUFqm0z88eVZnpDqIMPFJbnN4WzixtuOVLriA9Pk"/>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-950 dark:bg-black w-full py-12 mt-24 border-t border-slate-800">
+<div class="flex flex-col md:flex-row justify-between items-start px-12 max-w-screen-2xl mx-auto gap-12">
+<div class="space-y-6">
+<div class="font-black text-white text-3xl tracking-tighter uppercase">Comercializadora ALY</div>
+<p class="text-slate-500 text-xs font-medium uppercase tracking-widest leading-relaxed max-w-xs">
+                    © 2024 Comercializadora ALY. Industrial Excellence Built Through Precision.
+                </p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-white" data-icon="facebook">social_leaderboard</span>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-white" data-icon="language">language</span>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-16">
+<div class="space-y-4">
+<h4 class="text-white text-xs font-black uppercase tracking-widest">Navigation</h4>
+<ul class="space-y-2">
+<li><a class="text-slate-500 hover:text-orange-500 text-xs font-medium uppercase tracking-widest transition-colors" href="#">Inventory</a></li>
+<li><a class="text-slate-500 hover:text-orange-500 text-xs font-medium uppercase tracking-widest transition-colors" href="#">Quotes</a></li>
+<li><a class="text-slate-500 hover:text-orange-500 text-xs font-medium uppercase tracking-widest transition-colors" href="#">Suppliers</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="text-white text-xs font-black uppercase tracking-widest">Compliance</h4>
+<ul class="space-y-2">
+<li><a class="text-slate-500 hover:text-orange-500 text-xs font-medium uppercase tracking-widest transition-colors" href="#">Terms of Service</a></li>
+<li><a class="text-slate-500 hover:text-orange-500 text-xs font-medium uppercase tracking-widest transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-slate-500 hover:text-orange-500 text-xs font-medium uppercase tracking-widest transition-colors" href="#">Compliance</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="text-white text-xs font-black uppercase tracking-widest">Partner</h4>
+<ul class="space-y-2">
+<li><a class="text-white text-xs font-black uppercase tracking-widest hover:text-orange-500 transition-colors" href="#">Wholesale Login</a></li>
+<li><a class="text-slate-500 hover:text-orange-500 text-xs font-medium uppercase tracking-widest transition-colors" href="#">Open Forge</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="max-w-screen-2xl mx-auto px-12 mt-12 pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-4">
+<span class="w-2 h-2 bg-secondary rounded-full animate-pulse"></span>
+<span class="text-[10px] text-slate-600 font-bold uppercase tracking-[0.2em]">Operational Excellence Dashboard Live</span>
+</div>
+<div class="text-[10px] text-slate-700 font-medium">V2.4 PRECISION CONTROL ENGINE</div>
+</div>
+</footer>
+</body></html>

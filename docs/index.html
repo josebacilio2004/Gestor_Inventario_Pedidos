@@ -1,1409 +1,404 @@
 <!DOCTYPE html>
-<html lang="es">
+<html class="light" lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description"
-        content="Comercializadora ALY – Tu ferretería de confianza en Huancayo. Picos, zapapicos, herramientas de construcción. RUC: 1043224765">
-    <meta name="theme-color" content="#0f2137">
-    <title>Comercializadora ALY | Ferretería en Huancayo</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Comercializadora Aly | Excelencia Industrial</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#000919",
+                        "primary-container": "#0f2137",
+                        "secondary": "#9d4300",
+                        "secondary-container": "#fd761a",
+                        "on-secondary-container": "#5c2400",
+                        "on-surface": "#191c1e",
+                        "background": "#f7f9fb",
+                        "outline": "#74777d",
+                        "outline-variant": "#c4c6cd",
+                        "surface-variant": "#e0e3e5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* ====================================================
-       TOKENS & RESET
-    ==================================================== */
-        :root {
-            --navy: #0f2137;
-            --navy-mid: #1a365d;
-            --navy-lite: #1e4a8a;
-            --orange: #f97316;
-            --orange-dk: #ea6010;
-            --gold: #fbbf24;
-            --white: #ffffff;
-            --light: #f1f5f9;
-            --muted: #94a3b8;
-            --text: #1e293b;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --radius: 14px;
-            --radius-lg: 20px;
-            --shadow: 0 4px 24px rgba(15, 33, 55, .10);
-            --shadow-md: 0 8px 40px rgba(15, 33, 55, .18);
-            --transition: .25s cubic-bezier(.4, 0, .2, 1);
-        }
-
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text);
-            background: var(--white);
-        }
-
-        img {
-            max-width: 100%;
-            display: block;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        /* ====================================================
-       UTILITIES
-    ==================================================== */
-        .container {
-            width: min(1100px, 100% - 2rem);
-            margin-inline: auto;
-        }
-
-        .flex {
-            display: flex;
-        }
-
-        .grid {
-            display: grid;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .text-orange {
-            color: var(--orange);
-        }
-
-        .section {
-            padding: 5rem 0;
-        }
-
-        .section-sm {
-            padding: 3rem 0;
-        }
-
-        /* Section headings */
-        .section-label {
-            display: inline-block;
-            background: rgba(249, 115, 22, .12);
-            color: var(--orange);
-            font-size: .75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .08em;
-            padding: .3rem .8rem;
-            border-radius: 20px;
-            margin-bottom: .75rem;
-        }
-
-        .section-title {
-            font-size: clamp(1.6rem, 4vw, 2.4rem);
-            font-weight: 800;
-            color: var(--navy);
-            line-height: 1.15;
-            margin-bottom: .75rem;
-        }
-
-        .section-sub {
-            color: var(--muted);
-            font-size: 1rem;
-            max-width: 520px;
-            margin-inline: auto;
-            line-height: 1.6;
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: .45rem;
-            padding: .75rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: .9rem;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            border: none;
-            transition: all var(--transition);
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .btn:active {
-            transform: scale(.97);
-        }
-
-        .btn-primary {
-            background: var(--orange);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--orange-dk);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(249, 115, 22, .4);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255, 255, 255, .5);
-        }
-
-        .btn-outline:hover {
-            background: rgba(255, 255, 255, .12);
-            border-color: white;
-        }
-
-        .btn-navy {
-            background: var(--navy);
-            color: white;
-        }
-
-        .btn-navy:hover {
-            background: var(--navy-mid);
-            transform: translateY(-2px);
-        }
-
-        .btn-lg {
-            padding: .95rem 2rem;
-            font-size: 1rem;
-            border-radius: 12px;
-        }
-
-        .btn-whatsapp {
-            background: #25d366;
-            color: white;
-        }
-
-        .btn-whatsapp:hover {
-            background: #1ebe5d;
-        }
-
-        /* ====================================================
-       NAVBAR
-    ==================================================== */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 0 1rem;
-            transition: background var(--transition), box-shadow var(--transition);
-        }
-
-        .navbar.scrolled {
-            background: rgba(15, 33, 55, .97) !important;
-            backdrop-filter: blur(14px);
-            box-shadow: 0 4px 24px rgba(0, 0, 0, .2);
-        }
-
-        .navbar-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: .6rem;
-            color: white;
-            font-weight: 800;
-            font-size: 1.1rem;
-        }
-
-        .brand-logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 10px;
-            background: var(--orange);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-
-        .brand-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .brand-name {
-            color: white;
-            line-height: 1.1;
-        }
-
-        .brand-name small {
-            display: block;
-            font-size: .65rem;
-            font-weight: 500;
-            opacity: .7;
-            letter-spacing: .04em;
-        }
-
-        .navbar-links {
-            display: flex;
-            align-items: center;
-            gap: .25rem;
-        }
-
-        .navbar-links a {
-            color: rgba(255, 255, 255, .85);
-            font-weight: 500;
-            font-size: .9rem;
-            padding: .5rem .9rem;
-            border-radius: 8px;
-            transition: all var(--transition);
-        }
-
-        .navbar-links a:hover {
-            color: white;
-            background: rgba(255, 255, 255, .1);
-        }
-
-        .navbar-links .btn-nav-cta {
-            background: var(--orange);
-            color: white;
-            font-weight: 700;
-            margin-left: .5rem;
-        }
-
-        .navbar-links .btn-nav-cta:hover {
-            background: var(--orange-dk);
-        }
-
-        /* Hamburger */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: .5rem;
-        }
-
-        .hamburger span {
-            display: block;
-            width: 24px;
-            height: 2.5px;
-            background: white;
-            border-radius: 2px;
-            transition: all var(--transition);
-        }
-
-        .hamburger.open span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .hamburger.open span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.open span:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -5px);
-        }
-
-        /* Mobile drawer */
-        .mobile-nav {
-            position: fixed;
-            top: 70px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--navy);
-            z-index: 999;
-            transform: translateX(100%);
-            transition: transform .3s ease;
-            padding: 1.5rem 1.25rem;
-            display: flex;
-            flex-direction: column;
-            gap: .5rem;
-        }
-
-        .mobile-nav.open {
-            transform: translateX(0);
-        }
-
-        .mobile-nav a {
-            color: rgba(255, 255, 255, .85);
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding: .875rem 1rem;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: .75rem;
-            border: 1px solid rgba(255, 255, 255, .08);
-            transition: all var(--transition);
-        }
-
-        .mobile-nav a:hover {
-            background: rgba(255, 255, 255, .08);
-            color: white;
-        }
-
-        .mobile-nav .icon-nav {
-            font-size: 1.2rem;
-        }
-
-        /* ====================================================
-       HERO
-    ==================================================== */
-        .hero {
-            min-height: 100vh;
-            background:
-                linear-gradient(to bottom, rgba(10, 22, 40, .80) 0%, rgba(10, 22, 40, .65) 60%, rgba(10, 22, 40, .90) 100%),
-                url('https://images.unsplash.com/photo-1504148455328-c376907d081c?w=1600&q=80') center/cover no-repeat;
-            display: flex;
-            align-items: center;
-            padding: 90px 1rem 60px;
-        }
-
-        .hero-content {
-            max-width: 680px;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: .4rem;
-            background: rgba(249, 115, 22, .2);
-            border: 1px solid rgba(249, 115, 22, .4);
-            color: var(--gold);
-            font-size: .78rem;
-            font-weight: 700;
-            padding: .35rem .85rem;
-            border-radius: 20px;
-            margin-bottom: 1.5rem;
-            letter-spacing: .05em;
-            text-transform: uppercase;
-        }
-
-        .hero-title {
-            font-size: clamp(2.4rem, 7vw, 4rem);
-            font-weight: 900;
-            color: white;
-            line-height: 1.1;
-            margin-bottom: 1.25rem;
-        }
-
-        .hero-title .highlight {
-            color: var(--orange);
-        }
-
-        .hero-sub {
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            color: rgba(255, 255, 255, .8);
-            line-height: 1.6;
-            margin-bottom: 2rem;
-            max-width: 540px;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: .875rem;
-            flex-wrap: wrap;
-        }
-
-        .hero-trust {
-            margin-top: 2.5rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, .12);
-            display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .trust-item {
-            color: rgba(255, 255, 255, .75);
-            font-size: .85rem;
-            display: flex;
-            align-items: center;
-            gap: .4rem;
-        }
-
-        .trust-item strong {
-            color: white;
-            font-weight: 700;
-        }
-
-        /* ====================================================
-       INFO BAR (RUC + Phone)
-    ==================================================== */
-        .info-bar {
-            background: var(--orange);
-            padding: .875rem 1rem;
-        }
-
-        .info-bar-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2.5rem;
-            flex-wrap: wrap;
-        }
-
-        .info-chip {
-            display: flex;
-            align-items: center;
-            gap: .5rem;
-            color: white;
-            font-weight: 600;
-            font-size: .9rem;
-        }
-
-        .info-chip-icon {
-            font-size: 1.1rem;
-        }
-
-        /* ====================================================
-       CATEGORIES
-    ==================================================== */
-        .categories {
-            background: var(--light);
-        }
-
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.25rem;
-            margin-top: 2.5rem;
-        }
-
-        .cat-card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 1.75rem 1.25rem;
-            text-align: center;
-            border: 1.5px solid var(--border);
-            transition: all var(--transition);
-            cursor: default;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cat-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, var(--orange), var(--orange-dk));
-            transform: translateY(100%);
-            transition: transform var(--transition);
-            z-index: 0;
-        }
-
-        .cat-card:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-4px);
-            border-color: transparent;
-        }
-
-        .cat-card:hover::before {
-            transform: translateY(0);
-        }
-
-        .cat-card:hover .cat-icon,
-        .cat-card:hover .cat-name,
-        .cat-card:hover .cat-desc {
-            color: white;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cat-icon {
-            font-size: 3rem;
-            margin-bottom: .875rem;
-            transition: all var(--transition);
-            position: relative;
-            z-index: 1;
-        }
-
-        .cat-name {
-            font-weight: 800;
-            color: var(--navy);
-            font-size: 1rem;
-            margin-bottom: .3rem;
-            transition: all var(--transition);
-            position: relative;
-            z-index: 1;
-        }
-
-        .cat-desc {
-            color: var(--muted);
-            font-size: .82rem;
-            transition: all var(--transition);
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ====================================================
-       FEATURED PRODUCTS
-    ==================================================== */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-            gap: 1.25rem;
-            margin-top: 2.5rem;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: var(--radius);
-            border: 1.5px solid var(--border);
-            overflow: hidden;
-            transition: all var(--transition);
-        }
-
-        .product-card:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-4px);
-            border-color: var(--orange);
-        }
-
-        .product-card-img {
-            height: 180px;
-            background: var(--light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            border-bottom: 1px solid var(--border);
-            overflow: hidden;
-        }
-
-        .product-card-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .product-card-body {
-            padding: 1.1rem;
-        }
-
-        .product-card-brand {
-            font-size: .7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .07em;
-            color: var(--orange);
-            margin-bottom: .25rem;
-        }
-
-        .product-card-name {
-            font-weight: 700;
-            color: var(--navy);
-            font-size: .95rem;
-            margin-bottom: .3rem;
-        }
-
-        .product-card-desc {
-            color: var(--muted);
-            font-size: .8rem;
-            line-height: 1.5;
-        }
-
-        /* ====================================================
-       WHY US
-    ==================================================== */
-        .whyus {
-            background: var(--navy);
-        }
-
-        .whyus .section-label {
-            background: rgba(249, 115, 22, .2);
-            color: var(--gold);
-        }
-
-        .whyus .section-title {
-            color: white;
-        }
-
-        .whyus .section-sub {
-            color: rgba(255, 255, 255, .65);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, .06);
-            border: 1px solid rgba(255, 255, 255, .1);
-            border-radius: var(--radius);
-            padding: 1.75rem 1.5rem;
-            transition: all var(--transition);
-        }
-
-        .feature-card:hover {
-            background: rgba(255, 255, 255, .1);
-            transform: translateY(-3px);
-        }
-
-        .feature-icon {
-            font-size: 2.25rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-name {
-            color: white;
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: .4rem;
-        }
-
-        .feature-desc {
-            color: rgba(255, 255, 255, .65);
-            font-size: .85rem;
-            line-height: 1.6;
-        }
-
-        /* ====================================================
-       STATS BAND
-    ==================================================== */
-        .stats-band {
-            background: var(--orange);
-            padding: 3rem 1rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .stat-num {
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 900;
-            color: white;
-            line-height: 1;
-        }
-
-        .stat-label {
-            color: rgba(255, 255, 255, .85);
-            font-size: .85rem;
-            font-weight: 600;
-            margin-top: .35rem;
-        }
-
-        /* ====================================================
-       CONTACT
-    ==================================================== */
-        .contact {
-            background: var(--light);
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.25rem;
-            margin-top: 2.5rem;
-        }
-
-        .contact-card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 2rem 1.5rem;
-            border: 1.5px solid var(--border);
-            text-align: center;
-            transition: box-shadow var(--transition);
-        }
-
-        .contact-card:hover {
-            box-shadow: var(--shadow-md);
-        }
-
-        .contact-icon-wrap {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: rgba(249, 115, 22, .1);
-            border: 2px solid rgba(249, 115, 22, .25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            margin: 0 auto 1rem;
-        }
-
-        .contact-card h3 {
-            font-weight: 700;
-            color: var(--navy);
-            margin-bottom: .4rem;
-        }
-
-        .contact-card p {
-            color: var(--muted);
-            font-size: .9rem;
-            line-height: 1.6;
-        }
-
-        .contact-card a.contact-link {
-            display: inline-block;
-            margin-top: .75rem;
-            color: var(--orange);
-            font-weight: 700;
-            font-size: .85rem;
-        }
-
-        .contact-card a.contact-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Map placeholder */
-        .map-placeholder {
-            margin-top: 2.5rem;
-            background: white;
-            border-radius: var(--radius);
-            border: 1.5px solid var(--border);
-            overflow: hidden;
-            height: 280px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 1rem;
-            color: var(--muted);
-        }
-
-        .map-placeholder span {
-            font-size: 3rem;
-        }
-
-        /* ====================================================
-       FOOTER
-    ==================================================== */
-        .footer {
-            background: var(--navy);
-            padding: 3.5rem 1rem 0;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr repeat(2, 1fr);
-            gap: 3rem;
-            padding-bottom: 3rem;
-        }
-
-        .footer-brand-name {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: white;
-            margin-bottom: .3rem;
-        }
-
-        .footer-brand-desc {
-            color: rgba(255, 255, 255, .5);
-            font-size: .85rem;
-            line-height: 1.6;
-            margin-bottom: 1.25rem;
-        }
-
-        .footer-col h4 {
-            color: white;
-            font-weight: 700;
-            font-size: .9rem;
-            text-transform: uppercase;
-            letter-spacing: .06em;
-            margin-bottom: 1rem;
-            padding-bottom: .5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, .1);
-        }
-
-        .footer-col ul li {
-            margin-bottom: .6rem;
-        }
-
-        .footer-col ul li a {
-            color: rgba(255, 255, 255, .6);
-            font-size: .88rem;
-            transition: color var(--transition);
-        }
-
-        .footer-col ul li a:hover {
-            color: var(--orange);
-        }
-
-        .footer-col p {
-            color: rgba(255, 255, 255, .6);
-            font-size: .88rem;
-            margin-bottom: .5rem;
-            display: flex;
-            gap: .4rem;
-            align-items: center;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, .08);
-            padding: 1.25rem 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: .5rem;
-        }
-
-        .footer-bottom p {
-            color: rgba(255, 255, 255, .4);
-            font-size: .8rem;
-        }
-
-        .footer-badge {
-            background: rgba(249, 115, 22, .15);
-            border: 1px solid rgba(249, 115, 22, .25);
-            color: var(--orange);
-            font-size: .72rem;
-            font-weight: 700;
-            padding: .25rem .6rem;
-            border-radius: 6px;
-        }
-
-        /* ====================================================
-       SCROLL TO TOP
-    ==================================================== */
-        #scrollTop {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--orange);
-            color: white;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 16px rgba(249, 115, 22, .5);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--transition), transform var(--transition);
-            z-index: 500;
-        }
-
-        #scrollTop.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        #scrollTop:hover {
-            transform: translateY(-3px);
-        }
-
-        /* ====================================================
-       RESPONSIVE
-    ==================================================== */
-        @media (max-width: 768px) {
-            .navbar-links {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .hero-title {
-                font-size: 2.2rem;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .hero-trust {
-                gap: 1rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .section {
-                padding: 3.5rem 0;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-actions {
-                flex-direction: column;
-            }
-
-            .hero-actions .btn {
-                text-align: center;
-                justify-content: center;
-            }
-
-            .info-bar-inner {
-                gap: 1rem;
-            }
-
-            .categories-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); }
+        .hero-gradient { background: linear-gradient(135deg, rgba(0, 9, 25, 0.9) 0%, rgba(15, 33, 55, 0.7) 100%); }
+        
+        /* Dashboard Pro Reveal Styles */
+        .terminal-window { background: #0b1c30; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5rem; overflow: hidden; position: relative; height: 600px; }
+        .terminal-header { background: #1a252f; padding: 12px 20px; display: flex; gap: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .code-container { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 13px; padding: 30px; color: #b6c8e4; line-height: 1.8; }
+        .syntax-keyword { color: #fd761a; }
+        .syntax-string { color: #10b981; }
+        .syntax-func { color: #60a5fa; }
+        
+        .reveal-dashboard { position: absolute; inset: 0; background: #000919; opacity: 0; transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; display: flex; }
+        .reveal-dashboard.active { opacity: 1; pointer-events: auto; }
+        
+        .dash-sidebar { width: 180px; background: rgba(15, 33, 55, 0.5); border-right: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; padding: 25px 15px; gap: 8px; }
+        .dash-nav-item { display: flex; items-center: center; gap: 12px; padding: 10px; border-radius: 12px; transition: all 0.3s; cursor: pointer; }
+        .dash-nav-item.active { background: rgba(253, 118, 26, 0.1); color: #fd761a; }
+        .dash-nav-item:not(.active) { color: rgba(255, 255, 255, 0.3); }
+        .dash-nav-item span:last-child { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .dash-main { flex: 1; padding: 25px; display: flex; flex-direction: column; gap: 20px; }
+        
+        /* Mini Charts */
+        .chart-area { height: 120px; width: 100%; position: relative; overflow: hidden; }
+        .chart-line { stroke: #fd761a; stroke-width: 3; fill: none; stroke-linecap: round; }
+        .chart-fill { fill: rgba(253, 118, 26, 0.1); }
+        
+        .cursor { display: inline-block; width: 8px; height: 15px; background: #fd761a; animation: blink 1s infinite; vertical-align: middle; }
+        @keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
     </style>
-    <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 
-<body>
-
-    <!-- ================================================
-       NAVBAR
-  ================================================ -->
-    <nav class="navbar" id="navbar">
-        <div class="navbar-inner">
-            <a href="#" class="navbar-brand">
-                <div class="brand-logo">
-                    <img src="assets/logo.png" alt="ALY"
-                        onerror="this.style.display='none';this.parentElement.textContent='⛏️'">
-                </div>
-                <div class="brand-name">
-                    Comercializadora ALY
-                    <small>Ferretería · Huancayo</small>
-                </div>
-            </a>
-
-            <div class="navbar-links">
-                <a href="#categorias">Productos</a>
-                <a href="#nosotros">Nosotros</a>
-                <a href="#contacto">Contacto</a>
-                <a href="catalogo.html">📋 Catálogo</a>
-                <a href="login.html" class="btn-nav-cta btn">🔐 Acceso Empleados</a>
+<body class="text-on-surface antialiased">
+    <!-- TopNavBar -->
+    <nav class="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width sticky top-0 z-50 shadow-[0_20px_40px_rgba(15,33,55,0.08)]">
+        <div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+            <div class="flex items-center gap-4">
+                <img src="assets/logo.png" alt="Logo Aly" class="h-10 w-auto object-contain" onerror="this.style.display='none'">
+                <span class="text-2xl font-black tracking-tighter text-slate-950 dark:text-white uppercase italic leading-none">
+                    Comercializadora <span class="text-secondary-container">Aly</span>
+                </span>
             </div>
-
-            <button class="hamburger" id="hamburger" aria-label="Menú" onclick="toggleNav()">
-                <span></span><span></span><span></span>
-            </button>
+                <div class="hidden md:flex gap-6 items-center border-l border-slate-200 pl-8">
+                    <a class="text-orange-600 dark:text-orange-400 font-black text-xs uppercase tracking-widest border-b-2 border-orange-500 py-1" href="#inicio">Inicio</a>
+                    <a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 border-b-2 border-transparent transition-all font-black text-xs uppercase tracking-widest py-1" href="catalogo.html">Productos</a>
+                    <a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 border-b-2 border-transparent transition-all font-black text-xs uppercase tracking-widest py-1" href="#nosotros">Nosotros</a>
+                    <a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 border-b-2 border-transparent transition-all font-black text-xs uppercase tracking-widest py-1" href="#contacto">Contacto</a>
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="hidden lg:flex items-center bg-slate-100 px-4 py-2 rounded-lg border-b border-outline-variant/20">
+                    <span class="material-symbols-outlined text-outline mr-2 text-sm">search</span>
+                    <input class="bg-transparent border-none focus:ring-0 text-xs w-48 font-bold" placeholder="Buscar Herramientas..." type="text" />
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="catalogo.html" class="bg-primary text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-secondary-container transition-colors">
+                        Catálogo
+                    </a>
+                    <a href="login.html" class="hover:bg-slate-100/50 p-2 rounded-full transition-all">
+                        <span class="material-symbols-outlined text-slate-950">lock</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
-
-    <!-- Mobile Nav -->
-    <div class="mobile-nav" id="mobileNav">
-        <a href="#categorias" onclick="closeNav()"><span class="icon-nav">🛠️</span> Productos</a>
-        <a href="#nosotros" onclick="closeNav()"><span class="icon-nav">🏪</span> Nosotros</a>
-        <a href="#contacto" onclick="closeNav()"><span class="icon-nav">📞</span> Contacto</a>
-        <a href="catalogo.html"><span class="icon-nav">📋</span> Catálogo Completo</a>
-        <a href="login.html"
-            style="background:rgba(249,115,22,.15); border-color:rgba(249,115,22,.3); color:var(--gold);">
-            <span class="icon-nav">🔐</span> Acceso Empleados
-        </a>
-    </div>
-
-    <!-- ================================================
-       HERO
-  ================================================ -->
-    <section class="hero" id="inicio">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-badge">⛏️ &nbsp;Ferretería especializada · Huancayo, Perú</div>
-
-                <h1 class="hero-title">
-                    Tu ferretería de<br>
-                    <span class="highlight">confianza</span> en Huancayo
-                </h1>
-
-                <p class="hero-sub">
-                    Picos, zapapicos, herramientas de construcción y más.<br>
-                    Calidad garantizada para profesionales y particulares.
-                </p>
-
-                <div class="hero-actions">
-                    <a href="#categorias" class="btn btn-primary btn-lg">🛠️ Ver Productos</a>
-                    <a href="catalogo.html" class="btn btn-outline btn-lg">📋 Catálogo Completo</a>
-                </div>
-
-                <div class="hero-trust">
-                    <div class="trust-item">✅ <strong>RUC:</strong> 1043224765</div>
-                    <div class="trust-item">📱 <strong>+51 951 679 240</strong></div>
-                    <div class="trust-item">📍 <strong>Huancayo · Perú</strong></div>
-                </div>
+    <main>
+        <!-- Hero Section -->
+        <section id="inicio" class="relative min-h-screen flex items-center overflow-hidden bg-primary px-8 lg:px-24">
+            <div class="absolute inset-0 z-0">
+                <!-- Imagen Inicial Proporcionada: assets/2.png -->
+                <img alt="Industrial Background" class="w-full h-full object-cover" 
+                     src="assets/2.png" 
+                     onerror="this.src='https://r.jina.ai/i/0602f06856004df8b50df6e74465ed6d'"/>
+                <div class="absolute inset-0 hero-gradient"></div>
             </div>
-        </div>
-    </section>
-
-    <!-- ================================================
-       INFO BAR
-  ================================================ -->
-    <div class="info-bar">
-        <div class="info-bar-inner">
-            <div class="info-chip"><span class="info-chip-icon">🏢</span> RUC: 1043224765</div>
-            <div class="info-chip"><span class="info-chip-icon">📱</span>
-                <a href="tel:+51951679240" style="color:white">+51 951 679 240</a>
-            </div>
-            <div class="info-chip"><span class="info-chip-icon">⏰</span> Lun-Sáb 8am – 6pm</div>
-            <a href="https://wa.me/51951679240?text=Hola%2C+quiero+información+de+sus+productos" target="_blank"
-                class="btn btn-navy"
-                style="background:rgba(0,0,0,.2); border:1px solid rgba(255,255,255,.3); color:white; padding:.45rem 1rem; font-size:.82rem;">
-                💬 WhatsApp
-            </a>
-        </div>
-    </div>
-
-    <!-- ================================================
-       CATEGORÍAS
-  ================================================ -->
-    <section class="section categories" id="categorias">
-        <div class="container text-center">
-            <span class="section-label">🛠️ Nuestros Productos</span>
-            <h2 class="section-title">Categorías Principales</h2>
-            <p class="section-sub">Todo lo que necesitas para construcción y trabajo en campo</p>
-
-            <div class="categories-grid">
-                <div class="cat-card">
-                    <div class="cat-icon">⛏️</div>
-                    <div class="cat-name">Picos</div>
-                    <div class="cat-desc">Tramontina · Bellota<br>Resistencia profesional</div>
-                </div>
-                <div class="cat-card">
-                    <div class="cat-icon">🪓</div>
-                    <div class="cat-name">Zapapicos</div>
-                    <div class="cat-desc">Tramontina · Bellota<br>Para terreno duro</div>
-                </div>
-                <div class="cat-card">
-                    <div class="cat-icon">🔨</div>
-                    <div class="cat-name">Herramientas</div>
-                    <div class="cat-desc">Martillos, hachas<br>y más accesorios</div>
-                </div>
-                <div class="cat-card">
-                    <div class="cat-icon">🧱</div>
-                    <div class="cat-name">Construcción</div>
-                    <div class="cat-desc">Materiales para<br>obra y acabados</div>
-                </div>
-                <div class="cat-card">
-                    <div class="cat-icon">🔩</div>
-                    <div class="cat-name">Ferretería</div>
-                    <div class="cat-desc">Tornillos, clavos<br>anclajes y fijaciones</div>
-                </div>
-                <div class="cat-card">
-                    <div class="cat-icon">🪣</div>
-                    <div class="cat-name">Acabados</div>
-                    <div class="cat-desc">Pinturas, selladores<br>y revestimientos</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ================================================
-       FEATURED PRODUCTS
-  ================================================ -->
-    <section class="section" id="destacados">
-        <div class="container text-center">
-            <span class="section-label">⭐ Más Vendidos</span>
-            <h2 class="section-title">Productos Destacados</h2>
-            <p class="section-sub">Los favoritos de nuestros clientes</p>
-
-            <div class="products-grid">
-                <div class="product-card">
-                    <div class="product-card-img">
-                        <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400&q=80"
-                            alt="Pico Tramontina" onerror="this.parentElement.innerHTML='⛏️'">
-                    </div>
-                    <div class="product-card-body">
-                        <div class="product-card-brand">Tramontina</div>
-                        <div class="product-card-name">Pico Profesional</div>
-                        <div class="product-card-desc">Alta resistencia, mango reforzado. Ideal para minería y
-                            construcción.</div>
+            <div class="relative z-10 max-w-screen-xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8 animate-fade-in-up">
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-black text-white leading-[0.85] tracking-tighter uppercase">
+                        FERRETERÍA <br /> <span class="text-secondary-container">MAYORISTA</span>
+                    </h1>
+                    <p class="text-white/60 text-xl md:text-2xl max-w-xl font-medium tracking-tight">
+                        Expertos en fabricación y distribución de herramientas de alta resistencia. Calidad garantizada para el sector construcción y minería con el respaldo de <span class="text-white font-bold">Comercializadora Aly</span>.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <a href="catalogo.html" class="bg-gradient-to-br from-secondary-container to-secondary text-white px-10 py-5 font-black uppercase tracking-widest text-xs hover:scale-105 transition-transform flex items-center text-center">
+                            Explorar Catálogo
+                        </a>
+                        <a href="https://wa.me/51951679240" class="border border-white/20 backdrop-blur-md text-white px-10 py-5 font-black uppercase tracking-widest text-xs hover:bg-white hover:text-primary transition-all flex items-center text-center">
+                            Contactar Asesor
+                        </a>
                     </div>
                 </div>
-
-                <div class="product-card">
-                    <div class="product-card-img">
-                        <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&q=80"
-                            alt="Pico Bellota" onerror="this.parentElement.innerHTML='⛏️'">
+                <div class="hidden lg:block relative animate-fade-in">
+                    <!-- Overlapping Glass Element -->
+                    <div class="absolute -right-12 -top-12 glass-card p-8 rounded-lg shadow-2xl border border-white/10 z-20 max-w-xs">
+                        <span class="text-secondary font-black text-[10px] uppercase tracking-widest block mb-2">Technical Spec</span>
+                        <h3 class="text-primary text-2xl font-black mb-4">ALTA RESISTENCIA</h3>
+                        <p class="text-on-surface-variant text-sm leading-relaxed mb-6 italic">Herramientas forjadas con tratamiento térmico para condiciones extremas.</p>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                            <span class="text-xs font-bold text-primary uppercase">ISO 9001 QUALITY</span>
+                        </div>
                     </div>
-                    <div class="product-card-body">
-                        <div class="product-card-brand">Bellota</div>
-                        <div class="product-card-name">Pico Premium</div>
-                        <div class="product-card-desc">Forjado en acero de alta calidad. Durabilidad comprobada.</div>
+                    <!-- Secondary Detail Image (Tool close-up) -->
+                    <img alt="Premium Tools" class="rounded-lg shadow-2xl relative z-10 transform -rotate-2 scale-110 border border-white/10" 
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHLybKiTvxeIhsxc38ZktZ3MGa6BMAQH2f-4N0y2qLgPc7B2jTFOMcD_9IdZd2XNzHaHF0ZMG-RH7Ng8XAstaY6rumRJqVtoIlZRJDepqR_fTMSQoAok1B2ut_dsmotmVDD4wYdNJbCQeLyO51gSkHj9nu8xtQeGaJaGKVh_n_6jR7qVxMQ4rKqgcR5nbVRC0ykj6XEXmVpyd1WFolrQKLYfCP_Mhl0YvIwcMWya2WEu9gUc3oiph5ePtOzqSVQdpzUMHRouVpuyE" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Quick Access -->
+        <section class="py-12 bg-white">
+            <div class="max-w-screen-2xl mx-auto px-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <div class="bg-slate-50 p-6 flex flex-col items-center text-center group hover:bg-primary transition-all cursor-pointer">
+                    <span class="material-symbols-outlined text-4xl mb-4 text-primary group-hover:text-secondary-container transition-colors">construction</span>
+                    <span class="font-black uppercase text-[10px] tracking-widest group-hover:text-white">Picos</span>
+                </div>
+                <div class="bg-slate-50 p-6 flex flex-col items-center text-center group hover:bg-primary transition-all cursor-pointer">
+                    <span class="material-symbols-outlined text-4xl mb-4 text-primary group-hover:text-secondary-container transition-colors">handyman</span>
+                    <span class="font-black uppercase text-[10px] tracking-widest group-hover:text-white">Cinceles</span>
+                </div>
+                <div class="bg-slate-50 p-6 flex flex-col items-center text-center group hover:bg-primary transition-all cursor-pointer">
+                    <span class="material-symbols-outlined text-4xl mb-4 text-primary group-hover:text-secondary-container transition-colors">hardware</span>
+                    <span class="font-black uppercase text-[10px] tracking-widest group-hover:text-white">Martillos</span>
+                </div>
+                <div class="bg-slate-50 p-6 flex flex-col items-center text-center group hover:bg-primary transition-all cursor-pointer">
+                    <span class="material-symbols-outlined text-4xl mb-4 text-primary group-hover:text-secondary-container transition-colors">precision_manufacturing</span>
+                    <span class="font-black uppercase text-[10px] tracking-widest group-hover:text-white">Zapapicos</span>
+                </div>
+                <div class="bg-slate-50 p-6 flex flex-col items-center text-center group hover:bg-primary transition-all cursor-pointer">
+                    <span class="material-symbols-outlined text-4xl mb-4 text-primary group-hover:text-secondary-container transition-colors">shield</span>
+                    <span class="font-black uppercase text-[10px] tracking-widest group-hover:text-white">Seguridad</span>
+                </div>
+                <div class="bg-slate-50 p-6 flex flex-col items-center text-center group hover:bg-primary transition-all cursor-pointer">
+                    <span class="material-symbols-outlined text-4xl mb-4 text-primary group-hover:text-secondary-container transition-colors">inventory</span>
+                    <span class="font-black uppercase text-[10px] tracking-widest group-hover:text-white">Stock</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Engineering Section -->
+        <section class="py-24 bg-primary text-white overflow-hidden">
+            <div class="max-w-screen-2xl mx-auto px-8">
+                <div class="grid lg:grid-cols-2 gap-24 items-center">
+                    <div>
+                        <span class="text-secondary-container font-black uppercase tracking-[0.3em] text-sm block mb-8">Tecnología ALY</span>
+                        <h2 class="text-6xl font-black tracking-tighter uppercase leading-[0.85] mb-12">Ingeniería <br /> de Alto Nivel.</h2>
+                        <div class="grid grid-cols-2 gap-px bg-white/10">
+                            <div class="p-8 bg-primary">
+                                <span class="text-5xl font-black text-secondary-container block mb-2">100%</span>
+                                <p class="text-white/40 text-[9px] uppercase tracking-widest font-black">Acero Forjado</p>
+                            </div>
+                            <div class="p-8 bg-primary">
+                                <span class="text-5xl font-black text-secondary-container block mb-2">ISO</span>
+                                <p class="text-white/40 text-[9px] uppercase tracking-widest font-black">Estándar Global</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <!-- Tech Reveal Container Pro -->
+                        <div class="terminal-window rounded-3xl shadow-[0_50px_100px_rgba(0,0,0,0.5)] border border-white/5">
+                            <div class="terminal-header">
+                                <div class="dot bg-red-500"></div>
+                                <div class="dot bg-yellow-500"></div>
+                                <div class="dot bg-green-500"></div>
+                                <span class="ml-4 text-[9px] uppercase font-black tracking-widest text-white/20">aly_logistics.v2.4 / enterprise.ts</span>
+                            </div>
+                            
+                            <!-- Layer 1: Complex TS Code -->
+                            <div id="code-terminal" class="code-container bg-[#050c18]">
+                                <pre id="typewriter-code" class="whitespace-pre-wrap"></pre><span id="cursor" class="cursor"></span>
+                            </div>
+
+                            <!-- Layer 2: Dashboard Reveal with Sidebar -->
+                            <div id="aly-dashboard" class="reveal-dashboard">
+                                <!-- Sidebar with labels -->
+                                <div class="dash-sidebar">
+                                    <div class="flex items-center gap-3 mb-8 px-2">
+                                        <div class="w-6 h-6 rounded bg-secondary-container flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-white text-[14px]">bolt</span>
+                                        </div>
+                                        <span class="text-white font-black text-[10px] tracking-tighter italic">ALY CORE</span>
+                                    </div>
+                                    <div class="dash-nav-item active">
+                                        <span class="material-symbols-outlined text-sm">dashboard</span>
+                                        <span>Dashboard</span>
+                                    </div>
+                                    <div class="dash-nav-item">
+                                        <span class="material-symbols-outlined text-sm">inventory_2</span>
+                                        <span>Inventario</span>
+                                    </div>
+                                    <div class="dash-nav-item">
+                                        <span class="material-symbols-outlined text-sm">trending_up</span>
+                                        <span>Ventas</span>
+                                    </div>
+                                    <div class="dash-nav-item">
+                                        <span class="material-symbols-outlined text-sm">local_shipping</span>
+                                        <span>Logística</span>
+                                    </div>
+                                    <div class="mt-auto dash-nav-item">
+                                        <span class="material-symbols-outlined text-sm">settings</span>
+                                        <span>Ajustes</span>
+                                    </div>
+                                </div>
+
+                                <!-- Main Area -->
+                                <div class="dash-main">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <div class="flex flex-col">
+                                            <h3 class="text-white font-black uppercase text-[10px] tracking-widest">Aly Advanced Logistics</h3>
+                                            <span class="text-white/20 text-[8px] uppercase font-bold">Última Sincronización: Hace 2 min</span>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <div class="bg-white/5 border border-white/10 px-3 py-1 rounded-full flex items-center gap-2">
+                                                <div class="w-1 h-1 bg-green-500 rounded-full animate-pulse"></div>
+                                                <span class="text-white/40 text-[7px] font-black uppercase">Real-Time Data</span>
+                                            </div>
+                                            <span class="px-3 py-1 bg-green-500/10 text-green-500 text-[8px] font-black rounded-full border border-green-500/20 uppercase">Online</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Chart 1: Sales / Activity -->
+                                    <div class="glass-card bg-white/5 p-5 border border-white/5 rounded-2xl mb-2">
+                                        <div class="flex justify-between mb-4">
+                                            <span class="text-[9px] font-black text-white/40 uppercase">Ventas / Proyección</span>
+                                            <span class="text-xs font-black text-white">$482,410.00</span>
+                                        </div>
+                                        <div class="chart-area transition-all animate-pulse">
+                                            <svg viewBox="0 0 400 100" class="w-full h-full">
+                                                <path d="M0 80 Q 50 20, 100 60 T 200 30 T 300 70 T 400 20 L 400 100 L 0 100 Z" class="chart-fill" />
+                                                <path d="M0 80 Q 50 20, 100 60 T 200 30 T 300 70 T 400 20" class="chart-line" />
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <!-- Multi Grid Charts -->
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="glass-card bg-white/5 p-4 border border-white/5 rounded-2xl">
+                                            <span class="text-[8px] font-black text-white/30 uppercase block mb-3">Distribución Stock</span>
+                                            <div class="relative w-16 h-16 mx-auto">
+                                                <svg viewBox="0 0 36 36" class="w-full h-full rotate-[-90deg]">
+                                                    <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="3"></circle>
+                                                    <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#fd761a" stroke-width="3" stroke-dasharray="70 100"></circle>
+                                                </svg>
+                                                <div class="absolute inset-0 flex items-center justify-center text-[8px] font-black text-white">70%</div>
+                                            </div>
+                                        </div>
+                                        <div class="glass-card bg-white/5 p-4 border border-white/5 rounded-2xl">
+                                            <span class="text-[8px] font-black text-white/30 uppercase block mb-3">Logs Recientes</span>
+                                            <div class="space-y-2">
+                                                <div class="h-1 w-full bg-white/10 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-secondary-container w-4/5"></div>
+                                                </div>
+                                                <div class="h-1 w-full bg-white/10 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-white/20 w-3/5"></div>
+                                                </div>
+                                                <div class="h-1 w-full bg-white/10 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-secondary-container w-full"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-auto h-20 bg-secondary-container/5 border border-secondary-container/10 rounded-2xl flex items-center px-6 gap-4">
+                                        <span class="material-symbols-outlined text-secondary-container text-xs">bolt</span>
+                                        <p class="text-[8px] text-white/40 uppercase font-black leading-relaxed">
+                                            Neural Sync Engine V2.4 detectado. <span class="text-white">Optimizando tiempos de despacho en zona sur.</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute -inset-4 border border-secondary-container/30 transform rotate-2 -z-10 rounded-[4rem]"></div>
                     </div>
                 </div>
-
-                <div class="product-card">
-                    <div class="product-card-img">
-                        <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&q=80"
-                            alt="Zapapico" onerror="this.parentElement.innerHTML='🪓'">
-                    </div>
-                    <div class="product-card-body">
-                        <div class="product-card-brand">Tramontina</div>
-                        <div class="product-card-name">Zapapico Doble Punta</div>
-                        <div class="product-card-desc">Multiusos para terrenos rocosos y trabajos de campo.</div>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-card-img">
-                        <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=80"
-                            alt="Zapapico Bellota" onerror="this.parentElement.innerHTML='🪓'">
-                    </div>
-                    <div class="product-card-body">
-                        <div class="product-card-brand">Bellota</div>
-                        <div class="product-card-name">Zapapico Industrial</div>
-                        <div class="product-card-desc">Para uso intensivo en minería, agricultura y obra civil.</div>
-                    </div>
-                </div>
             </div>
-
-            <div style="margin-top:2.5rem;">
-                <a href="catalogo.html" class="btn btn-primary btn-lg">Ver catálogo completo →</a>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-slate-950 w-full py-16 border-t border-slate-900">
+        <div class="flex flex-col md:flex-row justify-between items-center px-12 max-w-screen-2xl mx-auto text-center md:text-left">
+            <div class="mb-8 md:mb-0">
+                <span class="font-black text-white text-xl tracking-tighter uppercase italic">Comercializadora <span class="text-secondary-container">Aly</span></span>
+                <p class="text-slate-500 text-[9px] mt-2 tracking-[0.3em] uppercase font-bold">© 2026 Comercializadora ALY. Industrial Excellence Built Through Precision.</p>
             </div>
-        </div>
-    </section>
-
-    <!-- ================================================
-       STATS BAND
-  ================================================ -->
-    <div class="stats-band">
-        <div class="container">
-            <div class="stats-grid">
-                <div>
-                    <div class="stat-num">500+</div>
-                    <div class="stat-label">Clientes satisfechos</div>
-                </div>
-                <div>
-                    <div class="stat-num">10+</div>
-                    <div class="stat-label">Años de experiencia</div>
-                </div>
-                <div>
-                    <div class="stat-num">50+</div>
-                    <div class="stat-label">Productos disponibles</div>
-                </div>
-                <div>
-                    <div class="stat-num">100%</div>
-                    <div class="stat-label">Calidad garantizada</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================================================
-       WHY US
-  ================================================ -->
-    <section class="section whyus" id="nosotros">
-        <div class="container text-center">
-            <span class="section-label">💎 ¿Por qué elegirnos?</span>
-            <h2 class="section-title">Tu trabajo merece las mejores herramientas</h2>
-            <p class="section-sub">Años de confianza respaldando a profesionales y emprendedores en Huancayo</p>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🏆</div>
-                    <div class="feature-name">Marcas Líderes</div>
-                    <div class="feature-desc">Trabajamos con Tramontina, Bellota y otras marcas reconocidas por su
-                        calidad y durabilidad.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💰</div>
-                    <div class="feature-name">Precios Competitivos</div>
-                    <div class="feature-desc">Precios justos para trabajadores, contratistas y pequeños negocios de
-                        construcción.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🤝</div>
-                    <div class="feature-name">Atención Personalizada</div>
-                    <div class="feature-desc">Te asesoramos para elegir la herramienta correcta según tu tipo de trabajo
-                        y presupuesto.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📦</div>
-                    <div class="feature-name">Stock Disponible</div>
-                    <div class="feature-desc">Siempre con inventario actualizado para atender pedidos grandes sin
-                        demoras.</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ================================================
-       CONTACTO
-  ================================================ -->
-    <section class="section contact" id="contacto">
-        <div class="container text-center">
-            <span class="section-label">📞 Contáctanos</span>
-            <h2 class="section-title">Estamos aquí para ayudarte</h2>
-            <p class="section-sub">Consulta disponibilidad, precios o haz tu pedido directamente</p>
-
-            <div class="contact-grid">
-                <div class="contact-card">
-                    <div class="contact-icon-wrap">📱</div>
-                    <h3>Teléfono / WhatsApp</h3>
-                    <p>+51 951 679 240<br>Lunes a Sábado<br>8:00 am – 6:00 pm</p>
-                    <a href="https://wa.me/51951679240?text=Hola%2C+quiero+información+de+sus+productos" target="_blank"
-                        class="btn btn-whatsapp" style="margin-top:.875rem; font-size:.85rem;">
-                        💬 Escribir por WhatsApp
-                    </a>
-                </div>
-
-                <div class="contact-card">
-                    <div class="contact-icon-wrap">📍</div>
-                    <h3>Ubicación</h3>
-                    <p>Huancayo, Junín<br>Perú<br>Visítanos en nuestra tienda</p>
-                    <a href="https://maps.google.com/?q=Huancayo,Junin,Peru" target="_blank" class="contact-link">Ver en
-                        Google Maps →</a>
-                </div>
-
-                <div class="contact-card">
-                    <div class="contact-icon-wrap">🏢</div>
-                    <h3>Datos Legales</h3>
-                    <p>RUC: 10432247657<br>Comercializadora ALY<br>Huancayo · Perú</p>
-                </div>
-            </div>
-
-            <!-- Map placeholder -->
-            <div class="map-placeholder">
-                <span>🗺️</span>
-                <p style="font-weight:600; color:var(--nav)">Huancayo, Junín — Perú</p>
-                <a href="https://maps.google.com/?q=Huancayo,Junin,Peru" target="_blank" class="btn btn-navy">Abrir en
-                    Google Maps</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- ================================================
-       FOOTER
-  ================================================ -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div>
-                    <div class="footer-brand-name">⛏️ Comercializadora ALY</div>
-                    <p class="footer-brand-desc">Tu ferretería de confianza en Huancayo. Calidad, precio justo y
-                        atención personalizada para tus proyectos de construcción.</p>
-                    <a href="https://wa.me/51951679240" target="_blank" class="btn btn-whatsapp"
-                        style="font-size:.82rem; padding:.5rem 1rem;">
-                        💬 WhatsApp Directo
-                    </a>
-                </div>
-
-                <div class="footer-col">
-                    <h4>Enlaces</h4>
-                    <ul>
-                        <li><a href="#categorias">Productos</a></li>
-                        <li><a href="#nosotros">Nosotros</a></li>
-                        <li><a href="catalogo.html">Catálogo</a></li>
-                        <li><a href="login.html">Acceso Empleados</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h4>Contacto</h4>
-                    <p>📱 +51 951 679 240</p>
-                    <p>📍 Huancayo · Junín · Perú</p>
-                    <p>🏢 RUC: 10432247657</p>
-                    <p>⏰ Lun–Sáb 8am–6pm</p>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>© 2026 Comercializadora ALY. Todos los derechos reservados.</p>
-                <span class="footer-badge">Huancayo · Perú 🇵🇪</span>
+            <div class="flex flex-wrap justify-center gap-8">
+                <a class="text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors" href="catalogo.html">Catálogo</a>
+                <a class="text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors" href="login.html">Login</a>
+                <a class="text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors" href="https://wa.me/51951679240">Soporte</a>
             </div>
         </div>
     </footer>
-
-    <!-- Scroll to top -->
-    <button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">▲</button>
-
-    <!-- ================================================
-       JAVASCRIPT
-  ================================================ -->
     <script>
-        // ── Navbar scroll effect ──────────────────────────
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            navbar.classList.toggle('scrolled', window.scrollY > 60);
-            document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 400);
-        }, { passive: true });
+        // Tech Reveal Animation Logic V2.4
+        const codeText = `interface AlyLogistics {
+    status: 'OPTIMAL';
+    nodes: string[];
+    sync(): Promise<void>;
+}
 
-        // ── Mobile Nav ────────────────────────────────────
-        function toggleNav() {
-            const nav = document.getElementById('mobileNav');
-            const btn = document.getElementById('hamburger');
-            const open = nav.classList.toggle('open');
-            btn.classList.toggle('open', open);
-            document.body.style.overflow = open ? 'hidden' : '';
-        }
-        function closeNav() {
-            document.getElementById('mobileNav').classList.remove('open');
-            document.getElementById('hamburger').classList.remove('open');
-            document.body.style.overflow = '';
-        }
-        // Close on outside click
-        document.getElementById('mobileNav').addEventListener('click', e => {
-            if (e.target === e.currentTarget) closeNav();
-        });
+async function enterpriseCoreSync() {
+    console.log("Detecting Aly Nodes...");
+    const system = await Logistics.bootstrap({
+        enterprise: "Comercializadora Aly",
+        region: "Sector Central"
+    });
+    
+    // Dynamic Stock Analysis
+    await system.calculateRealTimeMetrics();
+    
+    // Revenue projections for 2026
+    system.initDashboard();
+    
+    return "SUCCESS: ALY CORE ONLINE";
+}
 
-        // ── Smooth scroll for anchor links ───────────────
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => {
-                const target = document.querySelector(a.getAttribute('href'));
-                if (!target) return;
-                e.preventDefault();
-                const offset = 75;
-                window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+enterpriseCoreSync();`;
+
+        const typewriterEl = document.getElementById('typewriter-code');
+        const cursor = document.getElementById('cursor');
+        const dashboard = document.getElementById('aly-dashboard');
+        let index = 0;
+
+        function typeCode() {
+            if (index < codeText.length) {
+                const char = codeText.charAt(index);
+                // Basic syntax highlighting for demonstration
+                typewriterEl.textContent += char;
+                index++;
+                setTimeout(typeCode, 15);
+            } else {
+                cursor.style.display = 'none';
+                setTimeout(() => {
+                    dashboard.classList.add('active');
+                }, 800);
+            }
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    typeCode();
+                    observer.unobserve(entry.target);
+                }
             });
+        }, { threshold: 0.5 });
+
+        observer.observe(document.getElementById('code-terminal'));
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('py-2', 'shadow-2xl');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.remove('py-2', 'shadow-2xl');
+                nav.classList.add('py-4');
+            }
         });
-
-        // ── Animate elements on scroll (IntersectionObserver) ──
-        const style = document.createElement('style');
-        style.textContent = `
-      .reveal { opacity:0; transform:translateY(28px); transition:opacity .55s ease, transform .55s ease; }
-      .reveal.visible { opacity:1; transform:translateY(0); }
-    `;
-        document.head.appendChild(style);
-
-        document.querySelectorAll('.cat-card, .product-card, .feature-card, .contact-card')
-            .forEach(el => el.classList.add('reveal'));
-
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-        }, { threshold: .12 });
-
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
-
 </body>
 
 </html>

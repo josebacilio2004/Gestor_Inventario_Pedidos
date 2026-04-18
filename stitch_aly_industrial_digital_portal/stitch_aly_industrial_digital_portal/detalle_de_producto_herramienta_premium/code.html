@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#102134",
+                    "tertiary-fixed": "#d3e4fe",
+                    "on-secondary-container": "#5c2400",
+                    "secondary-fixed-dim": "#ffb690",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "on-surface-variant": "#44474d",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#9d4300",
+                    "surface-container": "#eceef0",
+                    "background": "#f7f9fb",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "inverse-surface": "#2d3133",
+                    "surface-container-high": "#e6e8ea",
+                    "on-secondary": "#ffffff",
+                    "inverse-primary": "#b6c8e4",
+                    "error-container": "#ffdad6",
+                    "surface-bright": "#f7f9fb",
+                    "surface": "#f7f9fb",
+                    "secondary-fixed": "#ffdbca",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#e0e3e5",
+                    "on-primary-container": "#7889a4",
+                    "surface-container-low": "#f2f4f6",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed": "#341100",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed": "#091c32",
+                    "primary": "#000919",
+                    "primary-fixed-dim": "#b6c8e4",
+                    "on-primary-fixed-variant": "#374860",
+                    "on-tertiary-container": "#7989a1",
+                    "tertiary": "#000918",
+                    "secondary-container": "#fd761a",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "primary-fixed": "#d4e3ff",
+                    "primary-container": "#0f2137",
+                    "outline-variant": "#c4c6cd",
+                    "surface-container-highest": "#e0e3e5",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-tint": "#4f5f78",
+                    "on-secondary-fixed-variant": "#783200",
+                    "outline": "#74777d",
+                    "surface-dim": "#d8dadc",
+                    "on-surface": "#191c1e",
+                    "on-background": "#191c1e",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background selection:bg-secondary-container selection:text-white">
+<!-- Top Navigation Anchor -->
+<nav class="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width sticky top-0 z-50 shadow-[0_20px_40px_rgba(15,33,55,0.08)]">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black tracking-tighter text-slate-950 dark:text-white">
+                Comercializadora ALY
+            </div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors font-medium text-sm tracking-tight" href="#">Inventory</a>
+<a class="text-orange-600 dark:text-orange-400 font-bold border-b-2 border-orange-500 font-medium text-sm tracking-tight" href="#">Quotes</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors font-medium text-sm tracking-tight" href="#">Suppliers</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors font-medium text-sm tracking-tight" href="#">Technical Support</a>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-950 cursor-pointer p-2 hover:bg-slate-100/50 rounded-lg">shopping_cart</span>
+<span class="material-symbols-outlined text-slate-950 cursor-pointer p-2 hover:bg-slate-100/50 rounded-lg">notifications</span>
+</div>
+<img alt="Manager Avatar" class="w-10 h-10 rounded-full object-cover border border-outline-variant/20" data-alt="Close-up portrait of a professional male industrial manager in a clean white shirt with a focused, confident expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKtjaRalH5qX0ke_EHhb3ZyYBz8xNyVi-99gcd4LPYC3rgFsrz41DquvSWE85OPJksFUUfg0IcW_Ffz1rXe4wwXQXQj-42PmMKpi-6iAJHmwWM-ZqcKYSYPdHSy4zf4Da22cP8SubMMys24aLbLiDSNaKyowubZh6bUKR1hhvYdEei3qhdooJWc28_SC0yW61EBBUjbUlEMY9ZnYfw4stfqkJNZbtAz3Kd6-4Pf9GMy3GuCXwY7gLJSybGeVqkUJnvFHolZqFZnLE"/>
+</div>
+</div>
+</nav>
+<main class="max-w-screen-2xl mx-auto px-8 pt-12">
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 mb-12">
+<a class="text-on-surface-variant hover:text-primary text-xs uppercase tracking-widest font-medium" href="#">Catálogo</a>
+<span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span>
+<a class="text-on-surface-variant hover:text-primary text-xs uppercase tracking-widest font-medium" href="#">Herramientas Forjadas</a>
+<span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span>
+<span class="text-primary text-xs uppercase tracking-widest font-black">Pico de Minería Serie Pro-900</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+<!-- Left: High-Res Product Visuals -->
+<div class="lg:col-span-7 sticky top-32">
+<div class="relative group">
+<!-- Atmospheric Depth Background Header -->
+<div class="absolute -top-20 -left-10 text-[180px] font-black text-surface-container-high/40 select-none pointer-events-none tracking-tighter uppercase">
+                        FORGE
+                    </div>
+<!-- Main Product Image with 3D Lighting feel -->
+<div class="bg-surface-container-low p-12 aspect-square flex items-center justify-center overflow-hidden relative">
+<img alt="Premium Industrial Pickaxe" class="max-w-full h-auto drop-shadow-[0_35px_60px_rgba(0,0,0,0.15)] transform group-hover:scale-105 transition-transform duration-700" data-alt="High-resolution studio shot of a heavy-duty industrial pickaxe with carbon steel head and ergonomic fiberglass handle, dramatic rim lighting on metallic edges" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNF_53HcbDJ3ld7_JmuhYTW-3xkAtVhwftJgIszELcbnqc2pV8c0KdRwl0lsMNJ-unQ1ZSAych0Sh2ajuc666l6X0JE-YnWW9shfTfDxZleDA4m-ySqPkirE_AB1C7IpNaBPa3WAE9o2T7HfiXMkt8Hp7viPiWNHTTVBEtVBJp86wCA8jyK4JAcQepyUbHAG9aRT190J5CeDZBVTQMYgpt70kY2m9p6YpLjXU2sB5tawKXiFjToNhZbG9Tk4B1m3FdOkbW1sKg3Cg"/>
+<!-- Floating Spec Badge -->
+<div class="absolute bottom-8 left-8 glass-panel p-6 border border-outline-variant/15 shadow-xl">
+<div class="text-[10px] uppercase tracking-[0.2em] font-bold text-secondary mb-1">Dureza Garantizada</div>
+<div class="text-4xl font-black text-primary tracking-tighter">65 <span class="text-lg font-medium text-on-surface-variant">HRC</span></div>
+</div>
+</div>
+<!-- Thumbnails / Multi-view -->
+<div class="grid grid-cols-4 gap-4 mt-6">
+<div class="aspect-square bg-surface-container-highest p-4 cursor-pointer hover:opacity-80 transition-opacity">
+<img alt="Detail view 1" class="w-full h-full object-contain" data-alt="Close-up of the forged carbon steel tip of an industrial tool showing micro-texture and precision machining" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALGDoH9a5A8wo-lVlFhUjP0kIaHwq3yxzvaph35AFGYYl4FNoFJfScsHAAlZRF4oMc7sfXxxaYGYG-XSIPp8bmeq4Ry9vW5hlC1itAeACXVjMQ24R7q_tRURuwUNZ-qRILX0z9JxHswU8McAWUvW4FydHhj9iZBFI01pXYbWm4u9Dw-V_sf1dbPMxN8rKJmEuw55ojZJtv2zpugB7lMsnPB0tX1cfAedDk_uqVwr5qY87JOsIweVvRQofuVlABe4jP8LyWqjbi8II"/>
+</div>
+<div class="aspect-square bg-surface-container-low p-4 cursor-pointer border-2 border-secondary-container">
+<img alt="Main view" class="w-full h-full object-contain" data-alt="Full view of industrial pickaxe against a clean neutral background with professional studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-0-j1NRTpM3EAw9tSrZVU6Cc6dRHU9lXUbd9BIyQjuN2kx-HsFcAgrAe34E31DH_Xfb8C0M6bQflfEK3x7EJKMUO1rUrGO0pjFjwvDSvJN4SM_XP4SqFYjc-vB59QDFLhHIfOeQxNUG1GwQ6hoQ6BOuO1pBSkv4nkB7o2Cg6_66scKboygr7Le8Ioej4aUX1sSmkuyEsZSDcbyiM2JFvL5XOBWmkChzPNvHWEea7brsbObdaeVtGQ7cvZCTX4VzUDXvYZ3H16A7M"/>
+</div>
+<div class="aspect-square bg-surface-container-low p-4 cursor-pointer hover:opacity-80 transition-opacity">
+<img alt="Detail view 2" class="w-full h-full object-contain" data-alt="Macro photo of an ergonomic tool handle grip with anti-vibration texture and high-visibility industrial orange accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRtfL4tKewRGv8PbOOJvlzzxVb1hy1g-kViOr9LVNpWJlvRvGXkZrcbvjLmeK0RYnGRvqP5oQ0NspVvAVFB7JcYsFXsyPAYKTg1YB-ZoQHh6g3a-fCO_V01VbvXdvcBd7BYLchtliaNplzcAh1AVDq-VA_PNNeQlKHIbr-F-mD6x_LUoAF1kbH3S1YbbqL9vbWmcOqqvRAGrxMKEQ2S9MLTq0jhhMA47eIC41cY-dsZwi7mmB9GSDEG5QrVIGLT1OYoQt98FwIIkg"/>
+</div>
+<div class="aspect-square bg-surface-container-low p-4 flex items-center justify-center cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-outline">3d_rotation</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Content & Specs -->
+<div class="lg:col-span-5 flex flex-col gap-10">
+<div>
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-4">
+<span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(157,67,0,0.6)]"></span>
+                        En Stock: 142 Unidades
+                    </div>
+<h1 class="text-6xl font-black text-primary tracking-tighter leading-none mb-6">
+                        PRO-900 <br/> MINING AXE
+                    </h1>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-prose">
+                        Diseñada para la máxima resistencia en entornos de minería profunda. Forjada en una sola pieza de acero al carbono aleado con mango de polímero técnico que reduce la vibración en un 40%.
+                    </p>
+</div>
+<!-- CTA Section -->
+<div class="p-8 bg-surface-container-lowest shadow-[0_20px_40px_rgba(15,33,55,0.05)] flex flex-col gap-6 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/5 -mr-16 -mt-16 rounded-full blur-3xl"></div>
+<div class="flex items-baseline gap-4">
+<span class="text-on-surface-variant text-sm font-medium">ID de Producto:</span>
+<span class="text-primary font-black tracking-tight">ALY-MPA-900-X</span>
+</div>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="flex-1 bg-gradient-to-br from-secondary-container to-secondary text-white px-8 py-5 text-sm font-black uppercase tracking-widest flex items-center justify-center gap-3 active:scale-95 duration-200 ease-in-out shadow-lg shadow-secondary/20">
+                            Cotizar Ahora
+                            <span class="material-symbols-outlined text-sm">request_quote</span>
+</button>
+<button class="px-8 py-5 bg-surface-container-high text-primary font-black uppercase tracking-widest text-sm hover:bg-surface-container-highest transition-colors active:scale-95">
+                            Ficha Técnica
+                        </button>
+</div>
+</div>
+<!-- Technical Specs Bento Grid -->
+<div class="grid grid-cols-2 gap-px bg-outline-variant/10">
+<div class="bg-surface-container-lowest p-6">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Peso Operativo</div>
+<div class="text-2xl font-black text-primary">2.8 <span class="text-sm font-normal text-outline">KG</span></div>
+</div>
+<div class="bg-surface-container-lowest p-6">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Longitud Total</div>
+<div class="text-2xl font-black text-primary">900 <span class="text-sm font-normal text-outline">MM</span></div>
+</div>
+<div class="bg-surface-container-lowest p-6">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Material Cabezal</div>
+<div class="text-lg font-black text-primary uppercase">Acero 1045</div>
+</div>
+<div class="bg-surface-container-lowest p-6">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Resistencia</div>
+<div class="text-lg font-black text-primary uppercase">Alta Torsión</div>
+</div>
+</div>
+<!-- Features List -->
+<div class="space-y-4">
+<div class="flex items-start gap-4 p-4 hover:bg-surface-container-low transition-colors group">
+<span class="material-symbols-outlined text-secondary group-hover:scale-110 transition-transform" style="font-variation-settings: 'FILL' 1;">verified</span>
+<div>
+<div class="text-sm font-black text-primary uppercase tracking-tight">Certificación ISO 9001:2015</div>
+<p class="text-xs text-on-surface-variant">Validado bajo estándares internacionales de seguridad y fatiga de materiales.</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 hover:bg-surface-container-low transition-colors group">
+<span class="material-symbols-outlined text-secondary group-hover:scale-110 transition-transform" style="font-variation-settings: 'FILL' 1;">shield</span>
+<div>
+<div class="text-sm font-black text-primary uppercase tracking-tight">Garantía Vitalicia</div>
+<p class="text-xs text-on-surface-variant">Protección total contra defectos de fabricación en el núcleo de acero.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Technical Grid -->
+<section class="mt-32 mb-20">
+<h2 class="text-3xl font-black text-primary tracking-tighter uppercase mb-12 flex items-center gap-4">
+                Especificaciones Técnicas
+                <div class="h-[2px] flex-1 bg-surface-container-high"></div>
+</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<div class="space-y-6">
+<h3 class="text-sm font-black text-secondary tracking-widest uppercase border-l-4 border-secondary pl-4">Composición</h3>
+<ul class="space-y-4">
+<li class="flex justify-between py-2 border-b border-outline-variant/15">
+<span class="text-on-surface-variant text-sm">Carbono (%)</span>
+<span class="text-primary font-bold text-sm">0.43 - 0.50</span>
+</li>
+<li class="flex justify-between py-2 border-b border-outline-variant/15">
+<span class="text-on-surface-variant text-sm">Manganeso (%)</span>
+<span class="text-primary font-bold text-sm">0.60 - 0.90</span>
+</li>
+<li class="flex justify-between py-2 border-b border-outline-variant/15">
+<span class="text-on-surface-variant text-sm">Tratamiento Térmico</span>
+<span class="text-primary font-bold text-sm">Templado/Revenido</span>
+</li>
+</ul>
+</div>
+<div class="space-y-6">
+<h3 class="text-sm font-black text-secondary tracking-widest uppercase border-l-4 border-secondary pl-4">Ergonomía</h3>
+<ul class="space-y-4">
+<li class="flex justify-between py-2 border-b border-outline-variant/15">
+<span class="text-on-surface-variant text-sm">Tipo de Mango</span>
+<span class="text-primary font-bold text-sm">Fibra de Vidrio HD</span>
+</li>
+<li class="flex justify-between py-2 border-b border-outline-variant/15">
+<span class="text-on-surface-variant text-sm">Grip Superficial</span>
+<span class="text-primary font-bold text-sm">Polímero Soft-Touch</span>
+</li>
+<li class="flex justify-between py-2 border-b border-outline-variant/15">
+<span class="text-on-surface-variant text-sm">Absorción Impacto</span>
+<span class="text-primary font-bold text-sm">Vibration-Damping™</span>
+</li>
+</ul>
+</div>
+<div class="space-y-6">
+<h3 class="text-sm font-black text-secondary tracking-widest uppercase border-l-4 border-secondary pl-4">Dimensiones</h3>
+<ul class="space-y-4">
+<li class="flex justify-between py-2 border-b border-outline-variant/15">
+<span class="text-on-surface-variant text-sm">Ancho Cabezal</span>
+<span class="text-primary font-bold text-sm">520 mm</span>
+</li>
+<li class="flex justify-between py-2 border-b border-outline-variant/15">
+<span class="text-on-surface-variant text-sm">Área de Golpe</span>
+<span class="text-primary font-bold text-sm">45 x 45 mm</span>
+</li>
+<li class="flex justify-between py-2 border-b border-outline-variant/15">
+<span class="text-on-surface-variant text-sm">Empaque Master</span>
+<span class="text-primary font-bold text-sm">6 Unidades</span>
+</li>
+</ul>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-950 dark:bg-black w-full py-12 mt-24 border-t border-slate-800">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 max-w-screen-2xl mx-auto">
+<div class="mb-8 md:mb-0">
+<div class="font-black text-white text-xl tracking-tighter mb-2">Comercializadora ALY</div>
+<div class="text-xs font-medium uppercase tracking-widest text-slate-400">© 2024 Comercializadora ALY. Industrial Excellence Built Through Precision.</div>
+</div>
+<div class="flex gap-8">
+<a class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-orange-500 transition-colors" href="#">Terms of Service</a>
+<a class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-orange-500 transition-colors" href="#">Privacy Policy</a>
+<a class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-orange-500 transition-colors" href="#">Compliance</a>
+<a class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-orange-500 transition-colors" href="#">Wholesale Login</a>
+</div>
+</div>
+</footer>
+</body></html>
