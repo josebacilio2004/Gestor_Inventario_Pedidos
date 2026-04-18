@@ -255,49 +255,56 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const {
-            fecha_pedido,
-            producto_id,
-            distribuidor_id,
-            cantidad,
-            capital_invertido,
-            ganancia_esperada,
-            ganancia_real,
-            devolucion_capital,
-            estado,
-            notas
-        } = req.body;
+        const updates = req.body;
 
-        const result = await pool.query(
-            `UPDATE pedidos 
-       SET fecha_pedido = $1, producto_id = $2, distribuidor_id = $3,
-           cantidad = $4, capital_invertido = $5, ganancia_esperada = $6,
-           ganancia_real = $7, devolucion_capital = $8, estado = $9, notas = $10
-       WHERE id = $11 
-       RETURNING *`,
-            [
-                fecha_pedido,
-                producto_id,
-                distribuidor_id,
-                cantidad,
-                capital_invertido,
-                ganancia_esperada,
-                ganancia_real,
-                devolucion_capital,
-                estado,
-                notas,
-                id
-            ]
-        );
+        // Si se proporcionan items pero no el producto_id principal, derivarlo del primer item para mantener integridad
+        if (!updates.producto_id && updates.items && updates.items.length > 0) {
+            updates.producto_id = updates.items[0].producto_id;
+        }
+
+        // Construir consulta dinámica para permitir actualizaciones parciales (PATCH style)
+        const fields = [];
+        const params = [];
+        let index = 1;
+
+        // Lista de columnas permitidas para actualizar
+        const allowedColumns = [
+            'fecha_pedido', 'producto_id', 'distribuidor_id', 'inversionista_id', 'comprador_id',
+            'cantidad', 'capital_invertido', 'ganancia_esperada', 'ganancia_real', 
+            'ganancia_devuelta', 'fecha_ganancia_devuelta', 'devolucion_capital', 'estado', 'notas'
+        ];
+
+        for (const col of allowedColumns) {
+            if (updates[col] !== undefined) {
+                fields.push(`${col} = $${index}`);
+                params.push(updates[col]);
+                index++;
+            }
+        }
+
+        if (fields.length === 0) {
+            return res.status(400).json({ error: 'No se proporcionaron campos para actualizar' });
+        }
+
+        params.push(id);
+        const query = `UPDATE pedidos SET ${fields.join(', ')} WHERE id = $${index} RETURNING *`;
+        
+        const result = await pool.query(query, params);
 
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Pedido no encontrado' });
         }
 
+        // Si se actualizaron los items, podríamos manejar la tabla pedidos_productos aquí si fuera necesario
+        // Por ahora, devolvemos el pedido actualizado
         res.json(result.rows[0]);
     } catch (err) {
         console.error('Error al actualizar pedido:', err);
-        res.status(500).json({ error: 'Error al actualizar pedido' });
+        res.status(500).json({ 
+            error: 'Error al actualizar pedido',
+            detail: err.message,
+            code: err.code 
+        });
     }
 });
 

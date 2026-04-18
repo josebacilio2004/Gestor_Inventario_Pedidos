@@ -318,6 +318,7 @@ document.getElementById('pedido-form').addEventListener('submit', async (e) => {
         distribuidor_id: parseInt(document.getElementById('distribuidor_id').value),
         inversionista_id: document.getElementById('inversionista_id').value ? parseInt(document.getElementById('inversionista_id').value) : null,
         comprador_id: document.getElementById('comprador_id').value ? parseInt(document.getElementById('comprador_id').value) : null,
+        producto_id: itemsPedido.length > 0 ? parseInt(itemsPedido[0].producto_id) : null, // Mapear producto principal
         cantidad: parseInt(document.getElementById('cantidad').value),
         capital_invertido: parseFloat(document.getElementById('capital_invertido').value),
         ganancia_esperada: parseFloat(document.getElementById('ganancia_esperada').value),
