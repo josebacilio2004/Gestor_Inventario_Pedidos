@@ -11,9 +11,9 @@
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     <style>
-        .bi-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
-        .chart-container { height: 350px; background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #edf2f7; }
-        @media (max-width: 768px) { .bi-grid { grid-template-cols: 1fr; } }
+        .bi-grid { display: grid; grid-template-cols: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem; }
+        .chart-container { height: 380px; background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); border: 1px solid #edf2f7; }
+        @media (max-width: 1024px) { .bi-grid { grid-template-cols: 1fr; } }
     </style>
 </head>
 
@@ -77,7 +77,7 @@
 
         <!-- Tabla de Pedidos -->
         <div class="card mt-2">
-            <h2 style="margin-bottom: 1rem;">📋 Mis Pedidos</h2>
+            <h2 style="margin-bottom: 1rem;">📋 Detalle de Mis Inversiones</h2>
             <div class="table-container">
                 <table class="table">
                     <thead>
@@ -87,15 +87,16 @@
                             <th>Producto</th>
                             <th>Comprador</th>
                             <th>Capital</th>
-                            <th>Devuelto</th>
-                            <th>Pendiente</th>
-                            <th>Ganancia</th>
+                            <th>Capital Devuelto</th>
+                            <th>G. Esperada</th>
+                            <th>G. Cobrada</th>
+                            <th>G. Pendiente</th>
                             <th>Estado</th>
                         </tr>
                     </thead>
                     <tbody id="pedidos-body">
                         <tr>
-                            <td colspan="9" class="text-center">Cargando...</td>
+                            <td colspan="10" class="text-center">Cargando...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -180,7 +181,7 @@
                     document.getElementById('capital-devuelto').textContent = formatCurrency(res.capital_total_devuelto || 0);
                     document.getElementById('capital-pendiente').textContent = formatCurrency(res.capital_total_pendiente || 0);
                     document.getElementById('total-pedidos').textContent = res.total_pedidos || 0;
-                    document.getElementById('ganancia-real').textContent = formatCurrency(res.ganancia_total_real || 0);
+                    document.getElementById('ganancia-real').textContent = formatCurrency(res.ganancia_total_proyectada || 0);
                     document.getElementById('ganancia-devuelta').textContent = formatCurrency(res.ganancia_devuelta || 0);
                     document.getElementById('ganancia-pendiente').textContent = formatCurrency(res.ganancia_pendiente || 0);
                     document.getElementById('porcentaje-devolucion').textContent = `${res.porcentaje_devolucion || 0}%`;
@@ -191,7 +192,7 @@
 
                 misPedidos = data.pedidos || [];
                 if (misPedidos.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="9" class="text-center">No tienes pedidos registrados</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="10" class="text-center">No tienes pedidos registrados</td></tr>';
                 } else {
                     tbody.innerHTML = misPedidos.map(p => `
                     <tr>
@@ -200,9 +201,10 @@
                         <td>${p.producto_nombre || '-'}</td>
                         <td>${p.comprador_nombre || '-'}</td>
                         <td>${formatCurrency(p.capital_invertido)}</td>
-                        <td style="color: var(--success)">${formatCurrency(p.capital_devuelto || 0)}</td>
-                        <td style="color: var(--warning)">${formatCurrency(p.capital_pendiente || 0)}</td>
-                        <td class="font-bold text-success">${formatCurrency(p.ganancia_real_display || 0)}</td>
+                        <td class="text-success font-bold">${formatCurrency(p.capital_devuelto || 0)}</td>
+                        <td class="text-secondary">${formatCurrency(p.ganancia_esperada || 0)}</td>
+                        <td class="text-success">${formatCurrency(p.ganancia_devuelta_real || 0)}</td>
+                        <td class="text-danger font-bold">${formatCurrency(p.ganancia_pendiente || 0)}</td>
                         <td><span class="badge ${getBadgeClass(p.estado)}">${p.estado}</span></td>
                     </tr>
                 `).join('');
@@ -210,7 +212,7 @@
 
             } catch (error) {
                 console.error('Error al cargar dashboard:', error);
-                tbody.innerHTML = '<tr><td colspan="9" class="text-center" style="color:var(--danger);">❌ Error al cargar datos. Intente recargar.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="10" class="text-center" style="color:var(--danger);">❌ Error al cargar datos. Intente recargar.</td></tr>';
             }
         }
 
@@ -236,18 +238,19 @@
             const gananciaChart = echarts.init(document.getElementById('ganancia-chart'));
             gananciaChart.setOption({
                 tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-                grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-                xAxis: { type: 'category', data: ['Real Total', 'Devuelta', 'Pendiente'], axisLabel: { fontSize: 9, fontWeight: 'bold' } },
+                grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                xAxis: { type: 'category', data: ['Proyectada', 'Cobrada', 'Pendiente'], axisLabel: { fontSize: 9, fontWeight: 'bold' } },
                 yAxis: { type: 'value' },
                 series: [{
                     data: [
-                        { value: res.ganancia_total_real, itemStyle: { color: '#3b82f6' } },
+                        { value: res.ganancia_total_proyectada, itemStyle: { color: '#3b82f6' } },
                         { value: res.ganancia_devuelta, itemStyle: { color: '#10b981' } },
                         { value: res.ganancia_pendiente, itemStyle: { color: '#f43f5e' } }
                     ],
                     type: 'bar',
-                    barWidth: '50%',
-                    itemStyle: { borderRadius: [5, 5, 0, 0] }
+                    barWidth: '40%',
+                    itemStyle: { borderRadius: [5, 5, 0, 0] },
+                    label: { show: true, position: 'top', formatter: 'S/ {c}', fontSize: 10 }
                 }]
             });
 

@@ -67,7 +67,6 @@ router.get('/:id', async (req, res) => {
             return res.status(404).json({ error: 'Inversionista no encontrado' });
         }
 
-        // Pedidos del inversionista con Fuente de Verdad (Sumatoria de pagos reales)
         const pedidos = await pool.query(
             `SELECT 
                 p.*,
@@ -85,13 +84,13 @@ router.get('/:id', async (req, res) => {
             [id]
         );
 
-        // Calcular resumen directamente con Fuente de Verdad (Pagos Reales)
+        // Calcular resumen directamente con Fuente de Verdad y Proyecciones
         const statsResult = await pool.query(
             `SELECT 
                 COALESCE(SUM(p.capital_invertido), 0) as capital_total,
                 COALESCE((SELECT SUM(pc.monto) FROM pagos_capital pc JOIN pedidos p2 ON pc.pedido_id = p2.id WHERE p2.inversionista_id = $1), 0) as capital_devuelto_total,
                 COUNT(p.id) as total_pedidos,
-                COALESCE(SUM(CASE WHEN p.ganancia_real > 0 THEN p.ganancia_real ELSE (CASE WHEN p.estado = 'completado' THEN p.ganancia_esperada ELSE 0 END) END), 0) as ganancia_total,
+                COALESCE(SUM(p.ganancia_esperada), 0) as ganancia_total_proyectada,
                 COALESCE((SELECT SUM(pg.monto) FROM pagos_ganancia pg JOIN pedidos p3 ON pg.pedido_id = p3.id WHERE p3.inversionista_id = $1), 0) as ganancia_devuelta_total
             FROM pedidos p
             WHERE p.inversionista_id = $1`,
@@ -101,7 +100,7 @@ router.get('/:id', async (req, res) => {
         const stats = statsResult.rows[0];
         const capitalTotal = parseFloat(stats.capital_total || 0);
         const capitalDevuelto = parseFloat(stats.capital_devuelto_total || 0);
-        const gananciaTotal = parseFloat(stats.ganancia_total || 0);
+        const gananciaProyectada = parseFloat(stats.ganancia_total_proyectada || 0);
         const gananciaDevuelta = parseFloat(stats.ganancia_devuelta_total || 0);
 
         const resumen = {
@@ -109,21 +108,25 @@ router.get('/:id', async (req, res) => {
             capital_total_devuelto: capitalDevuelto,
             capital_total_pendiente: Math.max(0, capitalTotal - capitalDevuelto),
             total_pedidos: parseInt(stats.total_pedidos || 0),
-            ganancia_total_real: gananciaTotal,
+            ganancia_total_proyectada: gananciaProyectada,
             ganancia_devuelta: gananciaDevuelta,
-            ganancia_pendiente: Math.max(0, gananciaTotal - gananciaDevuelta),
+            ganancia_pendiente: Math.max(0, gananciaProyectada - gananciaDevuelta),
             porcentaje_devolucion: capitalTotal > 0
                 ? parseFloat(((capitalDevuelto / capitalTotal) * 100).toFixed(1))
                 : 0
         };
 
-        // Enriquecer pedidos con cálculos de pendiente
-        const pedidosFinal = pedidos.rows.map(p => ({
-            ...p,
-            capital_pendiente: Math.max(0, parseFloat(p.capital_invertido || 0) - parseFloat(p.capital_devuelto || 0)),
-            // Si el pedido está completado pero la ganancia_real es 0, usamos ganancia_esperada para el display
-            ganancia_real_display: parseFloat(p.ganancia_real) > 0 ? p.ganancia_real : (p.estado === 'completado' ? p.ganancia_esperada : 0)
-        }));
+        // Enriquecer pedidos con cálculos de pendiente reales
+        const pedidosFinal = pedidos.rows.map(p => {
+            const expect = parseFloat(p.ganancia_esperada || 0);
+            const devuel = parseFloat(p.ganancia_devuelta_real || 0);
+            return {
+                ...p,
+                capital_pendiente: Math.max(0, parseFloat(p.capital_invertido || 0) - parseFloat(p.capital_devuelto || 0)),
+                ganancia_pendiente: Math.max(0, expect - devuel),
+                ganancia_total_mostrar: expect // Mostramos la esperada como referencia principal
+            };
+        });
 
         res.json({
             ...inversionista.rows[0],
