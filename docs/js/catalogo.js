@@ -21,13 +21,12 @@ async function loadCatalogProducts() {
  * para mostrar un precio de mercado profesional.
  */
 function calculatePublicPrice(producto) {
-    // Usamos precio_venta si existe, sino usamos precio_referencia como base
+    // Usamos precio_referencia como el precio final para el catálogo (sin margen adicional)
     const basePrice = parseFloat(producto.precio_venta || producto.precio_referencia || 0);
     if (basePrice <= 0) return 'Consulte';
     
-    // Aplicamos el margen del 40% solicitado para separar catálogo de admin
-    const publicPrice = basePrice * 1.40;
-    return formatCurrency(publicPrice);
+    // Mostramos el precio real ingresado en el sistema
+    return formatCurrency(basePrice);
 }
 
 // Render products to grid
