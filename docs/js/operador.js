@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await cargarTandas();
     await Promise.all([cargarCompradores(), cargarStock(), cargarStockPendiente()]);
     await cargarPedidos();
+    await cargarEstadisticasBI(); // Cargar gráficos avanzados
 
     // Cargar notas si hay tanda activa
     if (tandaActiva) {
@@ -449,7 +450,7 @@ async function cargarStock() {
         stockActual = {};
         data.forEach(s => { stockActual[s.tipo] = s.cantidad; });  // key = tipo only
         renderStock(data);
-        renderChartsProd(data);
+        cargarEstadisticasBI(); // Actualizar tendencia avanzada
         mostrarStockEnFormulario();  // refrescar etiqueta en formulario
     } catch (err) {
         grid.innerHTML = `<div style="color:#ef4444;padding:1rem;">⚠️ No se pudo cargar el stock</div>`;
@@ -827,6 +828,7 @@ async function cargarPedidos(tandaId = null, nombre = null) {
         const pedidos = await fetchAPI(url);
         actualizarStats(pedidos);
         renderPedidos(pedidos);
+        cargarEstadisticasBI(); // Actualizar indicadores de eficiencia
     } catch (err) {
         container.innerHTML = `
             <div class="error-state">
@@ -1110,48 +1112,65 @@ function irATandaActual() {
 let produccionChart = null;
 let stockChart = null;
 
-function renderChartsProd(stockData) {
+async function cargarEstadisticasBI() {
+    if (!operadorSesion?.id) return;
+    try {
+        const stats = await fetchAPI(`/operadores/${operadorSesion.id}/stats`);
+        renderChartsAvanzados(stats);
+    } catch (err) {
+        console.error('Error al cargar estadísticas BI:', err);
+    }
+}
+
+function renderChartsAvanzados(stats) {
     if (!produccionChart) produccionChart = echarts.init(document.getElementById('produccion-chart'));
     if (!stockChart) stockChart = echarts.init(document.getElementById('stock-chart'));
 
-    // Chart de Stock actual
-    stockChart.setOption({
-        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-        grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-        xAxis: { type: 'category', data: ['Picos', 'Zapapicos'], axisLabel: { fontWeight: 'bold' } },
-        yAxis: { type: 'value' },
-        series: [{
-            data: [
-                { value: stockData.find(s => s.tipo === 'Pico')?.cantidad || 0, itemStyle: { color: '#3b82f6' } },
-                { value: stockData.find(s => s.tipo === 'Zapapico')?.cantidad || 0, itemStyle: { color: '#8b5cf6' } }
-            ],
-            type: 'bar', barWidth: '40%', itemStyle: { borderRadius: [5, 5, 0, 0] },
-            label: { show: true, position: 'top', formatter: '{c} und' }
-        }]
-    });
-}
-
-function renderChartsPedidos(pedidos) {
-    if (!produccionChart) produccionChart = echarts.init(document.getElementById('produccion-chart'));
+    // ── GRÁFICO 1: TENDENCIA DE PRODUCCIÓN (HISTORIAL) ───────
+    const history = stats.historial_tandas || [];
+    const xAxisData = history.map(h => h.nombre.length > 10 ? h.nombre.substring(0, 10) + '...' : h.nombre);
     
-    const stats = {
-        completado: pedidos.filter(p => p.estado === 'completado').length,
-        proceso: pedidos.filter(p => p.estado === 'en_proceso').length,
-        pendiente: pedidos.filter(p => p.estado === 'pendiente').length
-    };
+    stockChart.setOption({
+        tooltip: { trigger: 'axis' },
+        legend: { data: ['Picos', 'Zapapicos'], bottom: 0 },
+        grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+        xAxis: { type: 'category', boundaryGap: false, data: xAxisData },
+        yAxis: { type: 'value' },
+        series: [
+            {
+                name: 'Picos', type: 'line', smooth: true,
+                data: history.map(h => parseInt(h.picos || 0)),
+                itemStyle: { color: '#3b82f6' },
+                areaStyle: { opacity: 0.1 }
+            },
+            {
+                name: 'Zapapicos', type: 'line', smooth: true,
+                data: history.map(h => parseInt(h.zapapicos || 0)),
+                itemStyle: { color: '#8b5cf6' },
+                areaStyle: { opacity: 0.1 }
+            }
+        ]
+    });
+
+    // ── GRÁFICO 2: EFICIENCIA DE DESPACHO (TANDA ACTUAL) ─────
+    const eficiencia = stats.eficiencia_pedidos || [];
+    const mapping = { completado: 'Entregados', en_proceso: 'En Taller', pendiente: 'Pendientes' };
+    const colors = { completado: '#10b981', en_proceso: '#3b82f6', pendiente: '#f59e0b' };
+    
+    const pieData = eficiencia.map(e => ({
+        value: parseInt(e.cantidad),
+        name: mapping[e.estado] || e.estado,
+        itemStyle: { color: colors[e.estado] || '#94a3b8' }
+    }));
 
     produccionChart.setOption({
-        tooltip: { trigger: 'item' },
+        tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
         legend: { bottom: '0', left: 'center' },
         series: [{
-            name: 'Pedidos', type: 'pie', radius: ['40%', '70%'],
+            name: 'Eficiencia', type: 'pie', radius: ['40%', '70%'],
             avoidLabelOverlap: false, itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
             label: { show: false },
-            data: [
-                { value: stats.completado, name: 'Completados', itemStyle: { color: '#10b981' } },
-                { value: stats.proceso, name: 'En Proceso', itemStyle: { color: '#3b82f6' } },
-                { value: stats.pendiente, name: 'Pendientes', itemStyle: { color: '#f59e0b' } }
-            ]
+            data: pieData.length ? pieData : [{ value: 0, name: 'Sin Pedidos', itemStyle: { color: '#e2e8f0' } }]
         }]
     });
 }

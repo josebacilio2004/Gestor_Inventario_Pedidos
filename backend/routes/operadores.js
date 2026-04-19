@@ -56,4 +56,39 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// GET - Estadísticas avanzadas del operador
+router.get('/:id/stats', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // 1. Historial de las últimas 5 tandas con su stock
+        const tandasResult = await pool.query(`
+            SELECT t.id, t.nombre, t.fecha_inicio,
+                   (SELECT SUM(cantidad) FROM stock_herramientas WHERE tanda_id = t.id AND tipo = 'Pico') as picos,
+                   (SELECT SUM(cantidad) FROM stock_herramientas WHERE tanda_id = t.id AND tipo = 'Zapapico') as zapapicos
+            FROM tandas t
+            WHERE t.operador_id = $1
+            ORDER BY t.fecha_inicio DESC
+            LIMIT 5
+        `, [id]);
+
+        // 2. Eficiencia de pedidos en la tanda activa
+        const eficienciaResult = await pool.query(`
+            SELECT estado, COUNT(*) as cantidad
+            FROM pedidos_herramientas
+            WHERE tanda_id = (SELECT id FROM tandas WHERE operador_id = $1 AND estado = 'activa' LIMIT 1)
+            GROUP BY estado
+        `, [id]);
+
+        res.json({
+            historial_tandas: tandasResult.rows.reverse(), // Orden cronológico para el gráfico
+            eficiencia_pedidos: eficienciaResult.rows
+        });
+    } catch (err) {
+        console.error('Error al obtener estadísticas del operador:', err);
+        res.status(500).json({ error: 'Error al obtener estadísticas' });
+    }
+});
+
 module.exports = router;
+
