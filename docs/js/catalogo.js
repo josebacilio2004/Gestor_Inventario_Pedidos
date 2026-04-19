@@ -21,12 +21,14 @@ async function loadCatalogProducts() {
  * para mostrar un precio de mercado profesional.
  */
 function calculatePublicPrice(producto) {
-    // Usamos precio_referencia como el precio final para el catálogo (sin margen adicional)
+    // En la administración se maneja el precio de compra (precio_referencia).
+    // Para el catálogo público, aplicamos un margen comercial del 40% (x1.4) 
     const basePrice = parseFloat(producto.precio_venta || producto.precio_referencia || 0);
     if (basePrice <= 0) return 'Consulte';
     
-    // Mostramos el precio real ingresado en el sistema
-    return formatCurrency(basePrice);
+    // El precio de venta público incluye el margen comercial
+    const publicPrice = basePrice * 1.40;
+    return formatCurrency(publicPrice);
 }
 
 // Render products to grid
