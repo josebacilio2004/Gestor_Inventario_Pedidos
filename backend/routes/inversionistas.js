@@ -67,33 +67,34 @@ router.get('/:id', async (req, res) => {
             return res.status(404).json({ error: 'Inversionista no encontrado' });
         }
 
+        // Pedidos del inversionista con Fuente de Verdad (Sumatoria de pagos reales)
         const pedidos = await pool.query(
             `SELECT 
-        p.*,
-        p.devolucion_capital as capital_devuelto,
-        (p.capital_invertido - p.devolucion_capital) as capital_pendiente,
-        prod.nombre as producto_nombre,
-        d.nombre as distribuidor_nombre,
-        c.nombre as comprador_nombre
-      FROM pedidos p
-      LEFT JOIN productos prod ON p.producto_id = prod.id
-      LEFT JOIN distribuidores d ON p.distribuidor_id = d.id
-      LEFT JOIN compradores c ON p.comprador_id = c.id
-      WHERE p.inversionista_id = $1
-      ORDER BY p.fecha_pedido DESC`,
+                p.*,
+                prod.nombre as producto_nombre,
+                d.nombre as distribuidor_nombre,
+                c.nombre as comprador_nombre,
+                COALESCE((SELECT SUM(monto) FROM pagos_capital WHERE pedido_id = p.id), 0) as capital_devuelto,
+                COALESCE((SELECT SUM(monto) FROM pagos_ganancia WHERE pedido_id = p.id), 0) as ganancia_devuelta_real
+            FROM pedidos p
+            LEFT JOIN productos prod ON p.producto_id = prod.id
+            LEFT JOIN distribuidores d ON p.distribuidor_id = d.id
+            LEFT JOIN compradores c ON p.comprador_id = c.id
+            WHERE p.inversionista_id = $1
+            ORDER BY p.fecha_pedido DESC`,
             [id]
         );
 
-        // Calcular resumen directamente con lógica corregida (usando devolucion_capital)
+        // Calcular resumen directamente con Fuente de Verdad (Pagos Reales)
         const statsResult = await pool.query(
             `SELECT 
-                COALESCE(SUM(capital_invertido), 0) as capital_total,
-                COALESCE(SUM(devolucion_capital), 0) as capital_devuelto_total,
-                COUNT(*) as total_pedidos,
-                COALESCE(SUM(CASE WHEN ganancia_real > 0 THEN ganancia_real ELSE (CASE WHEN estado = 'completado' THEN ganancia_esperada ELSE 0 END) END), 0) as ganancia_total,
-                COALESCE(SUM(CASE WHEN ganancia_devuelta = true THEN (CASE WHEN ganancia_real > 0 THEN ganancia_real ELSE ganancia_esperada END) ELSE 0 END), 0) as ganancia_devuelta_total
-            FROM pedidos 
-            WHERE inversionista_id = $1`,
+                COALESCE(SUM(p.capital_invertido), 0) as capital_total,
+                COALESCE((SELECT SUM(pc.monto) FROM pagos_capital pc JOIN pedidos p2 ON pc.pedido_id = p2.id WHERE p2.inversionista_id = $1), 0) as capital_devuelto_total,
+                COUNT(p.id) as total_pedidos,
+                COALESCE(SUM(CASE WHEN p.ganancia_real > 0 THEN p.ganancia_real ELSE (CASE WHEN p.estado = 'completado' THEN p.ganancia_esperada ELSE 0 END) END), 0) as ganancia_total,
+                COALESCE((SELECT SUM(pg.monto) FROM pagos_ganancia pg JOIN pedidos p3 ON pg.pedido_id = p3.id WHERE p3.inversionista_id = $1), 0) as ganancia_devuelta_total
+            FROM pedidos p
+            WHERE p.inversionista_id = $1`,
             [id]
         );
 
@@ -106,19 +107,27 @@ router.get('/:id', async (req, res) => {
         const resumen = {
             capital_total_invertido: capitalTotal,
             capital_total_devuelto: capitalDevuelto,
-            capital_total_pendiente: capitalTotal - capitalDevuelto,
+            capital_total_pendiente: Math.max(0, capitalTotal - capitalDevuelto),
             total_pedidos: parseInt(stats.total_pedidos || 0),
             ganancia_total_real: gananciaTotal,
             ganancia_devuelta: gananciaDevuelta,
-            ganancia_pendiente: gananciaTotal - gananciaDevuelta,
+            ganancia_pendiente: Math.max(0, gananciaTotal - gananciaDevuelta),
             porcentaje_devolucion: capitalTotal > 0
                 ? parseFloat(((capitalDevuelto / capitalTotal) * 100).toFixed(1))
                 : 0
         };
 
+        // Enriquecer pedidos con cálculos de pendiente
+        const pedidosFinal = pedidos.rows.map(p => ({
+            ...p,
+            capital_pendiente: Math.max(0, parseFloat(p.capital_invertido || 0) - parseFloat(p.capital_devuelto || 0)),
+            // Si el pedido está completado pero la ganancia_real es 0, usamos ganancia_esperada para el display
+            ganancia_real_display: parseFloat(p.ganancia_real) > 0 ? p.ganancia_real : (p.estado === 'completado' ? p.ganancia_esperada : 0)
+        }));
+
         res.json({
             ...inversionista.rows[0],
-            pedidos: pedidos.rows,
+            pedidos: pedidosFinal,
             resumen
         });
     } catch (err) {

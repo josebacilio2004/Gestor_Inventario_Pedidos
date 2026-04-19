@@ -194,18 +194,18 @@
                     tbody.innerHTML = '<tr><td colspan="9" class="text-center">No tienes pedidos registrados</td></tr>';
                 } else {
                     tbody.innerHTML = misPedidos.map(p => `
-            <tr>
-              <td>${p.id}</td>
-              <td>${formatDate(p.fecha_pedido)}</td>
-              <td>${p.producto_nombre || '-'}</td>
-              <td>${p.comprador_nombre || '-'}</td>
-              <td>${formatCurrency(p.capital_invertido)}</td>
-              <td style="color: var(--success)">${formatCurrency(p.capital_devuelto)}</td>
-              <td style="color: var(--warning)">${formatCurrency(p.capital_pendiente)}</td>
-              <td>${formatCurrency(p.ganancia_real)}</td>
-              <td><span class="badge ${getBadgeClass(p.estado)}">${p.estado}</span></td>
-            </tr>
-          `).join('');
+                    <tr>
+                        <td>${p.id}</td>
+                        <td>${formatDate(p.fecha_pedido)}</td>
+                        <td>${p.producto_nombre || '-'}</td>
+                        <td>${p.comprador_nombre || '-'}</td>
+                        <td>${formatCurrency(p.capital_invertido)}</td>
+                        <td style="color: var(--success)">${formatCurrency(p.capital_devuelto || 0)}</td>
+                        <td style="color: var(--warning)">${formatCurrency(p.capital_pendiente || 0)}</td>
+                        <td class="font-bold text-success">${formatCurrency(p.ganancia_real_display || 0)}</td>
+                        <td><span class="badge ${getBadgeClass(p.estado)}">${p.estado}</span></td>
+                    </tr>
+                `).join('');
                 }
 
             } catch (error) {
