@@ -21,6 +21,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     await Promise.all([cargarCompradores(), cargarStock(), cargarStockPendiente()]);
     await cargarPedidos();
 
+    // Cargar notas si hay tanda activa
+    if (tandaActiva) {
+        cargarNotasTanda(tandaActiva.id);
+    }
+
     // Auto-calcular MO + mostrar stock disponible al cambiar selects
     ['tipo-herramienta', 'marca-herramienta'].forEach(id => {
         document.getElementById(id)?.addEventListener('change', () => {
@@ -136,6 +141,11 @@ async function asignarStockAGrupo(pedidoId) {
 
         // Recargar listas para reflejar el cambio
         await Promise.all([cargarStockPendiente(), cargarStock()]);
+        // Refrescar gráficos
+        if (tandaActiva) {
+            const data = await fetchAPI('/stock-herramientas');
+            renderChartsProd(data);
+        }
 
     } catch (err) {
         showToast(err.message || 'Error al asignar stock', 'error');
@@ -188,10 +198,19 @@ function renderBannerTandaActiva() {
         document.getElementById('tanda-activa-meta').textContent =
             `Activa desde ${fechaInicio} · ${pedidos} pedido(s) registrados`;
         if (btnForm) btnForm.textContent = '＋ Nueva Tanda';
+        // Mostrar sección de notas
+        const noteSection = document.getElementById('post-it-section');
+        if (noteSection) {
+            noteSection.style.display = 'block';
+            cargarNotasTanda(tandaActiva.id);
+        }
     } else {
         bannerActiva.style.display = 'none';
         bannerSin.style.display = 'block';
         if (btnForm) btnForm.textContent = '🚀 Crear Primera Tanda';
+        // Ocultar sección de notas
+        const noteSection = document.getElementById('post-it-section');
+        if (noteSection) noteSection.style.display = 'none';
     }
     actualizarVisibilidadSecciones();
 }
@@ -358,6 +377,7 @@ async function crearTanda() {
         await cargarTandas();
         await cargarStock();
         await cargarPedidos();
+        if (tandaActiva) cargarNotasTanda(tandaActiva.id);
     } catch (err) {
         showToast(`❌ Error: ${err.message}`, 'error');
     } finally {
@@ -429,6 +449,7 @@ async function cargarStock() {
         stockActual = {};
         data.forEach(s => { stockActual[s.tipo] = s.cantidad; });  // key = tipo only
         renderStock(data);
+        renderChartsProd(data);
         mostrarStockEnFormulario();  // refrescar etiqueta en formulario
     } catch (err) {
         grid.innerHTML = `<div style="color:#ef4444;padding:1rem;">⚠️ No se pudo cargar el stock</div>`;
@@ -1082,3 +1103,137 @@ function irATandaActual() {
         cargarPedidos(tandaActiva.id, tandaActiva.nombre);
     }
 }
+
+// ============================================================
+// BI CHARTS (ECharts)
+// ============================================================
+let produccionChart = null;
+let stockChart = null;
+
+function renderChartsProd(stockData) {
+    if (!produccionChart) produccionChart = echarts.init(document.getElementById('produccion-chart'));
+    if (!stockChart) stockChart = echarts.init(document.getElementById('stock-chart'));
+
+    // Chart de Stock actual
+    stockChart.setOption({
+        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+        grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+        xAxis: { type: 'category', data: ['Picos', 'Zapapicos'], axisLabel: { fontWeight: 'bold' } },
+        yAxis: { type: 'value' },
+        series: [{
+            data: [
+                { value: stockData.find(s => s.tipo === 'Pico')?.cantidad || 0, itemStyle: { color: '#3b82f6' } },
+                { value: stockData.find(s => s.tipo === 'Zapapico')?.cantidad || 0, itemStyle: { color: '#8b5cf6' } }
+            ],
+            type: 'bar', barWidth: '40%', itemStyle: { borderRadius: [5, 5, 0, 0] },
+            label: { show: true, position: 'top', formatter: '{c} und' }
+        }]
+    });
+}
+
+function renderChartsPedidos(pedidos) {
+    if (!produccionChart) produccionChart = echarts.init(document.getElementById('produccion-chart'));
+    
+    const stats = {
+        completado: pedidos.filter(p => p.estado === 'completado').length,
+        proceso: pedidos.filter(p => p.estado === 'en_proceso').length,
+        pendiente: pedidos.filter(p => p.estado === 'pendiente').length
+    };
+
+    produccionChart.setOption({
+        tooltip: { trigger: 'item' },
+        legend: { bottom: '0', left: 'center' },
+        series: [{
+            name: 'Pedidos', type: 'pie', radius: ['40%', '70%'],
+            avoidLabelOverlap: false, itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
+            label: { show: false },
+            data: [
+                { value: stats.completado, name: 'Completados', itemStyle: { color: '#10b981' } },
+                { value: stats.proceso, name: 'En Proceso', itemStyle: { color: '#3b82f6' } },
+                { value: stats.pendiente, name: 'Pendientes', itemStyle: { color: '#f59e0b' } }
+            ]
+        }]
+    });
+}
+
+window.addEventListener('resize', () => {
+    produccionChart?.resize();
+    stockChart?.resize();
+});
+
+// ============================================================
+// GESTIÓN DE NOTAS (POST-ITS)
+// ============================================================
+async function cargarNotasTanda(tandaId) {
+    const board = document.getElementById('post-it-board');
+    if (!board) return;
+
+    try {
+        const notas = await fetchAPI(`/tanda-notas/${tandaId}`);
+        renderNotas(notas);
+    } catch (err) {
+        console.error('Error al cargar notas:', err);
+    }
+}
+
+function renderNotas(notas) {
+    const board = document.getElementById('post-it-board');
+    if (!board) return;
+
+    if (notas.length === 0) {
+        board.innerHTML = `<p style="color:#94a3b8; font-size:0.8rem; width:100%; text-align:center; padding:1rem;">No hay notas para esta tanda aún.</p>`;
+        return;
+    }
+
+    board.innerHTML = notas.map(n => `
+        <div class="post-it" style="background: ${n.color}">
+            <span class="post-it-delete" onclick="eliminarNota(${n.id})">×</span>
+            ${n.contenido}
+        </div>
+    `).join('');
+}
+
+function abrirModalNuevaNota() {
+    if (!tandaActiva) return showToast('Primero crea una tanda activa', 'warning');
+    document.getElementById('modal-nota').style.display = 'block';
+    document.getElementById('nota-contenido').focus();
+}
+
+function cerrarModalNota() {
+    document.getElementById('modal-nota').style.display = 'none';
+    document.getElementById('nota-contenido').value = '';
+}
+
+async function guardarNuevaNota() {
+    const contenido = document.getElementById('nota-contenido').value.trim();
+    const color = document.getElementById('nota-color').value;
+
+    if (!contenido) return showToast('La nota no puede estar vacía', 'warning');
+
+    try {
+        await fetchAPI('/tanda-notas', {
+            method: 'POST',
+            body: JSON.stringify({
+                tanda_id: tandaActiva.id,
+                contenido,
+                color
+            })
+        });
+        showToast('📌 Nota pegada con éxito', 'success');
+        cerrarModalNota();
+        cargarNotasTanda(tandaActiva.id);
+    } catch (err) {
+        showToast('Error al guardar nota', 'error');
+    }
+}
+
+async function eliminarNota(id) {
+    if (!confirm('¿Eliminar esta nota?')) return;
+    try {
+        await fetchAPI(`/tanda-notas/${id}`, { method: 'DELETE' });
+        if (tandaActiva) cargarNotasTanda(tandaActiva.id);
+    } catch (err) {
+        showToast('Error al eliminar nota', 'error');
+    }
+}
+

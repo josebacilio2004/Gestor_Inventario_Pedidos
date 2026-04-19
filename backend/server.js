@@ -65,6 +65,7 @@ const facturasCompradorRoutes = require('./routes/facturas-comprador');
 const mayoristasRoutes = require('./routes/mayoristas');
 const operadorPagosRoutes = require('./routes/operador-pagos');
 const pedidoStockDetalleRoutes = require('./routes/pedido-stock-detalle');
+const tandaNotasRoutes = require('./routes/tanda_notas');
 
 // Mapeo de Rutas
 app.use('/api/productos', productosRoutes);
@@ -83,6 +84,7 @@ app.use('/api/tandas', tandasRoutes);
 app.use('/api/facturas-comprador', facturasCompradorRoutes);
 app.use('/api/mayoristas', mayoristasRoutes);
 app.use('/api/operador-pagos', operadorPagosRoutes);
+app.use('/api/tanda-notas', tandaNotasRoutes);
 
 // Ruta raíz (Salud detallada)
 app.get('/', (req, res) => {
