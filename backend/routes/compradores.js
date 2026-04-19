@@ -88,16 +88,26 @@ router.get('/:id', async (req, res) => {
             [id]
         );
 
-        // Calcular resumen robusto desde Fuente de Verdad (Pagos Reales)
+        // Calcular resumen robusto desde Fuente de Verdad (Pagos Reales) con CTE
         const statsResult = await pool.query(
-            `SELECT 
-                COALESCE(SUM(p.capital_invertido), 0) as capital_total,
-                COALESCE(SUM(CASE WHEN p.estado = 'completado' THEN p.capital_invertido ELSE (SELECT COALESCE(SUM(monto),0) FROM pagos_capital WHERE pedido_id = p.id) END), 0) as capital_devuelto_total,
-                COUNT(p.id) as total_pedidos,
-                COALESCE(SUM(CASE WHEN p.estado = 'completado' THEN p.ganancia_esperada ELSE (SELECT COALESCE(SUM(monto),0) FROM pagos_ganancia WHERE pedido_id = p.id) END), 0) as ganancia_total,
-                COALESCE((SELECT SUM(pg.monto) FROM pagos_ganancia pg JOIN pedidos p3 ON pg.pedido_id = p3.id WHERE p3.comprador_id = $1), 0) as ganancia_devuelta_total
-            FROM pedidos p
-            WHERE p.comprador_id = $1`,
+            `WITH pedidos_resumen AS (
+                SELECT 
+                    p.id,
+                    p.capital_invertido,
+                    p.ganancia_esperada,
+                    p.estado,
+                    COALESCE((SELECT SUM(monto) FROM pagos_capital WHERE pedido_id = p.id), 0) as cap_pagado,
+                    COALESCE((SELECT SUM(monto) FROM pagos_ganancia WHERE pedido_id = p.id), 0) as gan_pagada
+                FROM pedidos p
+                WHERE p.comprador_id = $1
+            )
+            SELECT 
+                COALESCE(SUM(capital_invertido), 0) as capital_total,
+                COALESCE(SUM(CASE WHEN estado = 'completado' THEN capital_invertido ELSE cap_pagado END), 0) as capital_devuelto_total,
+                COUNT(*) as total_pedidos,
+                COALESCE(SUM(CASE WHEN estado = 'completado' THEN ganancia_esperada ELSE gan_pagada END), 0) as ganancia_total,
+                COALESCE(SUM(gan_pagada), 0) as ganancia_devuelta_total
+            FROM pedidos_resumen`,
             [id]
         );
 
