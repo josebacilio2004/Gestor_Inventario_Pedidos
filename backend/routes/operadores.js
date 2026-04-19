@@ -42,20 +42,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-// GET - Operador por ID
-router.get('/:id', async (req, res) => {
-    try {
-        const result = await pool.query(
-            'SELECT id, nombre, usuario, email, activo FROM operadores WHERE id = $1',
-            [req.params.id]
-        );
-        if (result.rows.length === 0) return res.status(404).json({ error: 'No encontrado' });
-        res.json(result.rows[0]);
-    } catch (err) {
-        res.status(500).json({ error: 'Error al obtener operador' });
-    }
-});
-
 // GET - Estadísticas avanzadas del operador
 router.get('/:id/stats', async (req, res) => {
     try {
@@ -87,6 +73,20 @@ router.get('/:id/stats', async (req, res) => {
     } catch (err) {
         console.error('Error al obtener estadísticas del operador:', err);
         res.status(500).json({ error: 'Error al obtener estadísticas' });
+    }
+});
+
+// GET - Operador por ID
+router.get('/:id', async (req, res) => {
+    try {
+        const result = await pool.query(
+            'SELECT id, nombre, usuario, email, activo FROM operadores WHERE id = $1',
+            [req.params.id]
+        );
+        if (result.rows.length === 0) return res.status(404).json({ error: 'No encontrado' });
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Error al obtener operador' });
     }
 });
 
