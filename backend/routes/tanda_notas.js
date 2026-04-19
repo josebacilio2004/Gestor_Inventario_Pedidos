@@ -1,6 +1,20 @@
-const express = require('express');
-const router = express.Router();
 const pool = require('../config/database');
+
+async function ensureTableExists() {
+    try {
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS tanda_notas (
+                id SERIAL PRIMARY KEY,
+                tanda_id INTEGER REFERENCES tandas(id) ON DELETE CASCADE,
+                contenido TEXT NOT NULL,
+                color VARCHAR(20) DEFAULT '#fef3c7',
+                created_at TIMESTAMP DEFAULT NOW()
+            )
+        `);
+        console.log('✅ Tabla tanda_notas verificada/creada');
+    } catch (err) { console.error('❌ Error al verificar tabla tanda_notas:', err); }
+}
+ensureTableExists();
 
 // GET - Obtener notas de una tanda
 router.get('/:tanda_id', async (req, res) => {

@@ -192,23 +192,29 @@
                     tbody.innerHTML = '<tr><td colspan="10" class="text-center" style="padding:2rem;">No tienes pedidos asignados aún</td></tr>';
                 } else {
                     tbody.innerHTML = data.pedidos.map(p => {
-                        const capitalPendiente = parseFloat(p.capital_pendiente || 0);
-                        const gananciaDevuelta = parseFloat(p.ganancia_devuelta_monto || 0);
+                        // Fuente de Verdad: Usar montos reales calculados por el backend
+                        // Si el pedido está completado, el capital devuelto es el invertido (legacy fallback)
+                        const capitalRetornado = p.estado === 'completado' ? parseFloat(p.capital_invertido) : parseFloat(p.capital_pagado_real || 0);
+                        const capitalInvertido = parseFloat(p.capital_invertido || 0);
+                        const capitalPendiente = Math.max(0, capitalInvertido - capitalRetornado);
+
                         const gananciaEsperada = parseFloat(p.ganancia_esperada || 0);
+                        const gananciaDevuelta = p.estado === 'completado' ? gananciaEsperada : parseFloat(p.ganancia_devuelta_real || 0);
                         const gananciaFaltante = Math.max(0, gananciaEsperada - gananciaDevuelta);
+
                         return `
             <tr>
               <td>${p.id}</td>
               <td>${formatDate(p.fecha_pedido)}</td>
               <td>${p.producto_nombre || '-'}</td>
               <td>${p.inversionista_nombre || '-'}</td>
-              <td>${formatCurrency(p.capital_invertido)}</td>
-              <td style="color: var(--success)">${formatCurrency(p.capital_devuelto)}</td>
+              <td>${formatCurrency(capitalInvertido)}</td>
+              <td style="color: var(--success)">${formatCurrency(capitalRetornado)}</td>
               <td style="color: var(--warning)">${formatCurrency(capitalPendiente)}</td>
               <td>
                 <div style="display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem;">
-                  <span style="color: var(--success)" title="Ganancia devuelta">✅ ${formatCurrency(gananciaDevuelta)}</span>
-                  <span style="color: var(--warning)" title="Ganancia esperada">⏳ ${formatCurrency(gananciaEsperada)}</span>
+                   <span style="color: var(--success)" title="Ganancia devuelta">✅ ${formatCurrency(gananciaDevuelta)}</span>
+                   <span style="color: var(--warning)" title="Ganancia esperada">⏳ ${formatCurrency(gananciaEsperada)}</span>
                 </div>
               </td>
               <td><span class="badge ${getBadgeClass(p.estado)}">${p.estado}</span></td>

@@ -88,15 +88,16 @@ router.get('/:id', async (req, res) => {
             [id]
         );
 
-        // Calcular resumen robusto desde la base de datos
+        // Calcular resumen robusto desde Fuente de Verdad (Pagos Reales)
         const statsResult = await pool.query(
             `SELECT 
-                COALESCE(SUM(capital_invertido), 0) as capital_total,
-                COALESCE(SUM(devolucion_capital), 0) as capital_devuelto_total,
-                COUNT(*) as total_pedidos,
-                COALESCE(SUM(ganancia_real), 0) as ganancia_total
-            FROM pedidos 
-            WHERE comprador_id = $1`,
+                COALESCE(SUM(p.capital_invertido), 0) as capital_total,
+                COALESCE(SUM(CASE WHEN p.estado = 'completado' THEN p.capital_invertido ELSE (SELECT COALESCE(SUM(monto),0) FROM pagos_capital WHERE pedido_id = p.id) END), 0) as capital_devuelto_total,
+                COUNT(p.id) as total_pedidos,
+                COALESCE(SUM(CASE WHEN p.estado = 'completado' THEN p.ganancia_esperada ELSE (SELECT COALESCE(SUM(monto),0) FROM pagos_ganancia WHERE pedido_id = p.id) END), 0) as ganancia_total,
+                COALESCE((SELECT SUM(pg.monto) FROM pagos_ganancia pg JOIN pedidos p3 ON pg.pedido_id = p3.id WHERE p3.comprador_id = $1), 0) as ganancia_devuelta_total
+            FROM pedidos p
+            WHERE p.comprador_id = $1`,
             [id]
         );
 
@@ -108,9 +109,10 @@ router.get('/:id', async (req, res) => {
         const resumen = {
             capital_total_gestionado: capitalTotal,
             capital_devuelto: capitalDevuelto,
-            capital_pendiente_devolver: capitalTotal - capitalDevuelto,
+            capital_pendiente_devolver: Math.max(0, capitalTotal - capitalDevuelto),
             total_pedidos: parseInt(stats.total_pedidos || 0),
             ganancia_generada: gananciaTotal,
+            ganancia_devuelta: parseFloat(stats.ganancia_devuelta_total || 0),
             porcentaje_devuelto: capitalTotal > 0
                 ? parseFloat(((capitalDevuelto / capitalTotal) * 100).toFixed(1))
                 : 0
