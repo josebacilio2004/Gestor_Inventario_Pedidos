@@ -1226,8 +1226,13 @@ function cerrarModalNota() {
 async function guardarNuevaNota() {
     const contenido = document.getElementById('nota-contenido').value.trim();
     const color = document.getElementById('nota-color').value;
+    const btn = document.querySelector('#modal-nota .btn-primary');
 
     if (!contenido) return showToast('La nota no puede estar vacía', 'warning');
+
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Pegando...';
 
     try {
         await fetchAPI('/tanda-notas', {
@@ -1240,9 +1245,12 @@ async function guardarNuevaNota() {
         });
         showToast('📌 Nota pegada con éxito', 'success');
         cerrarModalNota();
-        cargarNotasTanda(tandaActiva.id);
+        await cargarNotasTanda(tandaActiva.id);
     } catch (err) {
         showToast('Error al guardar nota', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
     }
 }
 
