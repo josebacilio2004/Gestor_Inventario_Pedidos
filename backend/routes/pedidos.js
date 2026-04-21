@@ -50,6 +50,8 @@ router.get('/', async (req, res) => {
         d.nombre as distribuidor_nombre,
         i.nombre as inversionista_nombre,
         c.nombre as comprador_nombre,
+        COALESCE((SELECT SUM(monto) FROM pagos_capital WHERE pedido_id = p.id), 0) as capital_devuelto,
+        COALESCE((SELECT SUM(monto) FROM pagos_ganancia WHERE pedido_id = p.id), 0) as ganancia_devuelta_real,
         (SELECT json_agg(json_build_object(
             'producto_id', pp.producto_id,
             'cantidad', pp.cantidad,

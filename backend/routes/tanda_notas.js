@@ -1,3 +1,5 @@
+const express = require('express');
+const router = express.Router();
 const pool = require('../config/database');
 
 async function ensureTableExists() {
@@ -15,6 +17,17 @@ async function ensureTableExists() {
     } catch (err) { console.error('❌ Error al verificar tabla tanda_notas:', err); }
 }
 ensureTableExists();
+
+// GET - Obtener todas las notas (para el dashboard general)
+router.get('/', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM tanda_notas ORDER BY created_at DESC LIMIT 20');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error al obtener notas:', err);
+        res.status(500).json({ error: 'Error al obtener notas' });
+    }
+});
 
 // GET - Obtener notas de una tanda
 router.get('/:tanda_id', async (req, res) => {
