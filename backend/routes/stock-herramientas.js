@@ -35,15 +35,17 @@ router.post('/agregar', async (req, res) => {
         const tanda = await getTandaActiva(pool);
         if (!tanda) return res.status(409).json({ error: 'No hay ninguna tanda activa. Crea una tanda primero.' });
 
+        // Usamos INSERT ... ON CONFLICT para que si el registro fue borrado accidentalmente,
+        // se cree de nuevo en lugar de dar error 404.
         const result = await pool.query(`
-            UPDATE stock_herramientas
-            SET cantidad = cantidad + $3, updated_at = NOW()
-            WHERE tanda_id = $1 AND tipo = $2
+            INSERT INTO stock_herramientas (tanda_id, tipo, cantidad, updated_at)
+            VALUES ($1, $2, $3, NOW())
+            ON CONFLICT (tanda_id, tipo) 
+            DO UPDATE SET 
+                cantidad = stock_herramientas.cantidad + EXCLUDED.cantidad,
+                updated_at = NOW()
             RETURNING *
         `, [tanda.id, tipo, Number(cantidad)]);
-
-        if (!result.rows.length)
-            return res.status(404).json({ error: `Stock de ${tipo} no encontrado en la tanda activa.` });
 
         res.json(result.rows[0]);
     } catch (err) {
