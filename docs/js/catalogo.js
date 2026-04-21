@@ -21,11 +21,12 @@ async function loadCatalogProducts() {
  * para mostrar un precio de mercado profesional.
  */
 function calculatePublicPrice(producto) {
-    // Usamos precio_venta si existe, sino usamos precio_referencia como base
+    // En la administración se maneja el precio de compra (precio_referencia).
+    // Para el catálogo público, aplicamos un margen comercial del 40% (x1.4) 
     const basePrice = parseFloat(producto.precio_venta || producto.precio_referencia || 0);
     if (basePrice <= 0) return 'Consulte';
     
-    // Aplicamos el margen del 40% solicitado para separar catálogo de admin
+    // El precio de venta público incluye el margen comercial
     const publicPrice = basePrice * 1.40;
     return formatCurrency(publicPrice);
 }

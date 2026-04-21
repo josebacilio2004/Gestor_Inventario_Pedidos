@@ -1,89 +1,84 @@
-# 🏪 Sistema de Gestión de Inventario, Pagos e Inversión
+# 🏪 COMERCIALIZADORA ALY | SISTEMA INDUSTRIAL
+> **Gestión Avanzada de Inventario, Inteligencia de Inversión y Control de Producción**
 
-Sistema completo de gestión para ferreterías con tracking de inversiones, devolución progresiva de capital, y control de ganancias.
+![Dashboard Preview](https://img.shields.io/badge/Status-Estable-success?style=for-the-badge&logo=render&logoColor=white) 
+![Stack](https://img.shields.io/badge/Stack-Node.js%20|%20PostgreSQL%20|%20ECharts-orange?style=for-the-badge)
+![Deployment](https://img.shields.io/badge/Frontend-GitHub%20Pages-blue?style=for-the-badge&logo=github)
 
-## 🚀 Características Principales
+---
 
-- ✅ **Gestión de Productos y Distribuidores**
-- ✅ **Sistema de Inversión y Capital Progresivo**
-- ✅ **Autenticación por Roles** (Inversionistas y Compradores)
-- ✅ **Dashboards Personalizados**
-- ✅ **Tracking Automático de Pagos**
-- ✅ **Moneda en Soles Peruanos (S/)**
-- ✅ **Base de Datos PostgreSQL con Docker**
-- ✅ **API REST con Node.js/Express**
-- ✅ **Frontend Moderno con Glassmorphism**
+## 🏭 Visión General
+**Comercializadora Aly** es una plataforma de gestión integral diseñada para centralizar el flujo financiero y operativo de herramientas forjadas. El sistema conecta a inversionistas, compradores y operadores en un ecosistema digital de alta precisión.
 
-## 📋 Requisitos
+### 🎯 Objetivos del Sistema
+*   **Gestión de Inversión**: Tracking real de retorno de capital y pago de utilidades.
+*   **Control de Producción**: Supervisión de marcas premium (Tramontina, Bellota) por tandas.
+*   **BI Analítico**: Gráficos dinámicos para el monitoreo de eficiencia y desempeño.
 
-- Node.js v14+
-- Docker Desktop
-- Navegador web moderno
+---
+
+## 🚀 Módulos Principales
+
+### 📈 Business Intelligence (BI)
+*   **Tendencias de Producción**: Historial progresivo de tandas y eficiencia de despacho.
+*   **Flujo de Capital**: Visualización del capital devuelto vs. pendiente en tiempo real.
+*   **Monitoreo 360°**: Dashboards estéticos con Apache ECharts integrados.
+
+### 🛠️ Gestión de Inventario
+*   **Catálogo Industrial**: Catálogo público de herramientas con precios sincronizados.
+*   **Tandas de Operador**: Control de mano de obra y registro de stock forjado.
+*   **Pizarra de Notas**: Sistema de "Post-its" dinámicos para incidencias en talleres.
+
+---
+
+## 🛠️ Stack Tecnológico
+| Capa | Tecnologías |
+| :--- | :--- |
+| **Frontend** | HTML5, JavaScript Vanilla, CSS3 (Premium Glassmorphism) |
+| **BI / Gráficos** | Apache ECharts |
+| **Backend** | Node.js, Express.js |
+| **Base de Datos** | PostgreSQL (Neon / Render) |
+| **DevOps** | Docker, Docker Compose, Render.com |
+
+---
+
+## 📂 Organización del Proyecto (Repo Clean)
+Para mantener un código mantenible, el directorio se ha organizado de la siguiente manera:
+
+*   📂 `backend/`: Núcleo de la API y lógica de servidores.
+*   📂 `docs/`: Frontend optimizado para despliegue en GitHub Pages.
+*   📂 `database/`: Migraciones SQL y esquemas de base de datos.
+*   📂 `docs_tecnica/`: Guías de instalación, despliegue y resolución de errores.
+*   📂 `admin_logs/`: Registros de cambios, usuarios activos y credenciales seguras.
+*   📂 `scripts_utilidad/`: Herramientas auxiliares de automatización.
+
+---
 
 ## 🔧 Instalación Rápida
 
-```bash
-# 1. Iniciar base de datos con Docker
+```powershell
+# 1. Levantar base de datos local
 docker-compose up -d
 
-# 2. Instalar dependencias del backend
+# 2. Configurar y lanzar servidor
 cd backend
 npm install
-
-# 3. Iniciar servidor backend
 npm start
-
-# 4. Abrir frontend
-# Abrir en navegador: frontend/login.html
 ```
 
-## 👥 Usuarios del Sistema
+---
 
-### Inversionistas
-- `ssamira` / `demo123` - Ssamira Xiomara Checya Peña
-- `inversor2` / `demo123` - Familia Rodríguez
-- `inversor3` / `demo123` - Fondo Capital Plus
+## 👥 Acceso Rápido (Demo)
+| Rol | Usuario | Contraseña |
+| :--- | :--- | :--- |
+| **Inversionista** | `ssamira` | `demo123` |
+| **Operador** | `jose` | `jose123` |
+| **Comprador** | `alicia` | `demo123` |
 
-### Compradores Principales
-- `alicia` / `demo123` - Alicia Peña Granilla
-- `comprador2` / `demo123` - Luis Mendoza
-- `comprador3` / `demo123` - Carmen Vega
+---
 
-## 📚 Documentación
+### 👨‍💻 Autor y Mantenimiento
+Desarrollado para **Comercializadora Aly**. 
+*Excelencia en Forja, Precisión en Gestión.*
 
-- [CREDENCIALES.md](CREDENCIALES.md) - Credenciales de acceso
-- [DOCKER.md](DOCKER.md) - Guía de Docker
-- [DBEAVER.md](DBEAVER.md) - Configuración de DBeaver
-
-## 🏗️ Arquitectura
-
-```
-Frontend (HTML/CSS/JS)
-    ↓
-Backend API (Express/Node.js) - Puerto 3002
-    ↓
-PostgreSQL (Docker) - Puerto 5433
-```
-
-## 📊 Flujo de Negocio
-
-1. **Inversionista** provee capital inicial
-2. **Comprador Principal** gestiona compra de productos
-3. **Comprador** vende y genera ganancias
-4. **Comprador** devuelve capital PROGRESIVAMENTE
-5. **Inversionista** recibe capital + ganancia
-
-## 🛠️ Tecnologías
-
-- **Backend**: Node.js, Express, PostgreSQL
-- **Frontend**: HTML5, CSS3, JavaScript Vanilla
-- **Base de Datos**: PostgreSQL 16 (Docker)
-- **Contenedores**: Docker Compose
-
-## 📝 Licencia
-
-MIT
-
-## 👨‍💻 Autor
-
-Sistema desarrollado para gestión de ferretería con control de inversiones.
+© 2026 COMERCIALIZADORA ALY. Todos los derechos reservados.

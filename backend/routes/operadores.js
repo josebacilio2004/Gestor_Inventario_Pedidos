@@ -47,14 +47,20 @@ router.get('/:id/stats', async (req, res) => {
     try {
         const { id } = req.params;
 
-        // 1. Historial de las últimas 5 tandas con su stock
+        // 1. Historial de las últimas 5 tandas con su producción real (sumada de pedidos)
         const tandasResult = await pool.query(`
             SELECT t.id, t.nombre, t.fecha_inicio,
-                   (SELECT SUM(cantidad) FROM stock_herramientas WHERE tanda_id = t.id AND tipo = 'Pico') as picos,
-                   (SELECT SUM(cantidad) FROM stock_herramientas WHERE tanda_id = t.id AND tipo = 'Zapapico') as zapapicos
+                   COALESCE((SELECT SUM(i.cantidad) 
+                    FROM items_pedido_herramienta i 
+                    JOIN pedidos_herramientas p ON i.pedido_id = p.id 
+                    WHERE p.tanda_id = t.id AND i.tipo = 'Pico'), 0) as picos,
+                   COALESCE((SELECT SUM(i.cantidad) 
+                    FROM items_pedido_herramienta i 
+                    JOIN pedidos_herramientas p ON i.pedido_id = p.id 
+                    WHERE p.tanda_id = t.id AND i.tipo = 'Zapapico'), 0) as zapapicos
             FROM tandas t
             WHERE t.operador_id = $1
-            ORDER BY t.fecha_inicio DESC
+            ORDER BY t.created_at DESC
             LIMIT 5
         `, [id]);
 
